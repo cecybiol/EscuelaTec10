@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="contenedor">
+
+    <div class="breadcrumb">
+        EscuelaTEC / Administración
+    </div>
+
+    <h1>Gestión de Usuarios</h1>
+
+    <p class="descripcion">
+        Administrá altas, bajas y modificaciones de cuentas del sistema.
+    </p>
+
+    <div class="tabs">
+
+        <button class="tab activa">
+            👥 Gestión de Usuarios
+        </button>
+
+        <button class="tab">
+            📊 Reportes
+        </button>
+
+        <button class="tab">
+            🛡 Permisos y Roles
+        </button>
+
+    </div>
+
+    <div class="barra-superior">
+
+        <input
+            type="text"
+            id="buscador"
+            placeholder="Buscar por nombre, email o rol..."
+        >
+
+        <button class="btn-filtrar">
+            Filtrar
+        </button>
+
+        <button class="btn-nuevo" onclick="abrirModal()">
+            + Nuevo Usuario
+        </button>
+
+    </div>
+
+    <div class="tabla-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>USUARIO</th>
+                    <th>ROL</th>
+                    <th>ESTADO</th>
+                    <th>ÚLTIMO ACCESO</th>
+                    <th>ACCIONES</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="tablaUsuarios">
+
+                <tr>
+
+                    <td>
+                        <div class="usuario">
+                            <div class="avatar">AG</div>
+
+                            <div>
+                                <div class="nombre">Ana García</div>
+                                <div class="correo">
+                                    ana.garcia@escuela.edu.ar
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        <span class="badge admin">
+                            Administrador
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="badge activo">
+                            Activo
+                        </span>
+                    </td>
+
+                    <td>Hoy, 09:42</td>
+
+                    <td class="acciones">
+                        <button>👁</button>
+                        <button>✏</button>
+                        <button>🗑</button>
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>
+                        <div class="usuario">
+                            <div class="avatar">CR</div>
+
+                            <div>
+                                <div class="nombre">Carlos Romero</div>
+                                <div class="correo">
+                                    c.romero@escuela.edu.ar
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        <span class="badge docente">
+                            Docente
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="badge activo">
+                            Activo
+                        </span>
+                    </td>
+
+                    <td>Ayer, 14:20</td>
+
+                    <td class="acciones">
+                        <button>👁</button>
+                        <button>✏</button>
+                        <button>🗑</button>
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>
+                        <div class="usuario">
+                            <div class="avatar">ML</div>
+
+                            <div>
+                                <div class="nombre">María López</div>
+                                <div class="correo">
+                                    m.lopez@escuela.edu.ar
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        <span class="badge alumno">
+                            Alumno
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="badge inactivo">
+                            Inactivo
+                        </span>
+                    </td>
+
+                    <td>Hace 3 días</td>
+
+                    <td class="acciones">
+                        <button>👁</button>
+                        <button>✏</button>
+                        <button>🗑</button>
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<div class="modal" id="modal">
+
+    <div class="modal-contenido">
+
+        <span class="cerrar" onclick="cerrarModal()">
+            ×
+        </span>
+
+        <h2>Nuevo Usuario</h2>
+
+        <label>Nombre completo</label>
+        <input type="text" id="nombre">
+
+        <label>Correo institucional</label>
+        <input type="email" id="correo">
+
+        <label>Rol</label>
+
+        <select id="rol">
+            <option>Administrador</option>
+            <option>Docente</option>
+            <option>Alumno</option>
+        </select>
+
+        <div class="botones-modal">
+
+            <button
+                class="cancelar"
+                onclick="cerrarModal()">
+                Cancelar
+            </button>
+
+            <button
+                class="crear"
+                onclick="crearUsuario()">
+                Crear Usuario
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
