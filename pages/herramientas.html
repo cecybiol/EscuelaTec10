@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Herramientas</title>
+</head>
+<body>
+
+  <!-- ================================================
+       VISTA 1: LISTA DE HERRAMIENTAS
+  ================================================ -->
+  <div id="vista-lista">
+
+    <section id="herramientas">
+
+      <header class="herramientas-header">
+        <h1>Herramientas</h1>
+      </header>
+
+      <!-- Barra de acciones -->
+      <div class="herramientas-acciones">
+
+        <button type="button" id="btn-nueva-herramienta">
+          + Nueva herramienta
+        </button>
+
+        <div class="buscador">
+          <label for="input-buscar" class="sr-only">Buscar herramienta</label>
+          <input
+            type="search"
+            id="input-buscar"
+            name="buscar"
+            placeholder="Buscar herramienta..."
+            autocomplete="off"
+          />
+          <button type="button" id="btn-buscar" aria-label="Buscar">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </button>
+        </div>
+
+        <button type="button" id="btn-filtros" aria-expanded="false" aria-controls="panel-filtros">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="4" y1="6" x2="20" y2="6"/>
+            <line x1="8" y1="12" x2="16" y2="12"/>
+            <line x1="11" y1="18" x2="13" y2="18"/>
+          </svg>
+          Filtros
+        </button>
+
+      </div>
+
+      <!-- Panel de filtros -->
+      <div id="panel-filtros" class="panel-filtros">
+
+        <fieldset class="filtro-grupo">
+          <legend>Estado</legend>
+          <label><input type="checkbox" name="estado" value="nueva" /> Nueva</label>
+          <label><input type="checkbox" name="estado" value="usada" /> Usada</label>
+          <label><input type="checkbox" name="estado" value="rota" /> Rota</label>
+        </fieldset>
+
+        <button type="button" id="btn-aplicar-filtros">Aplicar filtros</button>
+        <button type="button" id="btn-limpiar-filtros">Limpiar</button>
+
+      </div>
+
+      <!-- Listado de herramientas -->
+      <ul class="herramientas-lista" aria-label="Listado de herramientas">
+
+        <li class="fila-herramienta" data-id="1" role="button" tabindex="0" aria-label="Ver detalle de Taladro percutor">
+          <span class="herramienta-nombre">Taladro percutor</span>
+          <span class="badge badge--nueva">Nueva</span>
+          <span class="herramienta-ubicacion">Depósito A, estante 2</span>
+          <span class="herramienta-qr" aria-label="Código QR">
+          </span>
+        </li>
+
+      </ul>
+
+    </section>
+
+  </div>
+  <!-- =================== FIN VISTA LISTA =================== -->
+
+
+  <!-- ================================================
+       VISTA 2: DETALLE DE HERRAMIENTA
+  ================================================ -->
+  <div id="vista-detalle">
+
+    <header class="detalle-header">
+
+      <button type="button" id="btn-volver" aria-label="Volver al listado">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Herramientas
+      </button>
+
+      <h2 id="detalle-titulo">Nombre herramienta</h2>
+
+    </header>
+
+    <nav class="detalle-tabs" aria-label="Secciones del detalle">
+      <button type="button" class="tab-btn tab-btn--activo" id="tab-info" aria-selected="true" aria-controls="panel-info">
+        Información
+      </button>
+      <button type="button" class="tab-btn" id="tab-historial" aria-selected="false" aria-controls="panel-historial">
+        Historial
+      </button>
+    </nav>
+
+    <!-- Panel: Información -->
+    <div id="panel-info" class="detalle-panel" role="tabpanel" aria-labelledby="tab-info">
+
+      <form id="form-editar-herramienta" novalidate>
+
+        <div class="campo">
+          <label for="campo-nombre">Nombre</label>
+          <input type="text" id="campo-nombre" name="nombre" />
+        </div>
+
+        <div class="campo">
+          <label for="campo-estado">Estado</label>
+          <select id="campo-estado" name="estado">
+            <option value="">Seleccionar estado</option>
+            <option value="nueva">Nueva</option>
+            <option value="usada">Usada</option>
+            <option value="rota">Rota</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="campo-ubicacion">Lugar donde se guarda</label>
+          <input type="text" id="campo-ubicacion" name="ubicacion" />
+        </div>
+
+        <div class="campo">
+          <label for="campo-notas">Notas</label>
+          <textarea id="campo-notas" name="notas"></textarea>
+        </div>
+
+        <div class="detalle-footer">
+          <button type="button" id="btn-cancelar-edicion">Cancelar</button>
+          <button type="submit" id="btn-guardar-cambios">Guardar cambios</button>
+        </div>
+
+      </form>
+
+    </div>
+
+    <!-- Panel: Historial -->
+    <div id="panel-historial" class="detalle-panel" role="tabpanel" aria-labelledby="tab-historial">
+
+      <ul class="historial-lista" aria-label="Historial de movimientos">
+        <li class="historial-item">
+          <span class="historial-fecha">15 jun 2025</span>
+          <span class="historial-evento">Prestada a Juan Pérez</span>
+        </li>
+        <li class="historial-item">
+          <span class="historial-fecha">02 jun 2025</span>
+          <span class="historial-evento">Devuelta al depósito</span>
+        </li>
+        <li class="historial-item">
+          <span class="historial-fecha">20 may 2025</span>
+          <span class="historial-evento">Registrada en el sistema</span>
+        </li>
+      </ul>
+
+    </div>
+
+  </div>
+  <!-- =================== FIN VISTA DETALLE =================== -->
+
+
+  <!-- ================================================
+       MODAL: NUEVA HERRAMIENTA
+  ================================================ -->
+  <div
+    id="modal-nueva-herramienta"
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-nueva-titulo"
+  >
+    <div class="modal-overlay" id="modal-nueva-overlay"></div>
+
+    <div class="modal-contenido">
+
+      <header class="modal-header">
+        <h2 id="modal-nueva-titulo">Nueva herramienta</h2>
+        <button type="button" id="btn-cerrar-modal-nueva" aria-label="Cerrar">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </header>
+
+      <form id="form-nueva-herramienta" novalidate>
+
+        <div class="campo">
+          <label for="nueva-nombre">Nombre</label>
+          <input type="text" id="nueva-nombre" name="nombre" placeholder="Ej: Taladro percutor" required />
+        </div>
+
+        <div class="campo">
+          <label for="nueva-estado">Estado</label>
+          <select id="nueva-estado" name="estado" required>
+            <option value="">Seleccionar estado</option>
+            <option value="nueva">Nueva</option>
+            <option value="usada">Usada</option>
+            <option value="rota">Rota</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="nueva-ubicacion">Lugar donde se guarda</label>
+          <input type="text" id="nueva-ubicacion" name="ubicacion" placeholder="Ej: Depósito A, estante 2" />
+        </div>
+
+        <div class="campo">
+          <label for="nueva-notas">Notas</label>
+          <textarea id="nueva-notas" name="notas" placeholder="Observaciones adicionales..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="btn-cancelar-nueva">Cancelar</button>
+          <button type="submit" id="btn-guardar-nueva">Guardar herramienta</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+  <!-- =================== FIN MODAL NUEVA HERRAMIENTA =================== -->
+
+
+</body>
+</html>
