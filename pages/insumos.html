@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EscuelaTEC - Gestión de Insumos</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-icon">TEC</div>
+                <div>
+                    <h2>EscuelaTEC</h2>
+                    <p>Sistema de Gestión Escolar</p>
+                </div>
+            </div>
+            
+            <nav class="navigation-menu">
+                <p class="section-title">SECCIONES DEL SISTEMA</p>
+                <a href="#"><span class="material-icons-outlined">dashboard</span> Dashboard</a>
+                <a href="#"><span class="material-icons-outlined">build</span> Herramientas</a>
+                <a href="#" class="active"><span class="material-icons-outlined">inventory_2</span> Insumos <span class="arrow">›</span></a>
+                <a href="#"><span class="material-icons-outlined">assignment</span> Préstamos</a>
+                <a href="#"><span class="material-icons-outlined">admin_panel_settings</span> Administración</a>
+            </nav>
+            
+            <div class="user-profile">
+                <div class="avatar">MR</div>
+                <div class="user-info">
+                    <h4>María Rodríguez</h4>
+                    <p>Encargada Insumos</p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <header class="topbar">
+                <div class="topbar-left">
+                    <div class="breadcrumb">Inicio › <span>Insumos</span></div>
+                </div>
+                <div class="topbar-actions">
+                    <div class="search-box">
+                        <span class="material-icons-outlined">search</span>
+                        <input type="text" placeholder="Buscar insumo...">
+                    </div>
+                    <button class="btn-new-item"><span class="material-icons-outlined">add</span> Nuevo Insumo</button>
+                </div>
+            </header>
+
+            <div class="content-body">
+
+                <section class="summary-cards">
+                    <div class="card">
+                        <div class="card-header">
+                            <span>Total Insumos</span>
+                            <span class="material-icons-outlined icon-box">inventory_2</span>
+                        </div>
+                        <div class="card-number">11</div>
+                        <div class="card-subtext color-blue">↑ esta semana</div>
+                    </div>
+                    
+                    <div class="card card-status-normal">
+                        <div class="card-header">
+                            <span>Normal</span>
+                            <span class="material-icons-outlined icon-circle text-green">check_circle</span>
+                        </div>
+                        <div class="card-number">3</div>
+                        <div class="card-subtext">sin alertas</div>
+                    </div>
+
+                    <div class="card card-status-low">
+                        <div class="card-header">
+                            <span>Stock Bajo</span>
+                            <span class="material-icons-outlined icon-warning text-orange">warning</span>
+                        </div>
+                        <div class="card-number">3</div>
+                        <div class="card-subtext color-orange">─ esta semana</div>
+                    </div>
+
+                    <div class="card card-status-critical">
+                        <div class="card-header">
+                            <span>Críticos</span>
+                            <span class="material-icons-outlined icon-cancel text-red">cancel</span>
+                        </div>
+                        <div class="card-number">5</div>
+                        <div class="card-subtext color-red">acción urgente</div>
+                    </div>
+                </section>
+
+                <section class="liquids-section">
+                    <div class="panel-title">
+                        <h3><span class="material-icons-outlined">opacity</span> Insumos Líquidos <span class="badge-count-blue">4</span></h3>
+                    </div>
+                    <div class="liquids-grid">
+                        <div class="liquid-card border-red">
+                            <div class="liquid-info">
+                                <strong>Desinfectante...</strong>
+                                <p class="text-red">4 L <span class="text-muted">/ 20 L</span></p>
+                                <button class="btn-refill"><span class="material-icons-outlined">refresh</span> Rellenar</button>
+                            </div>
+                        </div>
+                        <div class="liquid-card border-blue">
+                            <div class="liquid-info">
+                                <strong>Alcohol isopro...</strong>
+                                <p class="text-blue">12 L <span class="text-muted">/ 20 L</span></p>
+                                <button class="btn-refill"><span class="material-icons-outlined">refresh</span> Rellenar</button>
+                            </div>
+                        </div>
+                        <div class="liquid-card border-red">
+                            <div class="liquid-info">
+                                <strong>Jabón líquido...</strong>
+                                <p class="text-red">3 L <span class="text-muted">/ 15 L</span></p>
+                                <button class="btn-refill"><span class="material-icons-outlined">refresh</span> Rellenar</button>
+                            </div>
+                        </div>
+                        <div class="liquid-card border-blue">
+                            <div class="liquid-info">
+                                <strong>Cloro concent...</strong>
+                                <p class="text-blue">7 L <span class="text-muted">/ 10 L</span></p>
+                                <button class="btn-refill"><span class="material-icons-outlined">refresh</span> Rellenar</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="alerts-section">
+                    <div class="panel-title">
+                        <h3><span class="material-icons-outlined">error_outline</span> Alertas Activas <span class="badge-count-red">7</span></h3>
+                    </div>
+                    <div class="alerts-list">
+                        <div class="alert alert-error">
+                            <p><span class="material-icons-outlined icon-inside">cancel</span> <strong>Cable USB-C 1m:</strong> SIN STOCK — solicitar reposición inmediata</p>
+                            <span class="date">hace 12 días</span>
+                        </div>
+                        <div class="alert alert-error">
+                            <p><span class="material-icons-outlined icon-inside">report_problem</span> <strong>Jabón líquido:</strong> nivel crítico (3 L / 8 L mínimo)</p>
+                            <span class="date">hace 1 día</span>
+                        </div>
+                        <div class="alert alert-error">
+                            <p><span class="material-icons-outlined icon-inside">report_problem</span> <strong>Desinfectante:</strong> nivel crítico (4 L / 10 L mínimo)</p>
+                            <span class="date">hace 5 días</span>
+                        </div>
+                        <div class="alert alert-error">
+                            <p><span class="material-icons-outlined icon-inside">report_problem</span> <strong>Cartucho HP 664:</strong> solo 2 unidades (mín. 5)</p>
+                            <span class="date">hace 1 día</span>
+                        </div>
+                        <div class="alert alert-error">
+                            <p><span class="material-icons-outlined icon-inside">report_problem</span> <strong>Resma papel A4:</strong> 8 resmas — por debajo del mínimo (20)</p>
+                            <span class="date">hace 2 días</span>
+                        </div>
+                        <div class="alert alert-warning">
+                            <p><span class="material-icons-outlined icon-inside">warning</span> <strong>Acetato retroproyector:</strong> se acerca al límite mínimo (12/15)</p>
+                            <span class="date">hace 1 sem</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="categories-section">
+                    <h3 class="section-subtitle">Categorías</h3>
+                    <div class="categories-grid">
+                        <div class="category-card">
+                            <span class="material-icons-outlined cat-icon">description</span>
+                            <p>Papelería</p>
+                            <span class="cat-badge badge-blue">24</span>
+                        </div>
+                        <div class="category-card">
+                            <span class="material-icons-outlined cat-icon text-green">cleaning_services</span>
+                            <p>Limpieza</p>
+                            <span class="cat-badge badge-green">18</span>
+                        </div>
+                        <div class="category-card">
+                            <span class="material-icons-outlined cat-icon">computer</span>
+                            <p>Cómputo</p>
+                            <span class="cat-badge badge-gray">12</span>
+                        </div>
+                        <div class="category-card">
+                            <span class="material-icons-outlined cat-icon text-purple">biotech</span>
+                            <p>Laboratorio</p>
+                            <span class="cat-badge badge-purple">31</span>
+                        </div>
+                        <div class="category-card">
+                            <span class="material-icons-outlined cat-icon">print</span>
+                            <p>Impresión</p>
+                            <span class="cat-badge badge-blue">9</span>
+                        </div>
+                        <div class="category-card">
+                            <span class="material-icons-outlined cat-icon">corporate_fare</span>
+                            <p>Oficina</p>
+                            <span class="cat-badge badge-red">15</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="inventory-panel">
+                    <div class="inventory-header">
+                        <h3>Inventario</h3>
+                        <button class="btn-filter"><span class="material-icons-outlined">filter_alt</span> Filtrar</button>
+                    </div>
+                    
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Insumo</th>
+                                <th>Categoría</th>
+                                <th>Stock / Nivel</th>
