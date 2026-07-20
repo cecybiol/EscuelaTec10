@@ -1,4 +1,4 @@
-<!--INDEX-->
+ /* - INDEX--*/
 .wrap{
     max-width:1000px;
     margin:0 auto;
@@ -189,9 +189,7 @@
   .m-insumos{--accent:var(--success);}
   .m-prestamos{--accent:var(--warning);}
   .m-admin{--accent:var(--secondary);}
-
-
-  <!--INDEX-->
+ /* -INDEX--*/
 .perfil{
 
     width:42px;
