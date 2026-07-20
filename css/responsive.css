@@ -43,3 +43,13 @@
     }
 
 }
+  @media (prefers-reduced-motion: reduce){
+    .led.on{animation:none;}
+    .btn, .btn svg{transition:none;}
+  }
+
+  @media (max-width:560px){
+    .plate{padding:28px 22px;}
+    header{padding:34px 0 4px;}
+    .gate-box{flex-direction:column; align-items:flex-start;}
+  }
