@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EscuelaTEC — Sistema Integral de Gestión Escolar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" >
+</head>
+<body>
+
+<div class="topstrip">
+  <div class="wrap">
+    <span>EscuelaTEC · Sistema Integral de Gestión Escolar</span>
+    <span>ET N°10 "Martín Miguel de Güemes" — Ciclo 2026</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header>
+    <div class="plate">
+      <span class="screw-tl"></span><span class="screw-tr"></span><span class="screw-bl"></span><span class="screw-br"></span>
+
+      <div class="eyebrow"><span class="led on"></span> <span>sistema disponible</span></div>
+
+      <h1>Sistema Integral de <span>Gestión Escolar</span></h1>
+      <p class="subhead">
+        Plataforma para administrar el día a día del taller: herramientas, insumos, préstamos y usuarios en un solo lugar. Cada módulo se habilita al iniciar sesión.
+      </p>
+
+      <div class="gate">
+        <div class="gate-box">
+          <div class="gate-status">
+            <span>🔑</span>
+            <span>Ingresá con tu usuario para acceder a los módulos.</span>
+          </div>
+          <a href="login.php" class="btn">
+            Ingresar al sistema
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section aria-labelledby="modulos">
+    <div class="section-head">
+      <h2 id="modulos">Qué incluye el sistema</h2>
+      <p>Hacé clic en un módulo para entrar. Si no iniciaste sesión, cada página te va a pedir que lo hagas.</p>
+    </div>
+
+    <div class="grid">
+      <a class="module m-dashboard" href="/pages/dashboard.html">
+        <div class="row1">
+          <span class="code">MÓD. 01</span>
+        </div>
+        <h3>Dashboard</h3>
+        <p>Indicadores generales, alertas y resumen de la actividad del taller.</p>
+      </a>
+
+      <a class="module m-herramientas" href="/pages/herramientas.html">
+        <div class="row1">
+          <span class="code">MÓD. 02</span>
+        </div>
+        <h3>Herramientas</h3>
+        <p>Inventario de herramientas: alta, baja, estado y ubicación de cada equipo.</p>
+      </a>
+
+      <a class="module m-insumos" href="/pages/insumos.html">
+        <div class="row1">
+          <span class="code">MÓD. 03</span>
+        </div>
+        <h3>Insumos</h3>
+        <p>Stock de materiales con alertas automáticas cuando el nivel es bajo.</p>
+      </a>
+
+      <a class="module m-prestamos" href="/pages/prestamos.html">
+        <div class="row1">
+          <span class="code">MÓD. 04</span>
+        </div>
+        <h3>Préstamos</h3>
+        <p>Registro de préstamos a estudiantes, con fechas de devolución.</p>
+      </a>
+
+      <a class="module m-admin" href="/pages/admin.html">
+        <div class="row1">
+          <span class="code">MÓD. 05</span>
+        </div>
+        <h3>Administración</h3>
+        <p>Usuarios, permisos y configuración general del sistema.</p>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span>EscuelaTEC 2026 — Escuela Técnica N°10 "Martín Miguel de Güemes"</span>
+    <span>login requerido en cada módulo</span>
+  </footer>
+
+</div>
+
+
+</body>
+</html>
