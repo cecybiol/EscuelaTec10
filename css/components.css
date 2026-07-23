@@ -464,3 +464,258 @@ li{
     margin-bottom:10px;
 
 }
+/* Parte de Herramientas */
+/* Buscar herramienta */
+/*Contenedor principal del buscador */
+.buscador {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 320px; /* Ajusta el ancho total deseado */
+  margin-top: 10px;
+}
+/* 3. Estilos del campo de texto (Input) */
+.buscador input[type="search"] {
+  width: 100%;
+  padding: 10px 45px 10px 16px; /* 45px a la derecha para dar espacio al botón */
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 20px;          /* Bordes redondeados que hacen juego con la interfaz */
+}
+.buscador #btn-buscar {
+  position: absolute;
+  right: 4px;                  /* Lo ubica pegado al borde derecho dentro del input */
+  width: 34px;                 /* Ajusta el tamaño del círculo */
+  height: 34px;
+  border-radius: 50%;          /* Lo hace perfectamente circular */
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s;
+}
+.buscador #btn-buscar svg {
+  width: 16px;
+  height: 16px;
+  stroke: #ffffff;             /* Color blanco para la lupa */
+}
+/* Boton filtro */
+.btn-filtros{
+   display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: fit-content; 
+}
+.btn-filtros svg {
+  width: 18px;   /* Tamaño del ancho del SVG */
+  height: 18px;  /* Tamaño del alto del SVG */
+  stroke: currentColor; /* Asegura que la flecha tome el color del texto (blanco) */
+}
+/*LISTADO DE LAS HERRAMINETAS*/
+/* Limpieza de la lista */
+.herramientas-lista {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Espacio vertical entre tarjeta y tarjeta */
+}
+
+/* Cada tarjeta / fila de herramienta */
+.fila-herramienta {
+  display: grid;
+  /* 4 columnas: Nombre, Estado, Ubicación, QR */
+  grid-template-columns: 2fr 1fr 2fr auto; 
+  align-items: center;
+  gap: 12px;
+  
+  /* Estilos de Tarjeta (Fondo blanco, bordes redondeados y sombra suave) */
+  background-color: #ffffff;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Efecto al pasar el cursor o seleccionar */
+.fila-herramienta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Alineaciones internas */
+.herramienta-nombre {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 15px;
+}
+
+.herramienta-ubicacion {
+  color: #666666;
+  font-size: 14px;
+}
+
+/* Estilos para las etiquetas de Estado (Badge) */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  width: fit-content;
+}
+.badge--nueva {
+  background-color: #e3f2fd;
+  color:var(--success);
+}
+
+.badge--usada {
+  background-color: #fff3e0;
+  color:var(--warning);
+}
+
+.badge--rota {
+  background-color: #ffebee;
+  color:var(--danger);
+}
+/* Visita de movil de la lista de las herramientas*/
+@media (max-width: 600px) {
+  .fila-herramienta {
+    /* 1. Cambiamos a disposición en columna vertical */
+    display: flex;
+    flex-direction: column;
+    align-items: center;     /* Centra todo el texto e iconos horizontalmente */
+    text-align: center;      /* Centra los textos de varias líneas */
+    gap: 10px;               /* Espacio uniforme entre Nombre, Estado, Ubicación y QR */
+    padding: 20px 16px;      /* Un poco más de aire arriba y abajo */
+  }
+
+  /* Asegura que los badges no se estiren */
+  .badge {
+    margin: 0 auto;
+  }
+
+  /* Icono del QR centrado */
+  .herramienta-qr {
+    margin-top: 4px;
+  }
+}
+/* boton para volver cuando entramos a la herramienta */
+.header-container {
+  display: flex;
+  justify-content: flex-start; /* Alinea los elementos a la izquierda */
+  width: 100%;
+}
+.btn-volver{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+}
+.btn-volver svg {
+  width: 18px;   /* Tamaño del ancho del SVG */
+  height: 18px;  /* Tamaño del alto del SVG */
+  stroke: currentColor; /* Asegura que la flecha tome el color del texto (blanco) */
+}
+/*ESTILOS DEL PANEL Y FORMULARIO */
+/* Panel contenedor principal con espaciado */
+.detalle-panel {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+/* Estructura del formulario */
+#form-editar-herramienta {
+  display: flex;
+  flex-direction: column;
+  gap: 18px; /* Espacio uniforme entre cada campo */
+}
+/* Cada contenedor de campo (Label + Input) */
+.campo {
+  display: flex;
+  flex-direction: column; /* Pone el label ARRIBA del input */
+  gap: 6px;               /* Espacio entre el label y el input */
+  text-align: left;
+}
+
+/* Estilos de las etiquetas (Labels) */
+.campo label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+}
+
+/* Estilo unificado para Inputs, Selects y Textareas */
+.campo input[type="text"],
+.campo select,
+.campo textarea {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #2c3e50;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 12px; /* Bordes suaves que hacen juego con tus botones */
+  outline: none;
+  box-sizing: border-box; /* Previene desbordamientos de tamaño */
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+/* Ajuste específico para la caja de Notas (Textarea) */
+.campo textarea {
+  min-height: 90px;
+  resize: vertical; /* Permite estirar hacia abajo sin romper el diseño */
+}
+/* NUEVA HERRAMIENTA*/
+
+/*Encabezado del Modal */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #299beb;  /* Tu azul de fondo */
+  color: white;
+  padding: 16px 20px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+.modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+/* Botón de cerrar (X) */
+#btn-cerrar-modal-nueva {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+#btn-cerrar-modal-nueva svg {
+  width: 20px;
+  height: 20px;
+  stroke: white;
+}
+/* 4. Formulario dentro del modal */
+#form-nueva-herramienta {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
