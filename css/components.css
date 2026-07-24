@@ -1,3 +1,195 @@
+ /* - INDEX--*/
+.wrap{
+    max-width:1000px;
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  /* ---------- Top strip ---------- */
+  .topstrip{
+    background:var(--text);
+    color:#cfd9dd;
+    font-family:var(--font);
+    font-size:12px;
+    letter-spacing:.04em;
+    padding:8px 0;
+    border-bottom:3px solid var(--warning);
+    background-image: repeating-linear-gradient(45deg, #F4A261 0 10px, #152229 10px 20px);
+  }
+  .topstrip .wrap{display:flex; justify-content:space-between; gap:16px; background:var(--text);}
+
+  /* ---------- Header / nameplate ---------- */
+
+  .plate{
+    background:linear-gradient(180deg, var(--panel-2), var(--panel));
+    border:1px solid #c7d0d4;
+    border-radius:10px;
+    box-shadow: 0 1px 0 #fff inset, 0 18px 40px -24px rgba(21,34,41,0.35);
+    padding:38px 40px;
+    position:relative;
+  }
+  .plate .screw-tl, .plate .screw-tr, .plate .screw-bl, .plate .screw-br{
+    content:'';
+    position:absolute;
+    width:9px; height:9px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #fff, var(--rivet) 55%, #8b979c 100%);
+    box-shadow:0 1px 2px rgba(0,0,0,.35);
+  }
+  .screw-tl{top:14px; left:14px;}
+  .screw-tr{top:14px; right:14px;}
+  .screw-bl{bottom:14px; left:14px;}
+  .screw-br{bottom:14px; right:14px;}
+
+  .eyebrow{
+    font-family:var(--font);
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--primary-dark);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:16px;
+  }
+  .led{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--secondary);
+    box-shadow:0 0 0 3px rgba(74,108,130,0.18);
+    flex:none;
+  }
+  .led.on{background:var(--success); box-shadow:0 0 0 3px rgba(46,139,87,0.18); animation:pulse 2.4s ease-in-out infinite;}
+  .led.off{background:var(--danger); box-shadow:0 0 0 3px rgba(201,76,76,0.18);}
+  @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:.45;}}
+
+
+
+  .subhead{
+    margin-top:16px;
+    max-width:60ch;
+    color:var(--secondary);
+    font-size:15.5px;
+    line-height:1.65;
+  }
+
+  /* ---------- Access gate ---------- */
+  .gate{
+    margin-top:26px;
+    border-top:1px dashed #c2ccd0;
+    padding-top:22px;
+  }
+  .gate-box{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    flex-wrap:wrap;
+    background:var(--panel-2);
+    border:1px solid #ccd6da;
+    border-radius:8px;
+    padding:16px 20px;
+  }
+  .gate-status{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:var(--font);
+    font-size:13px;
+    color:var(--muted);
+  }
+  .gate-status b{color:var(--text);}
+
+
+  .redirect-note{
+    font-family:var(--font);
+    font-size:11.5px;
+    color:var(--muted);
+    margin-top:10px;
+  }
+
+  /* ---------- Section: qué contiene ---------- */
+  .section-head{
+    margin:48px 0 20px;
+  }
+  .section-head h2{
+    font-family:var(--font);
+    font-weight:600;
+    font-size:20px;
+  }
+  .section-head p{
+    margin-top:8px;
+    color:var(--secondary);
+    font-size:14px;
+    max-width:60ch;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));
+    gap:14px;
+  }
+
+  .module{
+    position:relative;
+    background:var(--panel-2);
+    border:1px solid #ccd6da;
+    border-radius:10px;
+    padding:18px 18px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    border-top:4px solid var(--accent, var(--primary));
+    text-decoration:none;
+    color:var(--text);
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .module:hover, .module:focus-visible{
+    transform:translateY(-3px);
+    box-shadow:0 16px 30px -18px rgba(21,34,41,.45);
+    border-color:var(--accent, var(--primary));
+    outline:none;
+  }
+  .module:focus-visible{
+    outline:2px solid var(--accent, var(--primary));
+    outline-offset:3px;
+  }
+  .module .row1{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .module .code{
+    font-family:var(--font);
+    font-size:10.5px;
+    letter-spacing:.06em;
+    color:#fff;
+    background:var(--accent, var(--primary));
+    padding:3px 7px;
+    border-radius:4px;
+    white-space:nowrap;
+  }
+  .module .lock{
+    color:var(--muted);
+    flex:none;
+  }
+  .module h3{
+    font-family:var(--font);
+    font-size:16.5px;
+    font-weight:600;
+  }
+  .module p{
+    font-size:13px;
+    color:var(--secondary);
+    line-height:1.5;
+  }
+
+  .m-dashboard{--accent:var(--primary);}
+  .m-herramientas{--accent:var(--primary-dark);}
+  .m-insumos{--accent:var(--success);}
+  .m-prestamos{--accent:var(--warning);}
+  .m-admin{--accent:var(--secondary);}
+ /* -INDEX--*/
 .perfil{
 
     width:42px;
@@ -271,4 +463,353 @@ li{
     list-style:none;
     margin-bottom:10px;
 
+}
+
+/* ---------- especifico de insumos  ---------- */
+.liquid-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 20px;
+    border-left: 5px solid var(--secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.liquid-card.border-red {
+    border-left-color: var(--danger);
+}
+
+.liquid-card.border-blue {
+    border-left-color: var(--primary);
+}
+
+.liquid-info p {
+    font-size: 1.2rem;
+    font-weight: var(--bold);
+    margin: 6px 0 10px 0;
+}
+
+/* ---------- 2. Botones secundarios / Rellenar (.btn-refill) ---------- */
+.btn-refill {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid #d0d0d0;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    margin-top: 0; /* Anula el margin-top de 18px que tienen tus otros botones */
+}
+
+.btn-refill:hover {
+    background: var(--background);
+    color: var(--primary);
+}
+
+/* ---------- 3. Lista de Alertas Activas (.alert, .alert-error) ---------- */
+.alert {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 18px;
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    font-size: var(--text-size);
+}
+
+.alert p {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.alert-error {
+    background: #fdf2f2;
+    border-left: 4px solid var(--danger);
+    color: #991b1b;
+}
+
+.alert-warning {
+    background: #fffbe2;
+    border-left: 4px solid var(--warning);
+    color: #92400e;
+}
+
+.alert .date {
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+/* ---------- 4. Tarjetas de Categorías (.category-card) ---------- */
+.category-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 15px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-3px);
+}
+
+.cat-icon {
+    font-size: 32px;
+    color: var(--primary);
+    margin-bottom: 6px;
+}
+
+.category-card p {
+    margin: 0;
+    font-weight: var(--semi-bold);
+    color: var(--secondary);
+}
+
+/* ---------- 5. Badges / Etiquetas numéricas (.cat-badge, .badge-count) ---------- */
+.cat-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: var(--bold);
+}
+
+.badge-count-blue, 
+.badge-count-red {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-left: 6px;
+}
+
+.badge-blue, .badge-count-blue { background: #e0f2fe; color: var(--primary); }
+.badge-green { background: #dcfce7; color: var(--success); }
+.badge-red, .badge-count-red { background: #fee2e2; color: var(--danger); }
+.badge-purple { background: #f3e8ff; color: #7e22ce; }
+.badge-gray { background: #f1f5f9; color: var(--muted); }
+
+/* ---------- 6. Clases utilitarias de texto ---------- */
+.text-red { color: var(--danger) !important; }
+.text-blue { color: var(--primary) !important; }
+.text-green { color: var(--success) !important; }
+.text-orange { color: var(--warning) !important; }
+.text-purple { color: #7e22ce !important; }
+.text-muted { color: var(--muted) !important; font-size: 0.85em; }
+/* ==========================================
+   ESTILOS DASHBOARD / INSUMOS (NUEVO)
+   ========================================== */
+
+/* 4 Tarjetas Superiores (Métricas) en fila */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-left: 5px solid #2b82c5;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.card h2 {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #1a202c;
+  margin: 4px 0;
+}
+
+/* Colores de bordes */
+.card-blue { border-left-color: #2b82c5; }
+.card-green { border-left-color: #2e7d32; }
+.card-orange { border-left-color: #ed6c02; }
+.card-red { border-left-color: #d32f2f; }
+
+/* Insumos Líquidos */
+.section-container {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.card-product {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  border-left: 4px solid #2b82c5;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card-product.border-red { border-left-color: #d32f2f; }
+.card-product.border-blue { border-left-color: #2b82c5; }
+.card-product.border-orange { border-left-color: #ed6c02; }
+/* ==========================================
+   ESTILOS DE ALERTAS Y TABLA DE INVENTARIO
+   ========================================== */
+
+/* Contenedores Principales */
+.alerts-container, 
+.table-container {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-top: 20px;
+}
+
+.alerts-container h3, 
+.table-header h3 {
+  font-size: 1.1rem;
+  color: #2d3748;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Lista de Alertas */
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.alert-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+/* Alerta Crítica (Roja) */
+.alert-critical {
+  background-color: #fff5f5;
+  border: 1px solid #fed7d7;
+  color: #c53030;
+}
+
+/* Alerta Advertencia (Naranja) */
+.alert-warning {
+  background-color: #fffaf0;
+  border: 1px solid #feebc8;
+  color: #dd6b20;
+}
+
+.alert-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.alert-time {
+  font-size: 0.8rem;
+  color: #a0aec0;
+}
+
+/* Iconos de Alerta */
+.icon-danger { color: #e53e3e; }
+.icon-warning { color: #dd6b20; }
+.red-text { color: #e53e3e; }
+
+/* Badges / Contadores */
+.badge {
+  background: #e2e8f0;
+  color: #4a5568;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+.badge-red {
+  background: #fed7d7;
+  color: #9b2c2c;
+}
+
+/* Estilos de la Tabla */
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table th, 
+.custom-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.custom-table th {
+  background-color: #f7fafc;
+  color: #718096;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Etiquetas de Estado */
+.status-tag {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.tag-success { background: #c6f6d5; color: #22543d; }
+.tag-warning { background: #feebc8; color: #744210; }
+.tag-danger { background: #fed7d7; color: #742a2a; }
+
+.btn-secondary {
+  background: white;
+  border: 1px solid #cbd5e0;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
