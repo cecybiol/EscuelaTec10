@@ -1,0 +1,196 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EscuelaTEC - Gestión de Insumos</title>
+  
+  <!-- 1. Google Icons (Obligatorio para ver iconos) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <!-- 2. Cargamos los CSS directamente uno por uno desde la carpeta /css -->
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- 1. BARRA LATERAL (SIDEBAR) -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-icon">TEC</div>
+        <div>
+          <h2>EscuelaTEC</h2>
+          <p>Sistema de Gestión Escolar</p>
+        </div>
+      </div>
+
+      <nav class="navigation-menu">
+        <p class="section-title">SECCIONES DEL SISTEMA</p>
+        <a href="#"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+        <a href="#"><span class="material-symbols-outlined">build</span> Herramientas</a>
+        <a href="#" class="active"><span class="material-symbols-outlined">inventory_2</span> Insumos</a>
+        <a href="#"><span class="material-symbols-outlined">assignment</span> Préstamos</a>
+        <a href="#"><span class="material-symbols-outlined">admin_panel_settings</span> Administración</a>
+      </nav>
+
+      <div class="user-profile">
+        <div class="avatar">MR</div>
+        <div>
+          <strong>María Rodríguez</strong>
+          <p>Encargada Insumos</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 2. CONTENIDO PRINCIPAL (DERECHA) -->
+    <main class="main-content">
+
+      <!-- Header Azul Superior -->
+      <header>
+        <div class="breadcrumb">Inicio › <strong>Insumos</strong></div>
+        <div class="header-actions">
+          <input type="text" placeholder="Buscar insumo...">
+          <button class="btn">+ Nuevo Insumo</button>
+        </div>
+      </header>
+
+      <!-- Panel de Contenido -->
+      <section class="dashboard-body">
+
+        <!-- Grilla de 4 Tarjetas Superiores -->
+        <div class="metrics-grid">
+          <div class="card card-blue">
+            <div class="card-header">Total Insumos <span class="material-symbols-outlined">inventory_2</span></div>
+            <h2>11</h2>
+            <small>↑ esta semana</small>
+          </div>
+
+          <div class="card card-green">
+            <div class="card-header">Normal <span class="material-symbols-outlined">check_circle</span></div>
+            <h2>3</h2>
+            <small>sin alertas</small>
+          </div>
+
+          <div class="card card-orange">
+            <div class="card-header">Stock Bajo <span class="material-symbols-outlined">warning</span></div>
+            <h2>3</h2>
+            <small>— esta semana</small>
+          </div>
+
+          <div class="card card-red">
+            <div class="card-header">Críticos <span class="material-symbols-outlined">cancel</span></div>
+            <h2>5</h2>
+            <small>acción urgente</small>
+          </div>
+        </div>
+
+        <!-- Sección Insumos Líquidos -->
+        <div class="section-container">
+          <h3><span class="material-symbols-outlined">opacity</span> Insumos Líquidos <span class="badge">4</span></h3>
+
+          <div class="products-grid">
+            <div class="card-product border-red">
+              <h4>Desinfectante...</h4>
+              <p><strong>4 L</strong> / 20 L</p>
+              <button><span class="material-symbols-outlined">refresh</span> Rellenar</button>
+            </div>
+
+            <div class="card-product border-blue">
+              <h4>Alcohol isopro...</h4>
+              <p><strong>12 L</strong> / 20 L</p>
+              <button><span class="material-symbols-outlined">refresh</span> Rellenar</button>
+            </div>
+
+            <div class="card-product border-orange">
+              <h4>Jabón líquido...</h4>
+              <p><strong>3 L</strong> / 15 L</p>
+              <button><span class="material-symbols-outlined">refresh</span> Rellenar</button>
+            </div>
+
+            <div class="card-product border-blue">
+              <h4>Cloro concent...</h4>
+              <p><strong>7 L</strong> / 10 L</p>
+              <button><span class="material-symbols-outlined">refresh</span> Rellenar</button>
+            </div>
+          </div>
+        </div>
+        <!-- Sección Alertas Activas -->
+        <div class="alerts-container">
+          <h3><span class="material-symbols-outlined red-text">error</span> Alertas Activas <span class="badge badge-red">7</span></h3>
+          
+          <div class="alerts-list">
+            <div class="alert-item alert-critical">
+              <div class="alert-content">
+                <span class="material-symbols-outlined icon-danger">cancel</span>
+                <p><strong>Cable USB-C 1m:</strong> SIN STOCK — solicitar reposición inmediata</p>
+              </div>
+              <span class="alert-time">hace 12 días</span>
+            </div>
+
+            <div class="alert-item alert-warning">
+              <div class="alert-content">
+                <span class="material-symbols-outlined icon-warning">warning</span>
+                <p><strong>Jabón líquido:</strong> nivel crítico (3 L / 8 L mínimo)</p>
+              </div>
+              <span class="alert-time">hace 1 día</span>
+            </div>
+
+            <div class="alert-item alert-warning">
+              <div class="alert-content">
+                <span class="material-symbols-outlined icon-warning">warning</span>
+                <p><strong>Desinfectante:</strong> nivel crítico (4 L / 10 L mínimo)</p>
+              </div>
+              <span class="alert-time">hace 5 días</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabla General de Inventario -->
+        <div class="table-container">
+          <div class="table-header">
+            <h3>Inventario</h3>
+            <button class="btn-secondary"><span class="material-symbols-outlined">filter_list</span> Filtrar</button>
+          </div>
+
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Insumo</th>
+                <th>Categoría</th>
+                <th>Stock / Nivel</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Resma Papel A4</strong></td>
+                <td>Oficina</td>
+                <td>8 resmas</td>
+                <td><span class="status-tag tag-warning">Stock Bajo</span></td>
+                <td><button class="btn-sm">Editar</button></td>
+              </tr>
+              <tr>
+                <td><strong>Toner Impresora HP</strong></td>
+                <td>Impresión</td>
+                <td>2 unidades</td>
+                <td><span class="status-tag tag-success">Normal</span></td>
+                <td><button class="btn-sm">Editar</button></td>
+              </tr>
+              <tr>
+                <td><strong>Cable USB-C 1m</strong></td>
+                <td>Cómputo</td>
+                <td>0 unidades</td>
+                <td><span class="status-tag tag-danger">Agotado</span></td>
+                <td><button class="btn-sm">Editar</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+    </main>
+
+  </div>
+</body>

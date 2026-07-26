@@ -1,0 +1,108 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font, system-ui, sans-serif);
+  background: var(--background, #f4f6f8);
+  color: var(--text, #333);
+  min-height: 100vh;
+}
+
+/* Contenedor principal en 2 columnas */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Barra Lateral (Sidebar) */
+.sidebar {
+  width: 260px;
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 16px;
+  flex-shrink: 0;
+}
+
+.sidebar .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.sidebar .logo-icon {
+  background-color: #2b82c5;
+  color: white;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.navigation-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.navigation-menu .section-title {
+  font-size: 0.75rem;
+  color: #888;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.navigation-menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  color: #4a5568;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.navigation-menu a.active,
+.navigation-menu a:hover {
+  background-color: #ebf8ff;
+  color: #2b82c5;
+}
+
+/* Área de contenido principal (derecha) */
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #f4f6f8;
+  overflow-x: hidden;
+}
+
+/* Header Azul Superior */
+header {
+  background: #2b82c5;
+  color: white;
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.dashboard-body {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
