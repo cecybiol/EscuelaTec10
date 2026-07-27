@@ -133,3 +133,13 @@ header {
   flex-direction: column;
   gap: 24px;
 }
+ {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+ {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 4px;
+}
