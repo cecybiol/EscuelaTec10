@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | EscuelaTec</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/layout.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/responsive.css">
+
+</head>
+
+<body>
+
+    <header>
+
+        <div class="logo">
+
+            <img src="../img/logo.png">
+
+            <div>
+
+                <h2>EscuelaTec</h2>
+                <span>Sistema Integral de Gestión Escolar</span>
+
+            </div>
+
+        </div>
+
+        <nav>
+
+            <a href="#">
+                <i class="fa-solid fa-chart-line"></i>
+                Dashboard
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+                Herramientas
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-box"></i>
+                Insumos
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-handshake"></i>
+                Préstamos
+            </a>
+
+            <a href="#">
+                <i class="fa-solid fa-gear"></i>
+                Administración
+            </a>
+
+        </nav>
+
+        <div class="perfil">
+
+            <i class="fa-solid fa-user"></i>
+
+        </div>
+
+    </header>
+
+    <!-- ====================================== -->
+    <!-- CONTENIDO PRINCIPAL -->
+    <!-- ====================================== -->
+
+    <main>
+
+        <!-- TÍTULO -->
+
+        <section class="titulo">
+
+            <h1>¡Bienvenido, Usuario!</h1>
+
+            <p>Resumen General del Sistema</p>
+
+        </section>
+
+        <!-- TARJETAS -->
+
+        <section class="cards">
+
+            <div class="card azul">
+
+                <img src="../img/tools.png" alt="Herramientas">
+
+                <h2>80</h2>
+
+                <h3>Herramientas</h3>
+
+                <div class="footer">
+
+                    Total
+
+                </div>
+
+            </div>
+
+            <div class="card verde">
+
+                <img src="../img/box.png" alt="Insumos">
+
+                <h2>80</h2>
+
+                <h3>Insumos</h3>
+
+                <div class="footer">
+
+                    Stock
+
+                </div>
+
+            </div>
+
+            <div class="card naranja">
+
+                <img src="../img/loan.png" alt="Préstamos">
+
+                <h2>9</h2>
+
+                <h3>Préstamos</h3>
+
+                <div class="footer">
+
+                    Activos
+
+                </div>
+
+            </div>
+
+            <div class="card rojo">
+
+                <img src="../img/alert.png" alt="Alertas">
+
+                <h2>1</h2>
+
+                <h3>Alertas</h3>
+
+                <div class="footer">
+
+                    Atención
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- TABLA + PANEL DERECHO -->
+
+        <section class="contenido">
+
+            <!-- MOVIMIENTOS -->
+
+            <div class="tabla">
+
+                <h2>Movimientos recientes</h2>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Elemento</th>
+                            <th>Tipo</th>
+                            <th>Responsable</th>
+                            <th>Fecha</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>Proyector BQI</td>
+                            <td>Préstamo</td>
+                            <td>Mauro Giménez</td>
+                            <td>16/06/2026</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>Cables de puente</td>
+                            <td>Devolución</td>
+                            <td>Juan Sosa</td>
+                            <td>16/06/2026</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>Kit de Herramientas</td>
+                            <td>Ingreso</td>
+                            <td>Brenda Castillo</td>
+                            <td>16/06/2026</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>Proyector Epson</td>
+                            <td>Préstamo</td>
+                            <td>Juan Sosa</td>
+                            <td>15/06/2026</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>Cargador Notebook</td>
+                            <td>Ingreso</td>
+                            <td>Leo Rosales</td>
+                            <td>14/06/2026</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+                <button>
+
+                    Ver historial completo
+
+                </button>
+
+            </div>
+
+            <!-- PANEL DERECHO -->
+
+            <div class="derecha">
+
+                <!-- GRÁFICO -->
+
+                <div class="grafico">
+
+                    <h2>Préstamos por estado</h2>
+
+                    <div class="circulo"></div>
+
+                    <ul>
+
+                        <li>
+
+                            <span class="b azul"></span>
+
+                            Activos (9)
+
+                        </li>
+
+                        <li>
+
+                            <span class="b verde"></span>
+
+                            Devueltos (16)
+
+                        </li>
+
+                        <li>
+
+                            <span class="b rojo"></span>
+
+                            Vencidos (6)
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+                <!-- ALERTAS -->
+
+                <div class="alertas">
+
+                    <h2>Alertas</h2>
+
+                    <ul>
+
+                        <li>📦 Stock bajo en Cables de puente.</li>
+
+                        <li>⚠ Insumo "Cinta" agotado.</li>
+
+                        <li>📅 Dos préstamos vencen hoy.</li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>
