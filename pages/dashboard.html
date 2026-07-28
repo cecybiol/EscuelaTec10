@@ -2,309 +2,191 @@
 <html lang="es">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Dashboard | EscuelaTec</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Fuente Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Font Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
-<link rel="stylesheet" href="../css/variables.css">
-<link rel="stylesheet" href="../css/layout.css">
-<link rel="stylesheet" href="../css/components.css">
-<link rel="stylesheet" href="../css/responsive.css">
-
+    <!-- Estilos CSS del Proyecto -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
 </head>
 
 <body>
 
+    <!-- BARRA SUPERIOR DE NAVEGACIÓN -->
     <header>
-
         <div class="logo">
-
-            <img src="../img/logo.png">
-
+            <img src="../img/logo.png" alt="Logo EscuelaTec">
             <div>
-
                 <h2>EscuelaTec</h2>
                 <span>Sistema Integral de Gestión Escolar</span>
-
             </div>
-
         </div>
 
         <nav>
-
-            <a href="#">
-                <i class="fa-solid fa-chart-line"></i>
-                Dashboard
+            <a href="Dashboard.html" class="active">
+                <i class="fa-solid fa-chart-line"></i> Dashboard
             </a>
-
-            <a href="#">
-                <i class="fa-solid fa-screwdriver-wrench"></i>
-                Herramientas
+            <a href="herramientas.html">
+                <i class="fa-solid fa-screwdriver-wrench"></i> Herramientas
             </a>
-
-            <a href="#">
-                <i class="fa-solid fa-box"></i>
-                Insumos
+            <a href="insumos.html">
+                <i class="fa-solid fa-box"></i> Insumos
             </a>
-
-            <a href="#">
-                <i class="fa-solid fa-handshake"></i>
-                Préstamos
+            <a href="prestamos.html">
+                <i class="fa-solid fa-handshake"></i> Préstamos
             </a>
-
-            <a href="#">
-                <i class="fa-solid fa-gear"></i>
-                Administración
+            <a href="Administracion.html">
+                <i class="fa-solid fa-gear"></i> Administración
             </a>
-
         </nav>
 
         <div class="perfil">
-
             <i class="fa-solid fa-user"></i>
-
         </div>
-
     </header>
 
-    <!-- ====================================== -->
-    <!-- CONTENIDO PRINCIPAL -->
-    <!-- ====================================== -->
+    <!-- CONTENIDO PRINCIPAL DEL DASHBOARD -->
+    <main class="wrap">
 
-    <main>
-
-        <!-- TÍTULO -->
-
+        <!-- TÍTULO DE BIENVENIDA -->
         <section class="titulo">
-
             <h1>¡Bienvenido, Usuario!</h1>
-
             <p>Resumen General del Sistema</p>
-
         </section>
 
-        <!-- TARJETAS -->
-
+        <!-- TARJETAS DE MÉTRICAS -->
         <section class="cards">
-
             <div class="card azul">
-
-                <img src="../img/tools.png" alt="Herramientas">
-
                 <h2>80</h2>
-
                 <h3>Herramientas</h3>
-
-                <div class="footer">
-
-                    Total
-
-                </div>
-
+                <div class="footer">Total</div>
             </div>
 
             <div class="card verde">
-
-                <img src="../img/box.png" alt="Insumos">
-
                 <h2>80</h2>
-
                 <h3>Insumos</h3>
-
-                <div class="footer">
-
-                    Stock
-
-                </div>
-
+                <div class="footer">Stock</div>
             </div>
 
             <div class="card naranja">
-
-                <img src="../img/loan.png" alt="Préstamos">
-
                 <h2>9</h2>
-
                 <h3>Préstamos</h3>
-
-                <div class="footer">
-
-                    Activos
-
-                </div>
-
+                <div class="footer">Activos</div>
             </div>
 
             <div class="card rojo">
-
-                <img src="../img/alert.png" alt="Alertas">
-
                 <h2>1</h2>
-
                 <h3>Alertas</h3>
-
-                <div class="footer">
-
-                    Atención
-
-                </div>
-
+                <div class="footer">Atención</div>
             </div>
-
         </section>
 
-        <!-- TABLA + PANEL DERECHO -->
-
+        <!-- SECCIÓN INFERIOR (TABLA Y PANEL DERECHO) -->
         <section class="contenido">
 
-            <!-- MOVIMIENTOS -->
-
+            <!-- TABLA DE MOVIMIENTOS RECIENTES -->
             <div class="tabla">
-
                 <h2>Movimientos recientes</h2>
 
                 <table>
-
                     <thead>
-
                         <tr>
-
                             <th>Elemento</th>
                             <th>Tipo</th>
                             <th>Responsable</th>
                             <th>Fecha</th>
-
                         </tr>
-
                     </thead>
-
                     <tbody>
-
                         <tr>
-
                             <td>Proyector BQI</td>
-                            <td>Préstamo</td>
+                            <td><span class="badge badge-blue">Préstamo</span></td>
                             <td>Mauro Giménez</td>
                             <td>16/06/2026</td>
-
                         </tr>
-
                         <tr>
-
                             <td>Cables de puente</td>
-                            <td>Devolución</td>
+                            <td><span class="badge badge-green">Devolución</span></td>
                             <td>Juan Sosa</td>
                             <td>16/06/2026</td>
-
                         </tr>
-
                         <tr>
-
                             <td>Kit de Herramientas</td>
-                            <td>Ingreso</td>
+                            <td><span class="badge badge-purple">Ingreso</span></td>
                             <td>Brenda Castillo</td>
                             <td>16/06/2026</td>
-
                         </tr>
-
                         <tr>
-
                             <td>Proyector Epson</td>
-                            <td>Préstamo</td>
+                            <td><span class="badge badge-blue">Préstamo</span></td>
                             <td>Juan Sosa</td>
                             <td>15/06/2026</td>
-
                         </tr>
-
                         <tr>
-
                             <td>Cargador Notebook</td>
-                            <td>Ingreso</td>
+                            <td><span class="badge badge-purple">Ingreso</span></td>
                             <td>Leo Rosales</td>
                             <td>14/06/2026</td>
-
                         </tr>
-
                     </tbody>
-
                 </table>
 
-                <button>
-
-                    Ver historial completo
-
-                </button>
-
+                <button type="button">Ver historial completo</button>
             </div>
 
-            <!-- PANEL DERECHO -->
-
+            <!-- PANEL DERECHO DE INFORMACIÓN Y ALERTAS -->
             <div class="derecha">
 
-                <!-- GRÁFICO -->
-
+                <!-- RESUMEN DE PRÉSTAMOS -->
                 <div class="grafico">
-
                     <h2>Préstamos por estado</h2>
-
                     <div class="circulo"></div>
-
                     <ul>
-
-                        <li>
-
-                            <span class="b azul"></span>
-
-                            Activos (9)
-
-                        </li>
-
-                        <li>
-
-                            <span class="b verde"></span>
-
-                            Devueltos (16)
-
-                        </li>
-
-                        <li>
-
-                            <span class="b rojo"></span>
-
-                            Vencidos (6)
-
-                        </li>
-
+                        <li><span class="b azul"></span> Activos (9)</li>
+                        <li><span class="b verde"></span> Devueltos (16)</li>
+                        <li><span class="b rojo"></span> Vencidos (6)</li>
                     </ul>
-
                 </div>
 
-                <!-- ALERTAS -->
+                <!-- SECCIÓN DE ALERTAS ACTIVAS -->
+                <div class="alerts-container" style="margin-top: 0;">
+                    <div class="table-header" style="margin-bottom: 12px;">
+                        <h3><i class="fa-solid fa-triangle-exclamation icon-danger"></i> Alertas Activas</h3>
+                    </div>
 
-                <div class="alertas">
+                    <div class="alerts-list" style="margin-top: 0;">
+                        <div class="alert-item alert-critical">
+                            <div class="alert-content">
+                                <i class="fa-solid fa-box-open"></i>
+                                <span>Insumo "Cinta" agotado.</span>
+                            </div>
+                        </div>
 
-                    <h2>Alertas</h2>
+                        <div class="alert-item alert-warning">
+                            <div class="alert-content">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span>Stock bajo en Cables de puente.</span>
+                            </div>
+                        </div>
 
-                    <ul>
-
-                        <li>📦 Stock bajo en Cables de puente.</li>
-
-                        <li>⚠ Insumo "Cinta" agotado.</li>
-
-                        <li>📅 Dos préstamos vencen hoy.</li>
-
-                    </ul>
-
+                        <div class="alert-item alert-warning">
+                            <div class="alert-content">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>Dos préstamos vencen hoy.</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
