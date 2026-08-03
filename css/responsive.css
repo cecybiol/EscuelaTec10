@@ -84,41 +84,47 @@
 }
 /* responsive herramientas */
 
-@media (min-width: 768px) {
+@media (max-width: 640px) {
+  body {
+    padding: 12px;
+  }
+
+  #vista-lista,
+  #vista-detalle {
+    padding: 16px;
+  }
+
+  /* La barra superior se apila verticalmente */
   .herramientas-acciones {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .buscador {
-    flex: 1;
-    max-width: 450px;
+    width: 100%;
   }
 
+  /* Las filas de la lista de herramientas pasan a columna */
   .fila-herramienta {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 
-  #form-editar-herramienta,
-  #form-nueva-herramienta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+  .herramienta-nombre {
+    font-size: 16px;
   }
 
-  .campo:nth-child(4),
+  /* Los botones de pie de formulario se estiran al ancho total */
   .detalle-footer,
   .modal-footer {
-    grid-column: span 2;
+    flex-direction: column-reverse;
   }
 
-  .historial-item {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+  .detalle-footer button,
+  .modal-footer button {
+    width: 100%;
+    justify-content: center;
   }
 }
+
