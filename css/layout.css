@@ -99,7 +99,7 @@ header {
   gap: 12px;
   align-items: center;
 }
-/* estructura de herramientas */
+/* estructura de herramientas*/
 
 /* Reset general de márgenes y caja */
 * {
@@ -168,6 +168,35 @@ svg {
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay {
+  position: absolute;
+}
+
+/* Estructura del modal flotante */
+.modal {
+  display: none; /* Controlado con JS cuando abra la ventana */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-contenido {
+  position: relative;
+  background-color: var(--card-bg);
+  padding: 24px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 520px;
+  z-index: 1001;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   align-items: center;
   justify-content: center;

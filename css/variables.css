@@ -33,6 +33,18 @@
 }
 /*herramientas*/
 :root {
+  /* Fuente principal */
+  --font-main: 'Poppins', sans-serif;
+
+  /* Colores principales */
+  --primary: #2496D8;
+  --primary-dark: #1C78AD;
+  --secondary: #4A6C82;
+
+  /* Estados */
+  --success: #2E8B57;
+  --warning: #F4A261;
+  --danger: #C94C4C;
 
 
   /* Fondos y bordes */
