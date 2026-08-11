@@ -4,16 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>EscuelaTEC - Préstamos (Beta Minimal)</title>
-
-    <!-- Estilos -->
-    <link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/responsive.css">
 </head>
-
+</head>
 <body>
 
     <!-- ENCABEZADO -->
@@ -40,33 +37,13 @@
         <section class="card">
 
             <h3>Nuevo Préstamo</h3>
-
-            <form id="formulario">
-
-                <!-- SOLICITANTE -->
-                <input
-                    type="text"
-                    id="solicitante"
-                    placeholder="Solicitante (Nombre / Legajo)"
-                    required
-                >
-
-
-                <!-- ÍTEM -->
-                <select id="item" required>
-
-                    <option value="">
-                        Seleccionar Ítem...
-                    </option>
-
-                    <option value="1">
-                        Tester Digital Fluke
-                    </option>
-
-                    <option value="2">
-                        Amoladora Angular Bosch
-                    </option>
-
+            <form action="#" method="POST">
+                <input type="text" placeholder="Solicitante (Nombre / Legajo)" required>
+                
+                <select required>
+                    <option value="">Seleccionar Ítem...</option>
+                    <option value="1">Tester Digital Fluke</option>
+                    <option value="2">Amoladora Angular Bosch</option>
                 </select>
 
 
@@ -119,41 +96,13 @@
                         </tr>
 
                     </thead>
-
-
-                    <!-- CUERPO DE LA TABLA -->
-                    <tbody id="historial">
-
-                        <!-- Registro inicial -->
+                    <tbody>
                         <tr>
-
-                            <td>
-                                Carlos Gómez
-                            </td>
-
-                            <td>
-                                Amoladora Angular Bosch
-                            </td>
-
-                            <td>
-                                1 u.
-                            </td>
-
-                            <td>
-                                <span class="badge">
-                                    Activo
-                                </span>
-                            </td>
-
-                            <td>
-                                <button
-                                    type="button"
-                                    class="btn-sm"
-                                >
-                                    Devolver
-                                </button>
-                            </td>
-
+                            <td>Carlos Gómez</td>
+                            <td>Amoladora Angular Bosch</td>
+                            <td>1 u.</td>
+                            <td><span class="badge">Activo</span></td>
+                            <td><button type="button" class="btn-sm">Devolver</button></td>
                         </tr>
 
                     </tbody>
@@ -165,13 +114,6 @@
         </section>
 
     </main>
-
-
-    <!-- ========================= -->
-    <!-- JAVASCRIPT                -->
-    <!-- ========================= -->
-
-    <script src="../js/prestamos.js"></script>
 
 </body>
 
