@@ -1,11 +1,4 @@
-/* Tarjetas (Cards) */
-.card { 
-    background: var(--color-blanco); 
-    padding: 15px; 
-    border-radius: 6px; 
-    margin-top: 15px; 
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
-}
+
 
 /* ==========================================================================
    COMPONENTES DE FORMULARIO - RESPONSABILIDAD: EQUIPO 4 (PRÉSTAMOS)
@@ -52,52 +45,48 @@
     min-height: 100px;
     resize: vertical;
 }
+/* ==========================================================================
+   PLACEHOLDERS ESTILOS EXTERNOS (Provisional para desarrollo en paralelo)
+   ========================================================================== */
 
-/* Botones */
-button { 
-    background: var(--color-principal); 
-    color: var(--color-blanco); 
-    border: none; 
-    padding: 10px; 
-    border-radius: 4px; 
-    cursor: pointer; 
-    font-weight: bold; 
+.card {
+    background: var(--color-blanco);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
 }
 
-button:hover { 
-    background: var(--color-primario-oscuro); 
+.btn {
+    font-family: var(--fuente-principal);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: inline-block;
+    text-align: center;
 }
+.btn-primary { background-color: var(--color-principal); color: white; }
+.btn-primary:hover { background-color: var(--color-primario-oscuro); }
+.btn-secondary { background-color: var(--color-secundario); color: white; }
+.btn-qr { background-color: #E2E8F0; color: #333; border: 1px dashed #A0AEC0; }
 
-.btn-sm { 
-    background: var(--color-secundario); 
-    padding: 4px 8px; 
-    font-size: 12px; 
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-family: var(--fuente-principal);
 }
+.table th, .table td { padding: 0.75rem; border-bottom: 1px solid #E2E8F0; text-align: left; }
+.table th { background-color: #EDF2F7; color: var(--color-secundario); }
 
-/* Tablas y Badges de Estado */
-table { 
-    width: 100%; 
-    border-collapse: collapse; 
-    margin-top: 10px; 
+.badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
-
-th, td { 
-    border-bottom: 1px solid #ddd; 
-    padding: 8px; 
-    text-align: left; 
-    font-size: 14px; 
-}
-
-th { 
-    background: #eee; 
-    color: var(--color-secundario); 
-}
-
-.badge { 
-    background: #ffe8cc; 
-    color: #d67d3e; 
-    padding: 3px 6px; 
-    border-radius: 3px; 
-    font-size: 12px; 
-    font-weight: bold; 
-}
+.badge-success { background-color: rgba(46, 139, 87, 0.15); color: var(--color-exito); }
+.badge-warning { background-color: rgba(244, 162, 97, 0.15); color: #D67D3E; }
