@@ -1,33 +1,20 @@
-:root{
+/* Paleta Institucional EscuelaTEC 2026 */
+:root {
+    --color-principal: #2496D8;
+    --color-primario-oscuro: #1C78AD;
+    --color-secundario: #4A6C82;
+    
+    /* Colores de Estado/Alerta */
+    --color-exito: #2E8B57;
+    --color-advertencia: #F4A261;
+    --color-error: #C94C4C;
 
-    /* ===== PALETA DE COLORES ===== */
+    /* Neutros */
+    --color-fondo: #F8F9FA;
+    --color-texto: #333333;
+    --color-borde: #CCCCCC;
+    --color-blanco: #FFFFFF;
 
-    --primary:#2496DB;
-    --primary-dark:#1C78AD;
-    --secondary:#4A6C82;
-    --success:#2E8B57;
-    --warning:#F4A261;
-    --danger:#C94C4C;
-    --background:#F8FAFC;
-    --text:#212529;
-
-    /* ===== TIPOGRAFÍA ===== */
-
-    --font:'Poppins', sans-serif;
-
-    --h1:2.5rem;
-    --h2:2rem;
-    --h3:1.5rem;
-    --text-size:1rem;
-    --small:0.875rem;
-
-    --bold:700;
-    --semi-bold:600;
-    --regular:400;
-
-    /* ===== OTROS ===== */
-
-    --radius:10px;
-    --shadow:0 2px 8px rgba(0,0,0,.12);
-
+    /* Tipografía */
+    --fuente-principal: 'Poppins', sans-serif;
 }
