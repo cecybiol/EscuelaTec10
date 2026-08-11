@@ -1,16 +1,78 @@
+/* Layout Principal */
+body {
+    background-color: var(--color-fondo);
+    margin: 0;
+    color: var(--color-texto);
+    font-family: var(--fuente-principal);
+}
+
+.site-header {
+    background-color: var(--color-primario-oscuro);
+    color: var(--color-blanco);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.main-nav a {
+    color: var(--color-blanco);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.main-nav a.active {
+    text-decoration: underline;
+    font-weight: 700;
+}
+
+.main-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.site-footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-secundario);
+    font-size: 0.9rem;
+}
+/* estructura de herramientas*/
+
+/* Reset general de márgenes y caja */
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
-  font-family: var(--font, system-ui, sans-serif);
-  background: var(--background, #f4f6f8);
-  color: var(--text, #333);
-  min-height: 100vh;
+  font-family: var(--font-main);
+  background-color: var(--bg-main);
+  color: var(--text-color);
+  padding: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  line-height: 1.5;
 }
 
+<<<<<<< HEAD
 .wrap {
   max-width: 1000px;
   margin: 0 auto;
@@ -143,8 +205,17 @@ header nav a.active, header nav a:hover {
   flex-direction: column;
   gap: 8px;
   margin-bottom: 16px;
+=======
+/* Control global obligatorio de SVG para evitar íconos gigantes */
+svg {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+>>>>>>> origin/Deploy
 }
 
+/* Clase accesible para ocultar texto */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -157,6 +228,7 @@ header nav a.active, header nav a:hover {
   border: 0;
 }
 
+<<<<<<< HEAD
 .dashboard-body {
   padding: 32px;
   display: flex;
@@ -191,3 +263,88 @@ header nav a.active, header nav a:hover {
   flex-direction: column;
   gap: 20px;
 }
+=======
+/* Estructura general de vistas principales */
+#vista-lista,
+#vista-detalle {
+  background-color: var(--card-bg);
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
+  border: 1px solid var(--border-color);
+}
+
+/* Contención y distribución de la barra superior */
+.herramientas-acciones {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* Estructura del modal flotante */
+.modal {
+  display: none; /* Controlado con JS cuando abra la ventana */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay {
+  position: absolute;
+}
+
+/* Estructura del modal flotante */
+.modal {
+  display: none; /* Controlado con JS cuando abra la ventana */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-contenido {
+  position: relative;
+  background-color: var(--card-bg);
+  padding: 24px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 520px;
+  z-index: 1001;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-contenido {
+  position: relative;
+  background-color: var(--card-bg);
+  padding: 24px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 520px;
+  z-index: 1001;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+>>>>>>> origin/Deploy
