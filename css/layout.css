@@ -1,31 +1,55 @@
-/* Estructura general de la página */
-body { 
-    font-family: Arial, sans-serif; 
-    background: var(--color-fondo); 
-    margin: 0; 
-    padding: 15px; 
-    color: var(--color-texto); 
+/* Layout Principal */
+body {
+    background-color: var(--color-fondo);
+    margin: 0;
+    color: var(--color-texto);
+    font-family: var(--fuente-principal);
 }
 
-/* Cabecera y Menú Institucional */
-header { 
-    background: var(--color-primario-oscuro); 
-    color: var(--color-blanco); 
-    padding: 12px 20px; 
-    border-radius: 6px; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
+.site-header {
+    background-color: var(--color-primario-oscuro);
+    color: var(--color-blanco);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-nav a { 
-    color: var(--color-blanco); 
-    text-decoration: none; 
-    margin-left: 15px; 
-    font-size: 14px; 
+.main-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1.5rem;
 }
 
-nav a.active { 
-    font-weight: bold; 
-    text-decoration: underline; 
+.main-nav a {
+    color: var(--color-blanco);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.main-nav a.active {
+    text-decoration: underline;
+    font-weight: 700;
+}
+
+.main-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.site-footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-secundario);
+    font-size: 0.9rem;
 }
