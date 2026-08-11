@@ -1,12 +1,12 @@
- /* - INDEX--*/
+/* - INDEX--*/
 .wrap{
     max-width:1000px;
     margin:0 auto;
     padding:0 28px;
-  }
+}
 
-  /* ---------- Top strip ---------- */
-  .topstrip{
+/* ---------- Top strip ---------- */
+.topstrip{
     background:var(--text);
     color:#cfd9dd;
     font-family:var(--font);
@@ -15,33 +15,32 @@
     padding:8px 0;
     border-bottom:3px solid var(--warning);
     background-image: repeating-linear-gradient(45deg, #F4A261 0 10px, #152229 10px 20px);
-  }
-  .topstrip .wrap{display:flex; justify-content:space-between; gap:16px; background:var(--text);}
+}
+.topstrip .wrap{display:flex; justify-content:space-between; gap:16px; background:var(--text);}
 
-  /* ---------- Header / nameplate ---------- */
-
-  .plate{
+/* ---------- Header / nameplate ---------- */
+.plate{
     background:linear-gradient(180deg, var(--panel-2), var(--panel));
     border:1px solid #c7d0d4;
     border-radius:10px;
     box-shadow: 0 1px 0 #fff inset, 0 18px 40px -24px rgba(21,34,41,0.35);
     padding:38px 40px;
     position:relative;
-  }
-  .plate .screw-tl, .plate .screw-tr, .plate .screw-bl, .plate .screw-br{
+}
+.plate .screw-tl, .plate .screw-tr, .plate .screw-bl, .plate .screw-br{
     content:'';
     position:absolute;
     width:9px; height:9px;
     border-radius:50%;
     background:radial-gradient(circle at 35% 30%, #fff, var(--rivet) 55%, #8b979c 100%);
     box-shadow:0 1px 2px rgba(0,0,0,.35);
-  }
-  .screw-tl{top:14px; left:14px;}
-  .screw-tr{top:14px; right:14px;}
-  .screw-bl{bottom:14px; left:14px;}
-  .screw-br{bottom:14px; right:14px;}
+}
+.screw-tl{top:14px; left:14px;}
+.screw-tr{top:14px; right:14px;}
+.screw-bl{bottom:14px; left:14px;}
+.screw-br{bottom:14px; right:14px;}
 
-  .eyebrow{
+.eyebrow{
     font-family:var(--font);
     font-size:12px;
     letter-spacing:.12em;
@@ -51,34 +50,32 @@
     align-items:center;
     gap:8px;
     margin-bottom:16px;
-  }
-  .led{
+}
+.led{
     width:8px; height:8px; border-radius:50%;
     background:var(--secondary);
     box-shadow:0 0 0 3px rgba(74,108,130,0.18);
     flex:none;
-  }
-  .led.on{background:var(--success); box-shadow:0 0 0 3px rgba(46,139,87,0.18); animation:pulse 2.4s ease-in-out infinite;}
-  .led.off{background:var(--danger); box-shadow:0 0 0 3px rgba(201,76,76,0.18);}
-  @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:.45;}}
+}
+.led.on{background:var(--success); box-shadow:0 0 0 3px rgba(46,139,87,0.18); animation:pulse 2.4s ease-in-out infinite;}
+.led.off{background:var(--danger); box-shadow:0 0 0 3px rgba(201,76,76,0.18);}
+@keyframes pulse{0%,100%{opacity:1;} 50%{opacity:.45;}}
 
-
-
-  .subhead{
+.subhead{
     margin-top:16px;
     max-width:60ch;
     color:var(--secondary);
     font-size:15.5px;
     line-height:1.65;
-  }
+}
 
-  /* ---------- Access gate ---------- */
-  .gate{
+/* ---------- Access gate ---------- */
+.gate{
     margin-top:26px;
     border-top:1px dashed #c2ccd0;
     padding-top:22px;
-  }
-  .gate-box{
+}
+.gate-box{
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -88,48 +85,47 @@
     border:1px solid #ccd6da;
     border-radius:8px;
     padding:16px 20px;
-  }
-  .gate-status{
+}
+.gate-status{
     display:flex;
     align-items:center;
     gap:10px;
     font-family:var(--font);
     font-size:13px;
     color:var(--muted);
-  }
-  .gate-status b{color:var(--text);}
+}
+.gate-status b{color:var(--text);}
 
-
-  .redirect-note{
+.redirect-note{
     font-family:var(--font);
     font-size:11.5px;
     color:var(--muted);
     margin-top:10px;
-  }
+}
 
-  /* ---------- Section: qué contiene ---------- */
-  .section-head{
+/* ---------- Section: qué contiene ---------- */
+.section-head{
     margin:48px 0 20px;
-  }
-  .section-head h2{
+}
+.section-head h2{
     font-family:var(--font);
     font-weight:600;
     font-size:20px;
-  }
-  .section-head p{
+}
+.section-head p{
     margin-top:8px;
     color:var(--secondary);
     font-size:14px;
     max-width:60ch;
-  }
+}
 
-  .grid{
+.grid{
     display:grid;
     grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));
     gap:14px;
-  }
+}
 
-  .module{
+.module{
     position:relative;
     background:var(--panel-2);
     border:1px solid #ccd6da;
@@ -142,24 +138,24 @@
     text-decoration:none;
     color:var(--text);
     transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-  }
-  .module:hover, .module:focus-visible{
+}
+.module:hover, .module:focus-visible{
     transform:translateY(-3px);
     box-shadow:0 16px 30px -18px rgba(21,34,41,.45);
     border-color:var(--accent, var(--primary));
     outline:none;
-  }
-  .module:focus-visible{
+}
+.module:focus-visible{
     outline:2px solid var(--accent, var(--primary));
     outline-offset:3px;
-  }
-  .module .row1{
+}
+.module .row1{
     display:flex;
     align-items:flex-start;
     justify-content:space-between;
     gap:10px;
-  }
-  .module .code{
+}
+.module .code{
     font-family:var(--font);
     font-size:10.5px;
     letter-spacing:.06em;
@@ -168,304 +164,178 @@
     padding:3px 7px;
     border-radius:4px;
     white-space:nowrap;
-  }
-  .module .lock{
+}
+.module .lock{
     color:var(--muted);
     flex:none;
-  }
-  .module h3{
+}
+.module h3{
     font-family:var(--font);
     font-size:16.5px;
     font-weight:600;
-  }
-  .module p{
+}
+.module p{
     font-size:13px;
     color:var(--secondary);
     line-height:1.5;
-  }
+}
 
-  .m-dashboard{--accent:var(--primary);}
-  .m-herramientas{--accent:var(--primary-dark);}
-  .m-insumos{--accent:var(--success);}
-  .m-prestamos{--accent:var(--warning);}
-  .m-admin{--accent:var(--secondary);}
- /* -INDEX--*/
+.m-dashboard{--accent:var(--primary);}
+.m-herramientas{--accent:var(--primary-dark);}
+.m-insumos{--accent:var(--success);}
+.m-prestamos{--accent:var(--warning);}
+.m-admin{--accent:var(--secondary);}
+
+/* - DASHBOARD PERFIL Y TARJETAS --*/
 .perfil{
-
     width:42px;
     height:42px;
-
     border-radius:50%;
-
     background:white;
     color:var(--primary);
-
     display:flex;
     justify-content:center;
     align-items:center;
-
     font-size:20px;
-
 }
 
 .cards{
-
     display:grid;
     grid-template-columns:repeat(4,1fr);
     gap:20px;
-
     margin:25px 0;
-
-}
-
-.contenido{
-
-    display:grid;
-    grid-template-columns:2fr 1fr;
-    gap:20px;
-
-}
-
-.derecha{
-
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-
-}
-.titulo h1{
-
-    font-size:var(--h1);
-    font-weight:var(--bold);
-    color:var(--secondary);
-
-}
-
-.titulo p{
-
-    font-size:var(--text-size);
-    color:var(--text);
-
 }
 
 .card{
-
     background:white;
     border-radius:var(--radius);
     box-shadow:var(--shadow);
     overflow:hidden;
     position:relative;
-
 }
 
 .card img{
-
     position:absolute;
     right:15px;
     top:15px;
     width:42px;
-
 }
 
 .card h2{
-
     font-size:2.8rem;
     margin:25px 0 5px 20px;
-
 }
 
 .card h3{
-
     margin-left:20px;
     margin-bottom:25px;
-
     font-size:var(--h3);
     font-weight:var(--semi-bold);
-
 }
 
-.footer{
-
+.card .footer{
     color:white;
     text-align:center;
     padding:12px;
     font-weight:var(--semi-bold);
-
 }
 
-.azul h2{
-    color:var(--primary);
-}
+.azul h2{ color:var(--primary); }
+.azul .footer{ background:var(--primary); }
 
-.azul .footer{
-    background:var(--primary);
-}
+.verde h2{ color:var(--success); }
+.verde .footer{ background:var(--success); }
 
-.verde h2{
-    color:var(--success);
-}
+.naranja h2{ color:var(--warning); }
+.naranja .footer{ background:var(--warning); }
 
-.verde .footer{
-    background:var(--success);
-}
+.rojo h2{ color:var(--danger); }
+.rojo .footer{ background:var(--danger); }
 
-.naranja h2{
-    color:var(--warning);
-}
-
-.naranja .footer{
-    background:var(--warning);
-}
-
-.rojo h2{
-    color:var(--danger);
-}
-
-.rojo .footer{
-    background:var(--danger);
-}
-
-.tabla,
-.grafico,
-.alertas{
-
+/* Tablas, gráficos y alertas */
+.tabla, .grafico, .alerts-container{
     background:white;
     border-radius:var(--radius);
     box-shadow:var(--shadow);
     padding:20px;
-
 }
 
 table{
-
     width:100%;
     border-collapse:collapse;
     margin-top:15px;
-
 }
 
 th{
-
     background:var(--background);
     color:var(--secondary);
     padding:12px;
     font-weight:var(--semi-bold);
-
+    text-align:left;
 }
 
 td{
-
     padding:12px;
     border-bottom:1px solid #ececec;
     font-size:var(--text-size);
-
 }
 
 button{
-
     margin-top:18px;
-
     background:var(--secondary);
     color:white;
-
     border:none;
     border-radius:30px;
-
     padding:12px 24px;
-
     cursor:pointer;
-
     font-family:var(--font);
-
 }
 
 button:hover{
-
     background:var(--primary-dark);
-
 }
 
 .circulo{
-
     width:170px;
     height:170px;
-
     margin:20px auto;
-
     border-radius:50%;
-
     background:conic-gradient(
         var(--primary) 0 30%,
         var(--success) 30% 80%,
         var(--danger) 80% 100%
     );
-
     position:relative;
-
 }
 
 .circulo::after{
-
     content:"";
-
     position:absolute;
-
     width:90px;
     height:90px;
-
     background:white;
-
     border-radius:50%;
-
     top:40px;
     left:40px;
-
 }
 
 .b{
-
     width:15px;
     height:15px;
-
     display:inline-block;
-
     margin-right:10px;
-
 }
 
-.b.azul{
-    background:var(--primary);
-}
-
-.b.verde{
-    background:var(--success);
-}
-
-.b.rojo{
-    background:var(--danger);
-}
-
-.alertas h2{
-
-    background:var(--danger);
-    color:white;
-
-    margin:-20px -20px 20px -20px;
-
-    padding:12px 20px;
-
-    border-radius:10px 10px 0 0;
-
-}
+.b.azul{ background:var(--primary); }
+.b.verde{ background:var(--success); }
+.b.rojo{ background:var(--danger); }
 
 li{
-
     list-style:none;
     margin-bottom:10px;
-
 }
 
-/* ---------- especifico de insumos  ---------- */
+/* ---------- Específico de insumos ---------- */
 .liquid-card {
     background: white;
     border-radius: var(--radius);
@@ -477,13 +347,8 @@ li{
     align-items: center;
 }
 
-.liquid-card.border-red {
-    border-left-color: var(--danger);
-}
-
-.liquid-card.border-blue {
-    border-left-color: var(--primary);
-}
+.liquid-card.border-red { border-left-color: var(--danger); }
+.liquid-card.border-blue { border-left-color: var(--primary); }
 
 .liquid-info p {
     font-size: 1.2rem;
@@ -491,7 +356,6 @@ li{
     margin: 6px 0 10px 0;
 }
 
-/* ---------- 2. Botones secundarios / Rellenar (.btn-refill) ---------- */
 .btn-refill {
     background: transparent;
     color: var(--text);
@@ -503,7 +367,7 @@ li{
     align-items: center;
     gap: 4px;
     cursor: pointer;
-    margin-top: 0; /* Anula el margin-top de 18px que tienen tus otros botones */
+    margin-top: 0;
 }
 
 .btn-refill:hover {
@@ -511,7 +375,6 @@ li{
     color: var(--primary);
 }
 
-/* ---------- 3. Lista de Alertas Activas (.alert, .alert-error) ---------- */
 .alert {
     display: flex;
     justify-content: space-between;
@@ -541,13 +404,6 @@ li{
     color: #92400e;
 }
 
-.alert .date {
-    font-size: 12px;
-    color: var(--muted);
-    white-space: nowrap;
-}
-
-/* ---------- 4. Tarjetas de Categorías (.category-card) ---------- */
 .category-card {
     background: white;
     border-radius: var(--radius);
@@ -575,7 +431,6 @@ li{
     color: var(--secondary);
 }
 
-/* ---------- 5. Badges / Etiquetas numéricas (.cat-badge, .badge-count) ---------- */
 .cat-badge {
     position: absolute;
     top: 12px;
@@ -586,8 +441,7 @@ li{
     font-weight: var(--bold);
 }
 
-.badge-count-blue, 
-.badge-count-red {
+.badge-count-blue, .badge-count-red {
     padding: 2px 8px;
     border-radius: 12px;
     font-size: 12px;
@@ -600,109 +454,14 @@ li{
 .badge-purple { background: #f3e8ff; color: #7e22ce; }
 .badge-gray { background: #f1f5f9; color: var(--muted); }
 
-/* ---------- 6. Clases utilitarias de texto ---------- */
 .text-red { color: var(--danger) !important; }
 .text-blue { color: var(--primary) !important; }
 .text-green { color: var(--success) !important; }
 .text-orange { color: var(--warning) !important; }
 .text-purple { color: #7e22ce !important; }
 .text-muted { color: var(--muted) !important; font-size: 0.85em; }
-/* ==========================================
-   ESTILOS DASHBOARD / INSUMOS (NUEVO)
-   ========================================== */
 
-/* 4 Tarjetas Superiores (Métricas) en fila */
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  width: 100%;
-}
-
-.card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  border-left: 5px solid #2b82c5;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.card h2 {
-  font-size: 2.2rem;
-  font-weight: bold;
-  color: #1a202c;
-  margin: 4px 0;
-}
-
-/* Colores de bordes */
-.card-blue { border-left-color: #2b82c5; }
-.card-green { border-left-color: #2e7d32; }
-.card-orange { border-left-color: #ed6c02; }
-.card-red { border-left-color: #d32f2f; }
-
-/* Insumos Líquidos */
-.section-container {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-
-.card-product {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 16px;
-  border-left: 4px solid #2b82c5;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.card-product.border-red { border-left-color: #d32f2f; }
-.card-product.border-blue { border-left-color: #2b82c5; }
-.card-product.border-orange { border-left-color: #ed6c02; }
-/* ==========================================
-   ESTILOS DE ALERTAS Y TABLA DE INVENTARIO
-   ========================================== */
-
-/* Contenedores Principales */
-.alerts-container, 
-.table-container {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  margin-top: 20px;
-}
-
-.alerts-container h3, 
-.table-header h3 {
-  font-size: 1.1rem;
-  color: #2d3748;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Lista de Alertas */
+/* Estilos Alertas y Tablas Insumos/Dashboard */
 .alerts-list {
   display: flex;
   flex-direction: column;
@@ -719,14 +478,12 @@ li{
   font-size: 0.9rem;
 }
 
-/* Alerta Crítica (Roja) */
 .alert-critical {
   background-color: #fff5f5;
   border: 1px solid #fed7d7;
   color: #c53030;
 }
 
-/* Alerta Advertencia (Naranja) */
 .alert-warning {
   background-color: #fffaf0;
   border: 1px solid #feebc8;
@@ -744,77 +501,10 @@ li{
   color: #a0aec0;
 }
 
-/* Iconos de Alerta */
 .icon-danger { color: #e53e3e; }
 .icon-warning { color: #dd6b20; }
-.red-text { color: #e53e3e; }
 
-/* Badges / Contadores */
-.badge {
-  background: #e2e8f0;
-  color: #4a5568;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-}
-.badge-red {
-  background: #fed7d7;
-  color: #9b2c2c;
-}
-
-/* Estilos de la Tabla */
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.custom-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.custom-table th, 
-.custom-table td {
-  padding: 14px 16px;
-  text-align: left;
-  border-bottom: 1px solid #edf2f7;
-}
-
-.custom-table th {
-  background-color: #f7fafc;
-  color: #718096;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-/* Etiquetas de Estado */
-.status-tag {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  display: inline-block;
-}
-
-.tag-success { background: #c6f6d5; color: #22543d; }
-.tag-warning { background: #feebc8; color: #744210; }
-.tag-danger { background: #fed7d7; color: #742a2a; }
-
-.btn-secondary {
-  background: white;
-  border: 1px solid #cbd5e0;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-/* estilo y diseño de herramientas */
-
+/* Estilos Herramientas */
 .encabezado-seccion {
   background: linear-gradient(135deg, #2b82c5 0%, #1c78ad 100%);
   color: #ffffff;
@@ -870,4 +560,3 @@ li{
   border: 1px solid #e0e0e0;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
- 

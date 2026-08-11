@@ -8,7 +8,6 @@
         grid-template-columns:1fr;
     }
 
-    /* --- TUS GRILLES EN TABLETS (Pasar a 2 columnas) --- */
     .metrics-grid,
     .products-grid {
         grid-template-columns: repeat(2, 1fr) !important;
@@ -36,7 +35,6 @@
         font-size:2rem;
     }
 
-    /* --- TUS DUMPings Y TABLAS EN CELULARES --- */
     .app-container {
         flex-direction: column;
     }
@@ -52,8 +50,8 @@
         grid-template-columns: 1fr !important;
     }
 
-    .table-container {
-        overflow-x: auto; /* Permite scroll horizontal en la tabla para que no se deforme en celulares */
+    .table-container, .tabla {
+        overflow-x: auto;
     }
 
     .alert-item {
@@ -82,7 +80,6 @@
         padding: 12px;
     }
 }
-/* responsive herramientas */
 
 @media (min-width: 768px) {
   .herramientas-acciones {

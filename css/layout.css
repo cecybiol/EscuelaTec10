@@ -11,6 +11,12 @@ body {
   min-height: 100vh;
 }
 
+.wrap {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
 /* Contenedor principal en 2 columnas */
 .app-container {
   display: flex;
@@ -84,9 +90,9 @@ body {
   overflow-x: hidden;
 }
 
-/* Header Azul Superior */
+/* Header Superior */
 header {
-  background: #2b82c5;
+  background: var(--primary);
   color: white;
   padding: 16px 32px;
   display: flex;
@@ -94,13 +100,36 @@ header {
   align-items: center;
 }
 
+header .logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+header nav {
+  display: flex;
+  gap: 15px;
+}
+
+header nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: var(--semi-bold);
+  padding: 8px 12px;
+  border-radius: var(--radius);
+}
+
+header nav a.active, header nav a:hover {
+  background-color: var(--primary-dark);
+}
+
 .header-actions {
   display: flex;
   gap: 12px;
   align-items: center;
 }
-/* estructura de herramientas */
 
+/* Estructura de herramientas */
 .herramientas-acciones {
   display: flex;
   flex-direction: column;
@@ -127,9 +156,38 @@ header {
   white-space: nowrap;
   border: 0;
 }
+
 .dashboard-body {
   padding: 32px;
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.titulo {
+  margin: 25px 0;
+}
+
+.titulo h1 {
+  font-size: var(--h1);
+  font-weight: var(--bold);
+  color: var(--secondary);
+}
+
+.titulo p {
+  font-size: var(--text-size);
+  color: var(--text);
+}
+
+/* Grilla de Dashboard */
+.contenido {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.derecha {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
