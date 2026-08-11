@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>EscuelaTEC - Préstamos (Beta Minimal)</title>
-<link rel="stylesheet" href="../css/variables.css">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/responsive.css">
 </head>
-</head>
+
 <body>
+
+    <!-- ENCABEZADO -->
     <header>
         <strong>EscuelaTEC</strong>
+
         <nav>
             <a href="#">Dashboard</a>
             <a href="#" class="active">Préstamos</a>
@@ -20,33 +27,89 @@
         </nav>
     </header>
 
+
     <main>
+
         <h2>Gestión de Préstamos</h2>
 
-        <!-- FORMULARIO BETA -->
+
+        <!-- ========================= -->
+        <!-- FORMULARIO DE PRÉSTAMO    -->
+        <!-- ========================= -->
+
         <section class="card">
+
             <h3>Nuevo Préstamo</h3>
-            <form action="#" method="POST">
-                <input type="text" placeholder="Solicitante (Nombre / Legajo)" required>
-                
-                <select required>
-                    <option value="">Seleccionar Ítem...</option>
-                    <option value="1">Tester Digital Fluke</option>
-                    <option value="2">Amoladora Angular Bosch</option>
+
+            <form id="formulario">
+
+                <!-- SOLICITANTE -->
+                <input
+                    type="text"
+                    id="solicitante"
+                    placeholder="Solicitante (Nombre / Legajo)"
+                    required
+                >
+
+
+                <!-- ÍTEM -->
+                <select id="item" required>
+
+                    <option value="">
+                        Seleccionar Ítem...
+                    </option>
+
+                    <option value="1">
+                        Tester Digital Fluke
+                    </option>
+
+                    <option value="2">
+                        Amoladora Angular Bosch
+                    </option>
+
                 </select>
 
-                <input type="number" placeholder="Cantidad" min="1" value="1" required>
 
-                <button type="submit">Registrar Préstamo</button>
+                <!-- CANTIDAD -->
+                <input
+                    type="number"
+                    id="cantidad"
+                    placeholder="Cantidad"
+                    min="1"
+                    value="1"
+                    required
+                >
+
+
+                <!-- BOTÓN REGISTRAR -->
+                <button
+                    type="submit"
+                    id="btn-registrar"
+                >
+                    Registrar Préstamo
+                </button>
+
             </form>
+
         </section>
 
-        <!-- TABLA PRINCIPAL -->
+
+
+        <!-- ========================= -->
+        <!-- TABLA DE PRÉSTAMOS        -->
+        <!-- ========================= -->
+
         <section class="card">
+
             <h3>Préstamos Activos</h3>
+
             <div style="overflow-x: auto;">
-                <table>
+
+                <table id="tabla-historial">
+
+                    <!-- ENCABEZADOS -->
                     <thead>
+
                         <tr>
                             <th>Solicitante</th>
                             <th>Ítem</th>
@@ -54,20 +117,62 @@
                             <th>Estado</th>
                             <th>Acción</th>
                         </tr>
+
                     </thead>
-                    <tbody>
+
+
+                    <!-- CUERPO DE LA TABLA -->
+                    <tbody id="historial">
+
+                        <!-- Registro inicial -->
                         <tr>
-                            <td>Carlos Gómez</td>
-                            <td>Amoladora Angular Bosch</td>
-                            <td>1 u.</td>
-                            <td><span class="badge">Activo</span></td>
-                            <td><button type="button" class="btn-sm">Devolver</button></td>
+
+                            <td>
+                                Carlos Gómez
+                            </td>
+
+                            <td>
+                                Amoladora Angular Bosch
+                            </td>
+
+                            <td>
+                                1 u.
+                            </td>
+
+                            <td>
+                                <span class="badge">
+                                    Activo
+                                </span>
+                            </td>
+
+                            <td>
+                                <button
+                                    type="button"
+                                    class="btn-sm"
+                                >
+                                    Devolver
+                                </button>
+                            </td>
+
                         </tr>
+
                     </tbody>
+
                 </table>
+
             </div>
+
         </section>
+
     </main>
 
+
+    <!-- ========================= -->
+    <!-- JAVASCRIPT                -->
+    <!-- ========================= -->
+
+    <script src="../js/prestamos.js"></script>
+
 </body>
+
 </html>
