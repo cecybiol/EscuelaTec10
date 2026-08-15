@@ -1581,3 +1581,13 @@ button:active {
 .historial-evento {
   color: var(--text-color);
 }
+/* PARTE DE JAVA PARA OCULTAR Y SOLO APAREZCA AL PRECIONAR EL BOTON */
+/* Oculto por defecto */
+.nuevaherramienta {
+  display: none;
+}
+
+/* Se muestra cuando JavaScript le añade la clase 'is-visible' */
+.nuevaherramienta.is-visible {
+  display: block; /* O 'flex' según cómo esté estructurado tu modal */
+}
