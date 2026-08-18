@@ -8,3 +8,50 @@
         grid-column: span 2;
     }
 }
+}
+/* responsive herramientas */
+
+@media (max-width: 640px) {
+  body {
+    padding: 12px;
+  }
+
+  #vista-lista,
+  #vista-detalle {
+    padding: 16px;
+  }
+
+  /* La barra superior se apila verticalmente */
+  .herramientas-acciones {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .buscador {
+    width: 100%;
+  }
+
+  /* Las filas de la lista de herramientas pasan a columna */
+  .fila-herramienta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .herramienta-nombre {
+    font-size: 16px;
+  }
+
+  /* Los botones de pie de formulario se estiran al ancho total */
+  .detalle-footer,
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .detalle-footer button,
+  .modal-footer button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
