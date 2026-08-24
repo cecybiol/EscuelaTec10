@@ -1,124 +1,57 @@
-@media(max-width:1100px){
-
-    .cards{
-        grid-template-columns:repeat(2,1fr);
+@media (min-width: 768px) {
+    form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
     }
-
-    .contenido{
-        grid-template-columns:1fr;
-    }
-
-    /* --- TUS GRILLES EN TABLETS (Pasar a 2 columnas) --- */
-    .metrics-grid,
-    .products-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-
-}
-
-@media(max-width:768px){
-
-    header{
-        flex-direction:column;
-        gap:15px;
-    }
-
-    nav{
-        flex-wrap:wrap;
-        justify-content:center;
-    }
-
-    .cards{
-        grid-template-columns:1fr;
-    }
-
-    .titulo h1{
-        font-size:2rem;
-    }
-
-    /* --- TUS DUMPings Y TABLAS EN CELULARES --- */
-    .app-container {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #e0e0e0;
-    }
-
-    .metrics-grid,
-    .products-grid {
-        grid-template-columns: 1fr !important;
-    }
-
-    .table-container {
-        overflow-x: auto; /* Permite scroll horizontal en la tabla para que no se deforme en celulares */
-    }
-
-    .alert-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-    }
-
-    .alert-time {
-        align-self: flex-end;
-    }
-
-}
-
-@media (prefers-reduced-motion: reduce){
-    .led.on{animation:none;}
-    .btn, .btn svg{transition:none;}
-}
-
-@media (max-width:560px){
-    .plate{padding:28px 22px;}
-    header{padding:34px 0 4px;}
-    .gate-box{flex-direction:column; align-items:flex-start;}
-    
-    .dashboard-body {
-        padding: 12px;
+    form button {
+        grid-column: span 2;
     }
 }
+
 /* responsive herramientas */
 
-@media (min-width: 768px) {
+@media (max-width: 640px) {
+  body {
+    padding: 12px;
+  }
+
+  #vista-lista,
+  #vista-detalle {
+    padding: 16px;
+  }
+
+  /* La barra superior se apila verticalmente */
   .herramientas-acciones {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .buscador {
-    flex: 1;
-    max-width: 450px;
+    width: 100%;
   }
 
+  /* Las filas de la lista de herramientas pasan a columna */
   .fila-herramienta {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 
-  #form-editar-herramienta,
-  #form-nueva-herramienta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+  .herramienta-nombre {
+    font-size: 16px;
   }
 
-  .campo:nth-child(4),
+  /* Los botones de pie de formulario se estiran al ancho total */
   .detalle-footer,
   .modal-footer {
-    grid-column: span 2;
+    flex-direction: column-reverse;
   }
 
-  .historial-item {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+  .detalle-footer button,
+  .modal-footer button {
+    width: 100%;
+    justify-content: center;
   }
 }
+

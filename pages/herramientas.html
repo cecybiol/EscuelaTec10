@@ -9,26 +9,32 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!--  CSS -->
-<link rel="stylesheet" href="../css/variables.css">
-<link rel="stylesheet" href="../css/layout.css">
-<link rel="stylesheet" href="../css/components.css">
-<link rel="stylesheet" href="../css/responsive.css">
+<link rel="stylesheet" href="../style.css" >
 
-
+<script defer src="../js/app.js"></script>
+<script defer src="../js/storage.js"></script>
+<script defer src="../js/herramientas.js"></script>
 </head>
 <body>
 
   <!-- ================================================
        VISTA 1: LISTA DE HERRAMIENTAS
   ================================================ -->
-  <div id="vista-lista">
+  <main id="vista-lista">
 
     <section id="herramientas">
 
       <header class="herramientas-header">
         <h1>Herramientas</h1>
       </header>
+       <nav class="navigation-menu">
+        <p class="section-title">SECCIONES DEL SISTEMA</p>
+        <a href="#"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+        <a href="#"><span class="material-symbols-outlined">build</span> Herramientas</a>
+        <a href="#" class="active"><span class="material-symbols-outlined">inventory_2</span> Insumos</a>
+        <a href="#"><span class="material-symbols-outlined">assignment</span> Préstamos</a>
+        <a href="#"><span class="material-symbols-outlined">admin_panel_settings</span> Administración</a>
+      </nav>
 
       <!-- Barra de acciones -->
       <div class="herramientas-acciones">
@@ -54,7 +60,7 @@
           </button>
         </div>
 
-        <button type="button" id="btn-filtros" aria-expanded="false" aria-controls="panel-filtros">
+        <button class="btn-filtros" type="button" id="btn-filtros" aria-expanded="false" aria-controls="panel-filtros">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <line x1="4" y1="6" x2="20" y2="6"/>
             <line x1="8" y1="12" x2="16" y2="12"/>
@@ -79,23 +85,27 @@
         <button type="button" id="btn-limpiar-filtros">Limpiar</button>
 
       </div>
-
       <!-- Listado de herramientas -->
       <ul class="herramientas-lista" aria-label="Listado de herramientas">
+        <div id="lista-herramientas"></div>
 
-        <li class="fila-herramienta" data-id="1" role="button" tabindex="0" aria-label="Ver detalle de Taladro percutor">
-          <span class="herramienta-nombre">Taladro percutor</span>
-          <span class="badge badge--nueva">Nueva</span>
-          <span class="herramienta-ubicacion">Depósito A, estante 2</span>
-          <span class="herramienta-qr" aria-label="Código QR">
-          </span>
-        </li>
+       <li class="fila-herramienta" data-id="1" role="button" tabindex="0" aria-label="Ver detalle de Taladro percutor">
+       <span class="herramienta-nombre">Taladro percutor</span>
+       <span class="badge badge--nueva">Nueva</span>
+       <span class="herramienta-ubicacion">Depósito A, estante 2</span>
+        <span class="herramienta-qr" aria-label="Código QR">
+      <!-- Icono o texto QR -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+    </span>
+  </li>
 
-      </ul>
+</ul>
+
+
 
     </section>
 
-  </div>
+  </main>
   <!-- =================== FIN VISTA LISTA =================== -->
 
 
@@ -105,14 +115,16 @@
   <div id="vista-detalle">
 
     <header class="detalle-header">
+      <div class="header-container">
 
-      <button type="button" id="btn-volver" aria-label="Volver al listado">
+      <button class= "btn-volver" type="button" id="btn-volver" aria-label="Volver al listado">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="19" y1="12" x2="5" y2="12"/>
           <polyline points="12 19 5 12 12 5"/>
         </svg>
         Herramientas
       </button>
+      </div>
 
       <h2 id="detalle-titulo">Nombre herramienta</h2>
 
@@ -194,15 +206,15 @@
        MODAL: NUEVA HERRAMIENTA
   ================================================ -->
   <div
-    id="modal-nueva-herramienta"
-    class="modal"
+    id="-nueva-herramienta"
+    class="nuevaherramienta"
     role="dialog"
     aria-modal="true"
     aria-labelledby="modal-nueva-titulo"
   >
     <div class="modal-overlay" id="modal-nueva-overlay"></div>
 
-    <div class="modal-contenido">
+    <div class="modal-contenido" id="test">
 
       <header class="modal-header">
         <h2 id="modal-nueva-titulo">Nueva herramienta</h2>
