@@ -9,14 +9,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!--  CSS -->
-<link rel="stylesheet" href="../css/variables.css">
-<link rel="stylesheet" href="../css/layout.css">
-<link rel="stylesheet" href="../css/componentes.css">
-<link rel="stylesheet" href="../css/responsive.css">
+<link rel="stylesheet" href="../style.css" >
 
-
-  <link rel="stylesheet" href="../style.css" >
+<script defer src="../js/app.js"></script>
+<script defer src="../js/storage.js"></script>
 <script defer src="../js/herramientas.js"></script>
 </head>
 <body>
@@ -31,6 +27,14 @@
       <header class="herramientas-header">
         <h1>Herramientas</h1>
       </header>
+       <nav class="navigation-menu">
+        <p class="section-title">SECCIONES DEL SISTEMA</p>
+        <a href="#"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+        <a href="#"><span class="material-symbols-outlined">build</span> Herramientas</a>
+        <a href="#" class="active"><span class="material-symbols-outlined">inventory_2</span> Insumos</a>
+        <a href="#"><span class="material-symbols-outlined">assignment</span> Préstamos</a>
+        <a href="#"><span class="material-symbols-outlined">admin_panel_settings</span> Administración</a>
+      </nav>
 
       <!-- Barra de acciones -->
       <div class="herramientas-acciones">
@@ -83,6 +87,7 @@
       </div>
       <!-- Listado de herramientas -->
       <ul class="herramientas-lista" aria-label="Listado de herramientas">
+        <div id="lista-herramientas"></div>
 
        <li class="fila-herramienta" data-id="1" role="button" tabindex="0" aria-label="Ver detalle de Taladro percutor">
        <span class="herramienta-nombre">Taladro percutor</span>
@@ -201,15 +206,15 @@
        MODAL: NUEVA HERRAMIENTA
   ================================================ -->
   <div
-    id="modal-nueva-herramienta"
-    class="modal"
+    id="-nueva-herramienta"
+    class="nuevaherramienta"
     role="dialog"
     aria-modal="true"
     aria-labelledby="modal-nueva-titulo"
   >
     <div class="modal-overlay" id="modal-nueva-overlay"></div>
 
-    <div class="modal-contenido">
+    <div class="modal-contenido" id="test">
 
       <header class="modal-header">
         <h2 id="modal-nueva-titulo">Nueva herramienta</h2>
