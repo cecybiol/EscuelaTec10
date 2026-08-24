@@ -7,7 +7,6 @@
     form button {
         grid-column: span 2;
     }
-<<<<<<< HEAD
 
     .metrics-grid,
     .products-grid {
@@ -80,10 +79,11 @@
     .dashboard-body {
         padding: 12px;
     }
-=======
 }
->>>>>>> origin/Deploy
 }
+
+/* responsive herramientas */
+
 
 @media (max-width: 640px) {
   body {
