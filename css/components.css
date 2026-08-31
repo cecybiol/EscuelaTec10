@@ -509,7 +509,9 @@ li{
 
 .textarea {
     min-height: 100px;
-    resize: vertical;
+   resize: vertical;
+  }
+
   .plate{
     background:linear-gradient(180deg, var(--panel-2), var(--panel));
     border:1px solid #c7d0d4;
@@ -1100,6 +1102,8 @@ button:active {
     font-size: 0.95rem;
     display: inline-block;
     text-align: center;
+  }
+
 .filtro-grupo {
   border: none;
   display: flex;
@@ -1323,6 +1327,8 @@ button:active {
     border-collapse: collapse;
     margin-top: 1rem;
     font-family: var(--fuente-principal);
+  }
+
 #btn-nueva-herramienta:hover,
 #btn-aplicar-filtros:hover,
 #btn-guardar-cambios:hover,
