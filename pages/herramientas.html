@@ -18,23 +18,29 @@
 <body>
 
   <!-- ================================================
+        HEADER ÚNICO GLOBAL DE LA APLICACIÓN
+  ================================================ -->
+  <header class="main-header">
+    <div class="header-brand">
+      <h1>Herramientas</h1>
+    </div>
+
+    <nav class="navigation-menu">
+      <p class="section-title">SECCIONES DEL SISTEMA</p>
+      <a href="#"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+      <a href="#"><span class="material-symbols-outlined">build</span> Herramientas</a>
+      <a href="#" class="active"><span class="material-symbols-outlined">inventory_2</span> Insumos</a>
+      <a href="#"><span class="material-symbols-outlined">assignment</span> Préstamos</a>
+      <a href="#"><span class="material-symbols-outlined">admin_panel_settings</span> Administración</a>
+    </nav>
+  </header>
+
+  <!-- ================================================
        VISTA 1: LISTA DE HERRAMIENTAS
   ================================================ -->
   <main id="vista-lista">
 
     <section id="herramientas">
-
-      <header class="herramientas-header">
-        <h1>Herramientas</h1>
-      </header>
-       <nav class="navigation-menu">
-        <p class="section-title">SECCIONES DEL SISTEMA</p>
-        <a href="#"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
-        <a href="#"><span class="material-symbols-outlined">build</span> Herramientas</a>
-        <a href="#" class="active"><span class="material-symbols-outlined">inventory_2</span> Insumos</a>
-        <a href="#"><span class="material-symbols-outlined">assignment</span> Préstamos</a>
-        <a href="#"><span class="material-symbols-outlined">admin_panel_settings</span> Administración</a>
-      </nav>
 
       <!-- Barra de acciones -->
       <div class="herramientas-acciones">
@@ -114,7 +120,7 @@
   ================================================ -->
   <div id="vista-detalle">
 
-    <header class="detalle-header">
+    <div class="detalle-header-bar">
       <div class="header-container">
 
       <button class= "btn-volver" type="button" id="btn-volver" aria-label="Volver al listado">
@@ -128,7 +134,7 @@
 
       <h2 id="detalle-titulo">Nombre herramienta</h2>
 
-    </header>
+    </div>
 
     <nav class="detalle-tabs" aria-label="Secciones del detalle">
       <button type="button" class="tab-btn tab-btn--activo" id="tab-info" aria-selected="true" aria-controls="panel-info">
@@ -216,7 +222,7 @@
 
     <div class="modal-contenido" id="test">
 
-      <header class="modal-header">
+      <div class="modal-header-bar">
         <h2 id="modal-nueva-titulo">Nueva herramienta</h2>
         <button type="button" id="btn-cerrar-modal-nueva" aria-label="Cerrar">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -224,7 +230,7 @@
             <line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
-      </header>
+      </div>
 
       <form id="form-nueva-herramienta" novalidate>
 
@@ -263,7 +269,6 @@
     </div>
   </div>
   <!-- =================== FIN MODAL NUEVA HERRAMIENTA =================== -->
-
 
 </body>
 </html>
