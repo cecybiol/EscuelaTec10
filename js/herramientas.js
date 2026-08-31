@@ -88,3 +88,102 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderizarHerramientas();
 });
+//edicion de herramientas
+document.addEventListener("DOMContentLoaded", () => {
+  // 1. Selección de elementos del DOM 
+  const filaHerramienta = document.querySelector(".fila-herramienta");
+  const panelInfo = document.getElementById("panel-info");
+  const formEditar = document.getElementById("form-editar-herramienta");
+  const btnVolver = document.getElementById("btn-volver");
+  const btnCancelarEdicion = document.getElementById("btn-cancelar-edicion");
+
+  // Campos del formulario
+  const campoNombre = document.getElementById("campo-nombre");
+  const campoEstado = document.getElementById("campo-estado");
+  const campoUbicacion = document.getElementById("campo-ubicacion");
+  const campoNotas = document.getElementById("campo-notas");
+  const detalleTitulo = document.getElementById("detalle-titulo");
+
+  let herramientaSeleccionadaId = null;
+
+  // paso 1: Mantener oculto el panel de edición de inicio
+  if (panelInfo) {
+    panelInfo.style.display = "none";
+  }
+
+  // paso 2: Al hacer clic en la herramienta, desplegar el panel y cargar sus datos
+  if (filaHerramienta) {
+    filaHerramienta.addEventListener("click", () => {
+      herramientaSeleccionadaId = filaHerramienta.getAttribute("data-id");
+
+      // Consultar datos almacenados en storage.js
+      const coleccion = getCollection("herramientas");
+      const datosGuardados = coleccion.find((item) => String(item.id) === String(herramientaSeleccionadaId));
+
+      const nombre = datosGuardados?.nombre || filaHerramienta.querySelector(".herramienta-nombre")?.textContent || "";
+      const ubicacion = datosGuardados?.ubicacion || filaHerramienta.querySelector(".herramienta-ubicacion")?.textContent || "";
+      const estado = datosGuardados?.estado || "nueva";
+      const notas = datosGuardados?.notas || "";
+
+      // Rellenar formulario
+      if (campoNombre) campoNombre.value = nombre;
+      if (campoUbicacion) campoUbicacion.value = ubicacion;
+      if (campoEstado) campoEstado.value = estado;
+      if (campoNotas) campoNotas.value = notas;
+      if (detalleTitulo) detalleTitulo.textContent = nombre;
+
+      // Desplegar sección
+      if (panelInfo) {
+        panelInfo.style.display = "block";
+      }
+
+      // Alerta con app.js
+      if (typeof showAlert === "function") {
+        showAlert(`Editando herramienta: ${nombre}`, "info");
+      }
+    });
+  }
+
+  // paso 3: Guardar los cambios editados
+  if (formEditar) {
+    formEditar.addEventListener("submit", (event) => {
+      event.preventDefault(); // Evita recargar la página
+
+      const cambios = {
+        nombre: campoNombre?.value.trim(),
+        estado: campoEstado?.value,
+        ubicacion: campoUbicacion?.value.trim(),
+        notas: campoNotas?.value.trim(),
+      };
+
+      // Guardar actualización en storage.js
+      if (herramientaSeleccionadaId) {
+        updateItem("herramientas", herramientaSeleccionadaId, cambios);
+      }
+
+      // Actualizar vista visual
+      if (detalleTitulo && cambios.nombre) {
+        detalleTitulo.textContent = cambios.nombre;
+      }
+
+      const nombreSpan = filaHerramienta?.querySelector(".herramienta-nombre");
+      const ubicacionSpan = filaHerramienta?.querySelector(".herramienta-ubicacion");
+      if (nombreSpan && cambios.nombre) nombreSpan.textContent = cambios.nombre;
+      if (ubicacionSpan && cambios.ubicacion) ubicacionSpan.textContent = cambios.ubicacion;
+
+      // Alerta de confirmación con app.js
+      if (typeof showAlert === "function") {
+        showAlert("Cambios guardados correctamente", "success");
+      }
+    });
+  }
+
+  // Ocultar sección al cancelar o volver
+  const ocultarEdicion = () => {
+    if (panelInfo) panelInfo.style.display = "none";
+    if (formEditar) formEditar.reset();
+  };
+
+  if (btnCancelarEdicion) btnCancelarEdicion.addEventListener("click", ocultarEdicion);
+  if (btnVolver) btnVolver.addEventListener("click", ocultarEdicion);
+});
