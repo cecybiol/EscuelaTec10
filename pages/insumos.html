@@ -1,9 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EscuelaTEC - Gestión de Insumos</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EscuelaTEC - Gestión de Insumos</title>
+  
+  <!-- Fuentes e íconos -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <!-- Estilos corregidos -->
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/responsive.css">
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -37,22 +47,22 @@
       </div>
     </aside>
 
-    <!-- 2. CONTENIDO PRINCIPAL (DERECHA) -->
+    <!-- 2. CONTENIDO PRINCIPAL -->
     <main class="main-content">
 
-      <!-- Header Azul Superior -->
+      <!-- Header Superior -->
       <header>
         <div class="breadcrumb">Inicio › <strong>Insumos</strong></div>
         <div class="header-actions">
-          <input type="text" placeholder="Buscar insumo...">
-          <button class="btn">+ Nuevo Insumo</button>
+          <input type="text" id="btn-filter" placeholder="Buscar insumo...">
+          <button class="btn" id="btn-nuevo">+ Nuevo Insumo</button>
         </div>
       </header>
 
       <!-- Panel de Contenido -->
       <section class="dashboard-body">
 
-        <!-- Grilla de 4 Tarjetas Superiores -->
+        <!-- Métricas -->
         <div class="metrics-grid">
           <div class="card card-blue">
             <div class="card-header">Total Insumos <span class="material-symbols-outlined">inventory_2</span></div>
@@ -79,7 +89,7 @@
           </div>
         </div>
 
-        <!-- Sección Insumos Líquidos -->
+        <!-- Insumos Líquidos -->
         <div class="section-container">
           <h3><span class="material-symbols-outlined">opacity</span> Insumos Líquidos <span class="badge">4</span></h3>
 
@@ -87,29 +97,30 @@
             <div class="card-product border-red">
               <h4>Desinfectante...</h4>
               <p><strong>4 L</strong> / 20 L</p>
-              <button><span class="material-symbols-outlined">refresh</span> Rellenar</button>
+              <button class="btn-refill"><span class="material-symbols-outlined">refresh</span> Rellenar</button>
             </div>
 
             <div class="card-product border-blue">
               <h4>Alcohol isopro...</h4>
               <p><strong>12 L</strong> / 20 L</p>
-              <button><span class="material-symbols-outlined">refresh</span> Rellenar</button>
+              <button class="btn-refill"><span class="material-symbols-outlined">refresh</span> Rellenar</button>
             </div>
 
             <div class="card-product border-orange">
               <h4>Jabón líquido...</h4>
               <p><strong>3 L</strong> / 15 L</p>
-              <button><span class="material-symbols-outlined">refresh</span> Rellenar</button>
+              <button class="btn-refill"><span class="material-symbols-outlined">refresh</span> Rellenar</button>
             </div>
 
             <div class="card-product border-blue">
               <h4>Cloro concent...</h4>
               <p><strong>7 L</strong> / 10 L</p>
-              <button><span class="material-symbols-outlined">refresh</span> Rellenar</button>
+              <button class="btn-refill"><span class="material-symbols-outlined">refresh</span> Rellenar</button>
             </div>
           </div>
         </div>
-        <!-- Sección Alertas Activas -->
+
+        <!-- Alertas Activas -->
         <div class="alerts-container">
           <h3><span class="material-symbols-outlined red-text">error</span> Alertas Activas <span class="badge badge-red">7</span></h3>
           
@@ -140,7 +151,7 @@
           </div>
         </div>
 
-        <!-- Tabla General de Inventario -->
+        <!-- Tabla General -->
         <div class="table-container">
           <div class="table-header">
             <h3>Inventario</h3>
