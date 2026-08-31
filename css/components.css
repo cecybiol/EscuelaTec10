@@ -1596,3 +1596,7 @@ button:active {
 .nuevaherramienta.is-visible {
   display: block; /* O 'flex' según cómo esté estructurado tu modal */
 }
+
+.btn-refill * {
+  pointer-events: none !important;
+}
