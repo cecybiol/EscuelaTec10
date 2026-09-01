@@ -21,6 +21,10 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <link rel="stylesheet" href="../css/components.css">
 <link rel="stylesheet" href="../css/responsive.css">
 
+<script src="../js/storage.js" defer></script>
+<script src="../js/app.js" defer></script>
+<script src="../js/dashboard.js" defer></script>
+
 </head>
 
 <body>
@@ -29,7 +33,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         <div class="logo">
 
-            <img src="../img/logo.png">
+            <div class="logo-mark"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></div>
 
             <div>
 
@@ -40,38 +44,42 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         </div>
 
-        <nav>
+        <button class="navbar-toggle" aria-label="Abrir menú" aria-expanded="false">
+            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
 
-            <a href="#">
-                <i class="fa-solid fa-chart-line"></i>
+        <nav class="navbar-menu">
+
+            <a href="#" aria-current="page">
+                <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
                 Dashboard
             </a>
 
             <a href="#">
-                <i class="fa-solid fa-screwdriver-wrench"></i>
+                <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
                 Herramientas
             </a>
 
             <a href="#">
-                <i class="fa-solid fa-box"></i>
+                <i class="fa-solid fa-box" aria-hidden="true"></i>
                 Insumos
             </a>
 
             <a href="#">
-                <i class="fa-solid fa-handshake"></i>
+                <i class="fa-solid fa-handshake" aria-hidden="true"></i>
                 Préstamos
             </a>
 
             <a href="#">
-                <i class="fa-solid fa-gear"></i>
+                <i class="fa-solid fa-gear" aria-hidden="true"></i>
                 Administración
             </a>
 
         </nav>
 
-        <div class="perfil">
+        <div class="perfil" aria-label="Perfil de usuario">
 
-            <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
 
         </div>
 
@@ -99,55 +107,55 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
             <div class="card azul">
 
-                <img src="../img/tools.png" alt="Herramientas">
+                <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
 
                 <h2>80</h2>
 
                 <h3>Herramientas</h3>
 
-                <div class="footer">
+                <a class="footer" href="herramientas.html">
 
                     Total
 
-                </div>
+                </a>
 
             </div>
 
             <div class="card verde">
 
-                <img src="../img/box.png" alt="Insumos">
+                <i class="fa-solid fa-box" aria-hidden="true"></i>
 
                 <h2>80</h2>
 
                 <h3>Insumos</h3>
 
-                <div class="footer">
+                <a class="footer" href="insumos.html">
 
                     Stock
 
-                </div>
+                </a>
 
             </div>
 
             <div class="card naranja">
 
-                <img src="../img/loan.png" alt="Préstamos">
+                <i class="fa-solid fa-handshake" aria-hidden="true"></i>
 
                 <h2>9</h2>
 
                 <h3>Préstamos</h3>
 
-                <div class="footer">
+                <a class="footer" href="prestamos.html">
 
                     Activos
 
-                </div>
+                </a>
 
             </div>
 
             <div class="card rojo">
 
-                <img src="../img/alert.png" alt="Alertas">
+                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
 
                 <h2>1</h2>
 
@@ -179,10 +187,10 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
                         <tr>
 
-                            <th>Elemento</th>
-                            <th>Tipo</th>
-                            <th>Responsable</th>
-                            <th>Fecha</th>
+                            <th scope="col">Elemento</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Responsable</th>
+                            <th scope="col">Fecha</th>
 
                         </tr>
 
@@ -240,8 +248,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
                 </table>
 
                 <button>
+                    
+                <a class="footer" href="prestamos.html">
 
                     Ver historial completo
+
+                </a>
 
                 </button>
 

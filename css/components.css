@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* - INDEX--*/
 .wrap{
     max-width:1000px;
@@ -20,9 +19,6 @@
 .topstrip .wrap{display:flex; justify-content:space-between; gap:16px; background:var(--text);}
 
 /* ---------- Header / nameplate ---------- */
-.plate{
-
-
 
 /* ==========================================================================
    COMPONENTES DE FORMULARIO - RESPONSABILIDAD: EQUIPO 4 (PRÉSTAMOS)
@@ -32,28 +28,6 @@
 .form-group {
     margin-bottom: 1.25rem;
 }
-
-}
-  .plate{
-    background:linear-gradient(180deg, var(--panel-2), var(--panel));
-    border:1px solid #c7d0d4;
-    border-radius:10px;
-    box-shadow: 0 1px 0 #fff inset, 0 18px 40px -24px rgba(21,34,41,0.35);
-    padding:38px 40px;
-    position:relative;
-  }
-  .plate .screw-tl, .plate .screw-tr, .plate .screw-bl, .plate .screw-br{
-    content:'';
-    position:absolute;
-    width:9px; height:9px;
-    border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #fff, var(--rivet) 55%, #8b979c 100%);
-    box-shadow:0 1px 2px rgba(0,0,0,.35);
-  }
-  .screw-tl{top:14px; left:14px;}
-  .screw-tr{top:14px; right:14px;}
-  .screw-bl{bottom:14px; left:14px;}
-  .screw-br{bottom:14px; right:14px;}
 
   .eyebrow{
     font-family:var(--font);
@@ -275,12 +249,13 @@
 
 }
 
-.card img{
+.card i{
 
     position:absolute;
-    right:15px;
-    top:15px;
-    width:42px;
+    right:18px;
+    top:18px;
+    font-size:28px;
+    opacity:.85;
 
 }
 
@@ -307,10 +282,12 @@
     text-align:center;
     padding:12px;
     font-weight:var(--semi-bold);
+    display:block;
+    text-decoration:none;
 
 }
 
-.azul h2{
+.azul h2, .azul i{
     color:var(--primary);
 }
 
@@ -318,7 +295,7 @@
     background:var(--primary);
 }
 
-.verde h2{
+.verde h2, .verde i{
     color:var(--success);
 }
 
@@ -326,7 +303,7 @@
     background:var(--success);
 }
 
-.naranja h2{
+.naranja h2, .naranja i{
     color:var(--warning);
 }
 
@@ -334,7 +311,7 @@
     background:var(--warning);
 }
 
-.rojo h2{
+.rojo h2, .rojo i{
     color:var(--danger);
 }
 
@@ -537,8 +514,8 @@ li{
     min-height: 100px;
     resize: vertical;
 }
-  .plate{
->>>>>>> origin/Deploy
+/* ---------- Header / nameplate ---------- */
+.plate{
     background:linear-gradient(180deg, var(--panel-2), var(--panel));
     border:1px solid #c7d0d4;
     border-radius:10px;
@@ -733,13 +710,6 @@ li{
     position:relative;
 }
 
-.card img{
-    position:absolute;
-    right:15px;
-    top:15px;
-    width:42px;
-}
-
 .card h2{
     font-size:2.8rem;
     margin:25px 0 5px 20px;
@@ -853,7 +823,6 @@ li{
     list-style:none;
     margin-bottom:10px;
 }
-<<<<<<< HEAD
 
 /* ---------- Específico de insumos ---------- */
 .liquid-card {
@@ -1037,7 +1006,8 @@ li{
   justify-content: flex-start;
   gap: 12px;
   box-sizing: border-box;
-=======
+}
+
 /* Parte de Herramientas */
 /* TÍTULOS Y ENCABEZADOS */
 h1, h2, #detalle-titulo, #modal-nueva-titulo {
@@ -1211,7 +1181,6 @@ button:active {
 /* LISTA DE HERRAMIENTAS (TARJETAS) */
 .herramientas-lista {
   list-style: none;
->>>>>>> origin/Deploy
 }
 
 .fila-herramienta {
