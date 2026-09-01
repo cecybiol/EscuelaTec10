@@ -1,9 +1,11 @@
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EscuelaTEC - Gestión de Insumos</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EscuelaTEC - Gestión de Insumos</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/layout.css">
   <link rel="stylesheet" href="../css/components.css">
@@ -15,24 +17,26 @@
 <body>
   <div class="app-container">
 
-    <!-- 1. BARRA LATERAL (SIDEBAR) -->
+    <!-- BARRA LATERAL (SIDEBAR) -->
     <aside class="sidebar">
-      <div class="brand">
-        <div class="logo-icon">TEC</div>
-        <div>
-          <h2>EscuelaTEC</h2>
-          <p>Sistema de Gestión Escolar</p>
+      <div>
+        <div class="brand">
+          <div class="logo-icon">TEC</div>
+          <div>
+            <h2>EscuelaTEC</h2>
+            <p>Sistema de Gestión Escolar</p>
+          </div>
         </div>
-      </div>
 
-      <nav class="navigation-menu">
-        <p class="section-title">SECCIONES DEL SISTEMA</p>
-        <a href="#"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
-        <a href="#"><span class="material-symbols-outlined">build</span> Herramientas</a>
-        <a href="#" class="active"><span class="material-symbols-outlined">inventory_2</span> Insumos</a>
-        <a href="#"><span class="material-symbols-outlined">assignment</span> Préstamos</a>
-        <a href="#"><span class="material-symbols-outlined">admin_panel_settings</span> Administración</a>
-      </nav>
+        <nav class="navigation-menu">
+          <p class="section-title">SECCIONES DEL SISTEMA</p>
+          <a href="#"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+          <a href="#"><span class="material-symbols-outlined">build</span> Herramientas</a>
+          <a href="#" class="active"><span class="material-symbols-outlined">inventory_2</span> Insumos</a>
+          <a href="#"><span class="material-symbols-outlined">assignment</span> Préstamos</a>
+          <a href="#"><span class="material-symbols-outlined">admin_panel_settings</span> Administración</a>
+        </nav>
+      </div>
 
       <div class="user-profile">
         <div class="avatar">MR</div>
@@ -43,15 +47,15 @@
       </div>
     </aside>
 
-    <!-- 2. CONTENIDO PRINCIPAL (DERECHA) -->
+    <!-- CONTENIDO PRINCIPAL (DERECHA) -->
     <main class="main-content">
 
-      <!-- Header Azul Superior -->
-      <header>
+      <!-- Header Superior -->
+      <header class="top-header">
         <div class="breadcrumb">Inicio › <strong>Insumos</strong></div>
         <div class="header-actions">
-          <input type="text" placeholder="Buscar insumo...">
-          <button class="btn">+ Nuevo Insumo</button>
+          <input type="text" id="search-insumos" placeholder="Buscar insumo...">
+          <button id="btn-nuevo-insumo" class="btn">+ Nuevo Insumo</button>
         </div>
       </header>
 
@@ -91,30 +95,31 @@
 
           <div class="products-grid">
             <div class="card-product border-red">
-              <h4>Desinfectante...</h4>
+              <h4 class="text-ellipsis">Desinfectante de Superficies</h4>
               <p><strong>4 L</strong> / 20 L</p>
-              <button><span class="material-symbols-outlined">refresh</span> Rellenar</button>
+              <button class="btn-action"><span class="material-symbols-outlined">refresh</span> Rellenar</button>
             </div>
 
             <div class="card-product border-blue">
-              <h4>Alcohol isopro...</h4>
+              <h4 class="text-ellipsis">Alcohol Isopropílico</h4>
               <p><strong>12 L</strong> / 20 L</p>
-              <button><span class="material-symbols-outlined">refresh</span> Rellenar</button>
+              <button class="btn-action"><span class="material-symbols-outlined">refresh</span> Rellenar</button>
             </div>
 
             <div class="card-product border-orange">
-              <h4>Jabón líquido...</h4>
+              <h4 class="text-ellipsis">Jabón Líquido Neutro</h4>
               <p><strong>3 L</strong> / 15 L</p>
-              <button><span class="material-symbols-outlined">refresh</span> Rellenar</button>
+              <button class="btn-action"><span class="material-symbols-outlined">refresh</span> Rellenar</button>
             </div>
 
             <div class="card-product border-blue">
-              <h4>Cloro concent...</h4>
+              <h4 class="text-ellipsis">Cloro Concentrado</h4>
               <p><strong>7 L</strong> / 10 L</p>
-              <button><span class="material-symbols-outlined">refresh</span> Rellenar</button>
+              <button class="btn-action"><span class="material-symbols-outlined">refresh</span> Rellenar</button>
             </div>
           </div>
         </div>
+
         <!-- Sección Alertas Activas -->
         <div class="alerts-container">
           <h3><span class="material-symbols-outlined red-text">error</span> Alertas Activas <span class="badge badge-red">7</span></h3>
@@ -153,7 +158,7 @@
             <button class="btn-secondary"><span class="material-symbols-outlined">filter_list</span> Filtrar</button>
           </div>
 
-          <table class="custom-table">
+          <table class="custom-table" id="table-insumos">
             <thead>
               <tr>
                 <th>Insumo</th>
@@ -163,7 +168,7 @@
                 <th>Acciones</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="tbody-insumos">
               <tr>
                 <td><strong>Resma Papel A4</strong></td>
                 <td>Oficina</td>
@@ -193,6 +198,5 @@
     </main>
 
   </div>
-  <script src="../js/insumos.js"></script>
 </body>
 </html>
