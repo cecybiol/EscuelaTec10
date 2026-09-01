@@ -14,7 +14,12 @@
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/responsive.css">
-</head>
+
+    <!-- Scripts: orden requerido por app.js (storage -> app -> lógica de la página) -->
+    <!-- defer permite ubicarlos en el head sin bloquear el render ni romper el orden -->
+    <script src="../js/storage.js" defer></script>
+    <script src="../js/app.js" defer></script>
+    <script src="../js/prestamos.js" defer></script>
 </head>
 <body>
 
@@ -42,10 +47,10 @@
         <section class="card">
 
             <h3>Nuevo Préstamo</h3>
-            <form action="#" method="POST">
-                <input type="text" placeholder="Solicitante (Nombre / Legajo)" required>
+            <form action="#" method="POST" id="formulario">
+                <input type="text" id="solicitante" placeholder="Solicitante (Nombre / Legajo)" required>
                 
-                <select required>
+                <select id="item" required>
                     <option value="">Seleccionar Ítem...</option>
                     <option value="1">Tester Digital Fluke</option>
                     <option value="2">Amoladora Angular Bosch</option>
@@ -101,7 +106,7 @@
                         </tr>
 
                     </thead>
-                    <tbody>
+                    <tbody id="historial">
                         <tr>
                             <td>Carlos Gómez</td>
                             <td>Amoladora Angular Bosch</td>
