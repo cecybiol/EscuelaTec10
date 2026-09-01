@@ -72,12 +72,147 @@ body {
   line-height: 1.5;
 }
 
+<<<<<<< HEAD
+.wrap {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* Contenedor principal en 2 columnas */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Barra Lateral (Sidebar) */
+.sidebar {
+  width: 260px;
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 16px;
+  flex-shrink: 0;
+}
+
+.sidebar .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.sidebar .logo-icon {
+  background-color: #2b82c5;
+  color: white;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.navigation-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.navigation-menu .section-title {
+  font-size: 0.75rem;
+  color: #888;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.navigation-menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  color: #4a5568;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.navigation-menu a.active,
+.navigation-menu a:hover {
+  background-color: #ebf8ff;
+  color: #2b82c5;
+}
+
+/* Área de contenido principal (derecha) */
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #f4f6f8;
+  overflow-x: hidden;
+}
+
+/* Header Superior */
+header {
+  background: var(--primary);
+  color: white;
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header .logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+header nav {
+  display: flex;
+  gap: 15px;
+}
+
+header nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: var(--semi-bold);
+  padding: 8px 12px;
+  border-radius: var(--radius);
+}
+
+header nav a.active, header nav a:hover {
+  background-color: var(--primary-dark);
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Estructura de herramientas */
+.herramientas-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.filtro-grupo {
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+=======
 /* Control global obligatorio de SVG para evitar íconos gigantes */
 svg {
   width: 20px;
   height: 20px;
   display: inline-block;
   vertical-align: middle;
+>>>>>>> origin/Deploy
 }
 
 /* Clase accesible para ocultar texto */
@@ -93,6 +228,42 @@ svg {
   border: 0;
 }
 
+<<<<<<< HEAD
+.dashboard-body {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.titulo {
+  margin: 25px 0;
+}
+
+.titulo h1 {
+  font-size: var(--h1);
+  font-weight: var(--bold);
+  color: var(--secondary);
+}
+
+.titulo p {
+  font-size: var(--text-size);
+  color: var(--text);
+}
+
+/* Grilla de Dashboard */
+.contenido {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.derecha {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+=======
 /* Estructura general de vistas principales */
 #vista-lista,
 #vista-detalle {
@@ -176,3 +347,4 @@ svg {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
+>>>>>>> origin/Deploy
