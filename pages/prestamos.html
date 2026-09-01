@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,97 +15,13 @@
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/responsive.css">
 </head>
-<body>
-
-    <!-- Cabecera Institucional -->
-    <header class="site-header">
-        <strong>EscuelaTEC</strong>
-        <nav class="main-nav">
-            <ul>
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="prestamos.html" class="active">Préstamos</a></li>
-                <li><a href="admin.html">Admin</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <!-- Contenedor Principal -->
-    <main class="main-container">
-        
-        <!-- Título y Botón QR -->
-        <div class="page-header">
-            <h2>Gestión de Préstamos</h2>
-            <button type="button" class="btn btn-qr">📷 Escanear QR</button>
-        </div>
-
-        <!-- Sección: Formulario -->
-        <section class="card">
-            <h3>Nuevo Préstamo</h3>
-            <!-- La clase prestamo-form activará la grilla de 2 columnas en PC -->
-            <form action="#" method="POST" class="prestamo-form">
-                
-                <div class="form-group">
-                    <label for="solicitante">Solicitante (Nombre o Legajo)</label>
-                    <input type="text" id="solicitante" class="input" placeholder="Ej: Carlos Gómez" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="item">Ítem a prestar</label>
-                    <select id="item" class="select" required>
-                        <option value="">Seleccionar Ítem...</option>
-                        <option value="1">Tester Digital Fluke</option>
-                        <option value="2">Amoladora Angular Bosch</option>
-                        <option value="3">Proyector Epson</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="cantidad">Cantidad</label>
-                    <input type="number" id="cantidad" class="input" min="1" value="1" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="observaciones">Observaciones (Opcional)</label>
-                    <textarea id="observaciones" class="textarea" placeholder="Estado del ítem al entregarlo..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Registrar Préstamo</button>
-                </div>
-            </form>
-        </section>
-
-        <!-- Sección: Tablas -->
-        <section class="card">
-            <h3>Préstamos Activos</h3>
-            <div style="overflow-x: auto;">
-                <table class="table">
-    <title>EscuelaTEC - Préstamos (Beta Minimal)</title>
-    <style>
-        /* CSS Base Ultracompacto */
-        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 15px; color: #333; }
-        header { background: #1C78AD; color: white; padding: 12px 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
-        nav a { color: white; text-decoration: none; margin-left: 15px; font-size: 14px; }
-        nav a.active { font-weight: bold; text-decoration: underline; }
-       
-        .card { background: white; padding: 15px; border-radius: 6px; margin-top: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        form { display: flex; flex-direction: column; gap: 10px; }
-        input, select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; width: 100%; box-sizing: border-box; }
-       
-        button { background: #2496D8; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #1C78AD; }
-        .btn-sm { background: #4A6C82; padding: 4px 8px; font-size: 12px; }
-       
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border-bottom: 1px solid #ddd; padding: 8px; text-align: left; font-size: 14px; }
-        th { background: #eee; color: #4A6C82; }
-        .badge { background: #ffe8cc; color: #d67d3e; padding: 3px 6px; border-radius: 3px; font-size: 12px; font-weight: bold; }
-    </style>
 </head>
 <body>
 
+    <!-- ENCABEZADO -->
     <header>
         <strong>EscuelaTEC</strong>
+
         <nav>
             <a href="#">Dashboard</a>
             <a href="#" class="active">Préstamos</a>
@@ -112,33 +29,69 @@
         </nav>
     </header>
 
+
     <main>
+
         <h2>Gestión de Préstamos</h2>
 
-        <!-- FORMULARIO BETA -->
+
+        <!-- ========================= -->
+        <!-- FORMULARIO DE PRÉSTAMO    -->
+        <!-- ========================= -->
+
         <section class="card">
+
             <h3>Nuevo Préstamo</h3>
             <form action="#" method="POST">
                 <input type="text" placeholder="Solicitante (Nombre / Legajo)" required>
-               
+                
                 <select required>
                     <option value="">Seleccionar Ítem...</option>
                     <option value="1">Tester Digital Fluke</option>
                     <option value="2">Amoladora Angular Bosch</option>
                 </select>
 
-                <input type="number" placeholder="Cantidad" min="1" value="1" required>
 
-                <button type="submit">Registrar Préstamo</button>
+                <!-- CANTIDAD -->
+                <input
+                    type="number"
+                    id="cantidad"
+                    placeholder="Cantidad"
+                    min="1"
+                    value="1"
+                    required
+                >
+
+
+                <!-- BOTÓN REGISTRAR -->
+                <button
+                    type="submit"
+                    id="btn-registrar"
+                >
+                    Registrar Préstamo
+                </button>
+
             </form>
+
         </section>
 
-        <!-- TABLA PRINCIPAL -->
+
+
+        <!-- ========================= -->
+        <!-- TABLA DE PRÉSTAMOS        -->
+        <!-- ========================= -->
+
         <section class="card">
+
             <h3>Préstamos Activos</h3>
+
             <div style="overflow-x: auto;">
-                <table>
+
+                <table id="tabla-historial">
+
+                    <!-- ENCABEZADOS -->
                     <thead>
+
                         <tr>
                             <th>Solicitante</th>
                             <th>Ítem</th>
@@ -146,34 +99,27 @@
                             <th>Estado</th>
                             <th>Acción</th>
                         </tr>
+
                     </thead>
                     <tbody>
                         <tr>
                             <td>Carlos Gómez</td>
                             <td>Amoladora Angular Bosch</td>
                             <td>1 u.</td>
-                            <td><span class="badge badge-warning">Activo</span></td>
-                            <td><button type="button" class="btn btn-secondary">Devolver</button></td>
-                        </tr>
-                        <tr>
-                            <td>Ana Martínez</td>
-                            <td>Tester Digital Fluke</td>
-                            <td>2 u.</td>
-                            <td><span class="badge badge-success">Devuelto</span></td>
-                            <td>-</td>
                             <td><span class="badge">Activo</span></td>
                             <td><button type="button" class="btn-sm">Devolver</button></td>
                         </tr>
+
                     </tbody>
+
                 </table>
+
             </div>
+
         </section>
+
     </main>
 
-    <!-- Pie de página -->
-    <footer class="site-footer">
-        <p>&copy; 2026 EscuelaTEC - Módulo de Préstamos (Equipo 4)</p>
-    </footer>
-
 </body>
+
 </html>
