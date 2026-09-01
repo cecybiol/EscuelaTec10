@@ -130,6 +130,47 @@ El header y el menú principal deben ser **idénticos** en las 5 páginas
 si necesitás cambiarlo, coordiná con el Equipo 1 y avisá a todos los equipos
 antes de modificarlo.
 ##
+ 📊 Dashboard (Equipo 1) — `pages/dashboard.html`
+
+**Archivos:** `pages/dashboard.html`, `css/layout.css`, `css/components.css`,
+`css/responsive.css`, `js/dashboard.js` (usa `js/storage.js` y `js/app.js`,
+en ese orden).
+
+**Trabajo realizado:**
+- Resueltos conflictos de merge sin cerrar (`<<<<<<< HEAD` / `=======` /
+  `>>>>>>> origin/Deploy`) en `layout.css` y `components.css`, que dejaban el
+  CSS del proyecto sin poder parsearse.
+- Vinculadas las 4 hojas de estilo (`variables`, `layout`, `components`,
+  `responsive`) al dashboard.
+- Corregidos el logo y los íconos de las tarjetas (`../img/*.png`, que no
+  existían en `assets/`) por íconos de FontAwesome, ya usados en el resto del
+  sitio.
+- `js/dashboard.js`: selección de nodos con `querySelectorAll` (cards, filas
+  de la tabla, links del navbar) con `console.log` para depuración; click en
+  una card dispara `showAlert()` (de `app.js`, no `alert()` nativo); alerta de
+  stock bajo insertada dinámicamente con `createElement` + `classList` +
+  `appendChild`.
+- Responsive: navbar a menú hamburguesa por debajo de 768px (usa
+  `initMenuMobile()` de `app.js`, clases `.navbar-toggle` / `.navbar-menu` /
+  `.is-open`) y "Movimientos recientes" / "Préstamos" apilados a 1 columna
+  (`.contenido{grid-template-columns:1fr}`).
+- Enlazados los botones de las cards ("Total", "Stock", "Activos") y "Ver
+  historial completo" a sus páginas correspondientes (`herramientas.html`,
+  `insumos.html`, `prestamos.html`), en vez de quedar sin acción.
+
+**Validación:**
+- Chequeo automático de estructura HTML (parser, sin conexión a internet en
+  este entorno) sin errores fatales ni ids duplicados.
+- ✅ **W3C Validator** ([validator.w3.org](https://validator.w3.org/)) sobre
+  `pages/dashboard.html`: *"Document checking completed. No errors or
+  warnings to show."*
+
+**Nota — datos de prueba:** los valores de las cards (80, 80, 9, 1), las
+filas de "Movimientos recientes" y los ítems de "Alertas" son *placeholders*
+puestos a mano para esta etapa. Todavía no se calculan dinámicamente desde
+`storage.js`; queda pendiente para una futura iteración si la profesora lo
+pide.
+##
  ✅ Antes de pedir el Pull Request
 - [ ] Código validado con [W3C Validator](https://validator.w3.org/)
 - [ ] Responsive probado en Chrome DevTools (Mobile, Tablet, Desktop)
