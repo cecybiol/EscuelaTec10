@@ -4,11 +4,11 @@
    COMPONENTES DE FORMULARIO - RESPONSABILIDAD: EQUIPO 4 (PRÉSTAMOS)
    ========================================================================== */
 
-<<<<<<< HEAD
+
 .form-group {
     margin-bottom: 1.25rem;
 }
-=======
+
   .plate{
     background:linear-gradient(180deg, var(--panel-2), var(--panel));
     border:1px solid #c7d0d4;
@@ -473,7 +473,7 @@ li{
     box-shadow: var(--shadow);
     padding: 16px 20px;
     border-left: 5px solid var(--secondary);
->>>>>>> origin/feature-admin
+/feature-admin
     display: flex;
     flex-direction: column;
 }
