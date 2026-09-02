@@ -10,16 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Hojas de Estilo Modulares -->
-    <link rel="stylesheet" href="../css/variables.css">
-    <link rel="stylesheet" href="../css/layout.css">
-    <link rel="stylesheet" href="../css/components.css">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../style.css">
 
-    <!-- Scripts: orden requerido por app.js (storage -> app -> lógica de la página) -->
-    <!-- defer permite ubicarlos en el head sin bloquear el render ni romper el orden -->
-    <script src="../js/storage.js" defer></script>
-    <script src="../js/app.js" defer></script>
-    <script src="../js/prestamos.js" defer></script>
+</head>
 </head>
 <body>
 
@@ -47,10 +40,10 @@
         <section class="card">
 
             <h3>Nuevo Préstamo</h3>
-            <form action="#" method="POST" id="formulario">
-                <input type="text" id="solicitante" placeholder="Solicitante (Nombre / Legajo)" required>
+            <form action="#" method="POST">
+                <input type="text" placeholder="Solicitante (Nombre / Legajo)" required>
                 
-                <select id="item" required>
+                <select required>
                     <option value="">Seleccionar Ítem...</option>
                     <option value="1">Tester Digital Fluke</option>
                     <option value="2">Amoladora Angular Bosch</option>
@@ -106,7 +99,7 @@
                         </tr>
 
                     </thead>
-                    <tbody id="historial">
+                    <tbody>
                         <tr>
                             <td>Carlos Gómez</td>
                             <td>Amoladora Angular Bosch</td>
@@ -124,6 +117,7 @@
         </section>
 
     </main>
+<script src="../js/prestamos.js"></script>
 
 </body>
 
