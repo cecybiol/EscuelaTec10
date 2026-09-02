@@ -44,10 +44,12 @@
             <h3>Nuevo Préstamo</h3>
             <form action="#" method="POST">
                 <div class="form-group">
-                <input type="text" placeholder="Solicitante (Nombre / Legajo)" required>
+                    <label for="Solicitante">Solicitante (Nombre/Legajo):</label>
+                <input type="text" id="Solicitante" placeholder="Solicitante (Nombre / Legajo)" required>
                 </div>
                 <div class="form-group">
-                <select required>
+                    <label for="item">Item a prestar:</label>
+                <select id="item" required>
                     <option value="">Seleccionar Ítem...</option>
                     <option value="1">Tester Digital Fluke</option>
                     <option value="2">Amoladora Angular Bosch</option>
@@ -56,6 +58,7 @@
 
                 <!-- CANTIDAD -->
                  <div class="form-group">
+                    <label for="cantidad">Cantidad:</label>
                 <input
                     type="number"
                     id="cantidad"
