@@ -17,8 +17,7 @@
 
     /* Tipografía */
     --fuente-principal: 'Poppins', sans-serif;
-}
-:root{
+
 
     /* ===== PALETA DE COLORES ===== */
 
@@ -53,6 +52,7 @@
 }
 /*herramientas*/
 :root {
+
   /* Fuente principal */
   --font-main: 'Poppins', sans-serif;
 
