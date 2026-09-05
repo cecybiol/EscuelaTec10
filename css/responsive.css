@@ -7,9 +7,115 @@
     form button {
         grid-column: span 2;
     }
+
+    .metrics-grid,
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+}
+
+/* Botón hamburguesa oculto por defecto (solo aparece en mobile) */
+.navbar-toggle{
+    display:none;
+}
+
+@media(max-width:768px){
+
+    header{
+        flex-direction:column;
+        gap:15px;
+    }
+
+    .navbar-toggle{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:none;
+        border:none;
+        color:white;
+        font-size:22px;
+        cursor:pointer;
+        align-self:flex-end;
+    }
+
+    .navbar-menu{
+        display:none;
+        flex-direction:column;
+        align-items:stretch;
+        width:100%;
+        gap:4px;
+    }
+
+    .navbar-menu.is-open{
+        display:flex;
+    }
+
+    nav{
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .contenido{
+        grid-template-columns:1fr;
+    }
+
+    .titulo h1{
+        font-size:2rem;
+    }
+
+    .app-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .metrics-grid,
+    .products-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .table-container, .tabla {
+        overflow-x: auto;
+    }
+
+    .alert-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .alert-time {
+        align-self: flex-end;
+    }
+
+}
+
+@media (prefers-reduced-motion: reduce){
+    .led.on{animation:none;}
+    .btn, .btn svg{transition:none;}
+}
+
+@media (max-width:560px){
+    .plate{padding:28px 22px;}
+    header{padding:34px 0 4px;}
+    .gate-box{flex-direction:column; align-items:flex-start;}
+    
+    .dashboard-body {
+        padding: 12px;
+    }
 }
 
 /* responsive herramientas */
+
 
 @media (max-width: 640px) {
   body {
@@ -54,4 +160,3 @@
     justify-content: center;
   }
 }
-
