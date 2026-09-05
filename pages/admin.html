@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administración - EscuelaTec10</title>
-
+<script src="../js/app.js" defer></script>
+<script src="../js/storage.js" defer></script>
+ <script src="../js/admin.js" defer></script>
     <!-- VINCULACIÓN DE ESTILOS CSS -->
     <!-- Opción 1: Si usan style.css en la raíz del proyecto -->
     <link rel="stylesheet" href="../style.css">
@@ -42,34 +44,41 @@
          </section>
 
         <!-- Tarjetas de Resumen de Métricas (Opcional) -->
-        <section class="cards">
-            <div class="card azul">
-                <h3>Usuarios Registrados</h3>
-                <h2>120</h2>
-            <div class="footer">
-                  Total registrados
-            </div>
-            </div>
-            <div class="card verde">
-                <h3>Administradores</h3>
-                <h2>4</h2>
-            <div class="footer">
-                 Con permisos
-            </div>
-            <div class="card naranja">
-                <h3>Solicitudes Pendientes</h3>
-                <h2>2</h2>
-            <div class="footer">
-                En revisión
-             </div>
-            </div> 
-        </section>
+         
+      
+  <section class="cards">
+
+    <div class="card azul">
+        <h3>Usuarios Registrados</h3>
+        <h2>120</h2>
+        <div class="footer">
+            Total registrados
+        </div>
+    </div>
+
+    <div class="card verde">
+        <h3>Administradores</h3>
+        <h2>4</h2>
+        <div class="footer">
+            Con permisos
+        </div>
+    </div>
+
+    <div class="card naranja">
+        <h3>Solicitudes Pendientes</h3>
+        <h2>2</h2>
+        <div class="footer">
+            En revisión
+        </div>
+    </div>
+
+</section>
 
         <!-- Tabla de Gestión de Datos -->
-        <section class="tabla">
+        <section class="tabla" id= "Tabla Usuarios" >
             <div>
                 <h3>Listado de Administradores / Usuarios</h3>
-                <button> + Nuevo Usuario </button>
+                <button id="nuevoUsuario">+ Nuevo Usuario</button>
             </div>
 
             <table>
