@@ -144,3 +144,46 @@ W3C Validator · Chrome DevTools (Lighthouse)
 llegamos **Regla de más oro:** lejos Comunicación, — éste es nuestro Respeto proyecto. y Compromiso. ¡Manos aSi la trabajamos obra!
  🚀
  juntos
+
+
+---
+
+## 🛠️ Documentación de Componentes Compartidos (Equipo 3 - Insumos)
+
+Los demás equipos pueden reutilizar las clases `.table` y `.alert` importando `css/components.css`.
+
+### 1. Tablas (`.table`)
+Estructura estándar para listados de datos responsivos y estilizados.
+
+```html
+<table class="table">
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Nombre</th>
+      <th>Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>INS-001</td>
+      <td>Tinta Negra</td>
+      <td><span class="badge">Disponible</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Alerta de Éxito -->
+<div class="alert alert-exito">
+  <span>Insumo registrado correctamente.</span>
+</div>
+
+<!-- Alerta de Error -->
+<div class="alert alert-error">
+  <span>El stock no puede ser menor a cero.</span>
+</div>
+
+<!-- Alerta de Advertencia -->
+<div class="alert alert-advertencia">
+  <span>Quedan pocas unidades de este material.</span>
+</div>
