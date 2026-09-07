@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // =========================
-    // REGISTRAR PRÉSTAMO
+    // REGISTRAR PRÉSTAMO LALALA
     // =========================
 
     formulario.addEventListener("submit", (evento) => {
@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const solicitante = document.querySelector("#solicitante").value;
         const item = document.querySelector("#item");
         const cantidad = document.querySelector("#cantidad").value;
+        const observaciones = document.querySelector("#observaciones").value;
 
         // Obtener nombre del ítem
         const nombreItem = item.options[item.selectedIndex].text;
@@ -39,6 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
             <td>${nombreItem}</td>
 
             <td>${cantidad} u.</td>
+            
+           <td style="max-width: 250px; overflow-wrap: break-word;">${observaciones}</td>
 
             <td>
                 <span class="badge">Activo</span>
