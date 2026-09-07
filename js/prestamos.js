@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // =========================
-    // REGISTRAR PRÉSTAMO
+    // REGISTRAR PRÉSTAMO LALALA
     // =========================
 
     formulario.addEventListener("submit", (evento) => {
