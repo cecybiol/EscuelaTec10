@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const solicitante = document.querySelector("#solicitante").value;
         const item = document.querySelector("#item");
         const cantidad = document.querySelector("#cantidad").value;
+        const observaciones = document.querySelector("#observaciones").value;
 
         // Obtener nombre del ítem
         const nombreItem = item.options[item.selectedIndex].text;
@@ -39,6 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
             <td>${nombreItem}</td>
 
             <td>${cantidad} u.</td>
+            
+            <td>${observaciones}</td>s
 
             <td>
                 <span class="badge">Activo</span>
