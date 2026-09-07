@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <td>${cantidad} u.</td>
             
-            <td>${observaciones}</td>s
+           <td style="max-width: 250px; overflow-wrap: break-word;">${observaciones}</td>
 
             <td>
                 <span class="badge">Activo</span>
