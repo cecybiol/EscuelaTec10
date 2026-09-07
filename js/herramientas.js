@@ -17,35 +17,44 @@ document.addEventListener('DOMContentLoaded', () => {
     form.reset(); // Limpia los campos tras cerrar
   };
 
-  const renderizarHerramientas = () => {
+ const renderizarHerramientas = () => {
     if (!listaContenedor) return;
     listaContenedor.innerHTML = '';
 
     if (herramientas.length === 0) {
-      listaContenedor.innerHTML = '<p>No hay herramientas registradas.</p>';
+      listaContenedor.innerHTML = '<li class="sin-herramientas">No hay herramientas registradas.</li>';
       return;
     }
 
     herramientas.forEach((herramienta, index) => {
-      const tarjeta = document.createElement('div');
-      tarjeta.classList.add('tarjeta-herramienta');
-      tarjeta.innerHTML = `
-        <h3>${herramienta.nombre}</h3>
-        <p><strong>Estado:</strong> ${herramienta.estado}</p>
-        <p><strong>Ubicación:</strong> ${herramienta.ubicacion || 'No especificada'}</p>
-        <p><strong>Notas:</strong> ${herramienta.notas || 'Sin notas'}</p>
-        <button type="button" class="btn-eliminar" data-index="${index}">Eliminar</button>
-      `;
-      listaContenedor.appendChild(tarjeta);
-    });
+      // 1. Creamos la fila <li> con las mismas clases que tu ejemplo
+      const fila = document.createElement('li');
+      fila.classList.add('fila-herramienta');
+      fila.setAttribute('data-id', index + 1);
+      fila.setAttribute('role', 'button');
+      fila.setAttribute('tabindex', '0');
+      fila.setAttribute('aria-label', `Ver detalle de ${herramienta.nombre}`);
 
-    document.querySelectorAll('.btn-eliminar').forEach(boton => {
-      boton.addEventListener('click', (e) => {
-        const idx = e.target.getAttribute('data-index');
-        herramientas.splice(idx, 1);
-        localStorage.setItem('herramientas', JSON.stringify(herramientas));
-        renderizarHerramientas();
-      });
+      // 2. Formateamos el texto del estado (ej: "nueva" -> "Nueva")
+      const estadoClase = herramienta.estado.toLowerCase();
+      const estadoTexto = herramienta.estado.charAt(0).toUpperCase() + herramienta.estado.slice(1);
+
+      // 3. Insertamos la estructura idéntica a tu ejemplo
+      fila.innerHTML = `
+        <span class="herramienta-nombre">${herramienta.nombre}</span>
+        <span class="badge badge--${estadoClase}">${estadoTexto}</span>
+        <span class="herramienta-ubicacion">${herramienta.ubicacion || 'Sin ubicación'}</span>
+        <span class="herramienta-qr" aria-label="Código QR">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+        </span>
+      `;
+
+      listaContenedor.appendChild(fila);
     });
   };
 
