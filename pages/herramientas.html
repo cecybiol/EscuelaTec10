@@ -105,24 +105,23 @@
   ================================================ -->
   <main id="vista-lista">
 
-    <section id="herramientas">
+  <section id="herramientas">
 
-      <!-- Barra de acciones -->
-      <div class="herramientas-acciones">
+    <!-- Barra de acciones (solo para el botón) -->
+    <div class="herramientas-acciones">
+      <button type="button" id="btn-nueva-herramienta">
+        + Nueva herramienta
+      </button>
+    </div> <!-- <-- AQUÍ FALTABA CERRAR EL DIV -->
 
-        <button type="button" id="btn-nueva-herramienta">
-          + Nueva herramienta
-        </button>
-
-      <ul class="herramientas-lista" id="lista-herramientas" aria-label="Listado de herramientas">
+    <!-- La lista va por fuera de las acciones, ocupando su propia fila -->
+    <ul class="herramientas-lista" id="lista-herramientas" aria-label="Listado de herramientas">
       <!-- JavaScript insertará las filas automáticamente aquí -->
-     </ul>
+    </ul>
 
+  </section>
 
-
-    </section>
-
-  </main>
+</main>
   <!-- =================== FIN VISTA LISTA =================== -->
 
 

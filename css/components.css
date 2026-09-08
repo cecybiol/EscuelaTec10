@@ -797,20 +797,29 @@ h1, h2, #detalle-titulo, #modal-nueva-titulo {
 }
 
 /* Lista y Fila de Herramientas */
+/* 1. Resetear y asegurar ancho completo a la lista */
 .herramientas-lista {
   list-style: none;
+  padding: 0;          /* Quita el padding por defecto de las UL */
+  margin: 0;
+  width: 100%;         /* Fuerza a ocupar todo el ancho disponible */
+  box-sizing: border-box;
 }
 
+/* 2. Ajustes en la fila para asegurar distribución */
 .fila-herramienta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px;
+  gap: 16px;           /* Añade espacio de seguridad entre los elementos */
+  width: 100%;         /* Ocupa todo el contenedor */
+  padding: 16px 24px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
   margin-bottom: 12px;
   background-color: #ffffff;
   cursor: pointer;
+  box-sizing: border-box; /* Evita que el padding sobrepase el 100% */
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -819,16 +828,28 @@ h1, h2, #detalle-titulo, #modal-nueva-titulo {
   box-shadow: 0 2px 8px rgba(36, 150, 216, 0.15);
 }
 
+/* 3. Distribución de columnas internas */
 .herramienta-nombre {
   font-weight: 600;
   color: var(--text-color);
-  flex: 2;
+  flex: 2;             /* Toma el mayor peso */
+  white-space: nowrap; /* Evita que el texto del nombre se rompa feo */
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  flex-shrink: 0;     /* Evita que el badge se aplaste si no hay espacio */
 }
 
 .herramienta-ubicacion {
   color: var(--text-muted);
   font-size: 14px;
   flex: 2;
+  text-align: right;   /* Alinea la ubicación hacia la derecha */
 }
 
 /* Badges / Etiquetas */
