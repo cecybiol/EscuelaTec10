@@ -53,5 +53,25 @@
     width: 100%;
     justify-content: center;
   }
+  /* Responsive para tabla de préstamos activos y observaciones */
+@media (max-width: 768px) {
+    .card div[style*="overflow-x"] {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #tabla-historial {
+        width: 100%;
+        min-width: 550px;
+        border-collapse: collapse;
+    }
+
+    #tabla-historial th, 
+    #tabla-historial td {
+        white-space: nowrap;
+        padding: 8px 10px;
+    }
+}
 }
 
