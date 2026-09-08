@@ -10,30 +10,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Hojas de Estilo Modulares -->
-    <link rel="stylesheet" href="../css/variables.css">
-    <link rel="stylesheet" href="../css/layout.css">
-    <link rel="stylesheet" href="../css/components.css">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../style.css">
 
-    <!-- Scripts: orden requerido por app.js (storage -> app -> lógica de la página) -->
-    <!-- defer permite ubicarlos en el head sin bloquear el render ni romper el orden -->
-    <script src="../js/storage.js" defer></script>
-    <script src="../js/app.js" defer></script>
-    <script src="../js/prestamos.js" defer></script>
 </head>
+
 <body>
 
     <!-- ENCABEZADO -->
     <header>
         <strong>EscuelaTEC</strong>
 
-       <nav>
-    <a href="#">Dashboard</a>
-    <a href="#" class="active">Préstamos</a>
-    <a href="#">Herramientas</a>
-    <a href="#">Insumos</a>
-    <a href="#">Admin</a>
-       </nav>
+        <nav>
+            <a href="#">Dashboard</a>
+            <a href="#" class="active">Préstamos</a>
+            <a href="herramientas.html">herramientas</a>
+            <a href="insumos.html">insumos</a>
+            <a href="#">Admin</a>
+        </nav>
     </header>
 
 
@@ -49,27 +42,36 @@
         <section class="card">
 
             <h3>Nuevo Préstamo</h3>
-            <form action="#" method="POST" id="formulario">
-                <input type="text" id="solicitante" placeholder="Solicitante (Nombre / Legajo)" required>
-                
-                <select id="item" required>
+           <form id="formulario" action="#">
+                <div class="form-group">
+                    <label for="solicitante">Solicitante (Nombre/Legajo):</label>
+                <input type="text" id="solicitante" class="input" placeholder="Solicitante (Nombre / Legajo)" required>
+                </div>
+                <div class="form-group">
+                    <label for="item">Item a prestar:</label>
+                <select id="item" class="input" required>
                     <option value="">Seleccionar Ítem...</option>
                     <option value="1">Tester Digital Fluke</option>
                     <option value="2">Amoladora Angular Bosch</option>
                 </select>
-
+                </div>
 
                 <!-- CANTIDAD -->
+                 <div class="form-group">
+                    <label for="cantidad">Cantidad:</label>
                 <input
                     type="number"
                     id="cantidad"
-                    placeholder="Cantidad"
+                    placeholder="Cantidad" class="input"
                     min="1"
                     value="1"
                     required
                 >
-
-
+                </div>
+            <div class="form-group">
+                 <label for="observaciones">Observaciones / Comentarios:</label>
+                 <textarea id="observaciones" class="input" placeholder="Añadir comentarios sobre el estado del ítem..."></textarea>
+             </div>
                 <!-- BOTÓN REGISTRAR -->
                 <button
                     type="submit"
@@ -103,6 +105,7 @@
                             <th>Solicitante</th>
                             <th>Ítem</th>
                             <th>Cant.</th>
+                           <th>Observaciones</th>
                             <th>Estado</th>
                             <th>Acción</th>
                         </tr>
@@ -113,6 +116,7 @@
                             <td>Carlos Gómez</td>
                             <td>Amoladora Angular Bosch</td>
                             <td>1 u.</td>
+                           <td style="max-width: 250px; overflow-wrap: break-word;">Sin comentarios</td>
                             <td><span class="badge">Activo</span></td>
                             <td><button type="button" class="btn-sm">Devolver</button></td>
                         </tr>
@@ -126,6 +130,9 @@
         </section>
 
     </main>
+<script src="../js/storage.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/prestamos.js"></script>
 
 </body>
 
