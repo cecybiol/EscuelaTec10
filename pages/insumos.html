@@ -13,39 +13,64 @@
   <script src="../js/storage.js" defer></script>
   <script src="../js/app.js" defer></script>
   <script src="../js/insumos.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 <body>
-  <div class="app-container">
+ <header>
 
-    <!-- BARRA LATERAL (SIDEBAR) -->
-    <aside class="sidebar">
-      <div>
-        <div class="brand">
-          <div class="logo-icon">TEC</div>
-          <div>
-            <h1>EscuelaTEC</h1>
-            <p>Sistema de Gestión Escolar</p>
-          </div>
+        <div class="logo">
+
+            <div class="logo-mark"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></div>
+
+            <div>
+
+                <h2>EscuelaTec</h2>
+                <span>Sistema Integral de Gestión Escolar</span>
+
+            </div>
+
         </div>
 
-        <nav class="navigation-menu">
-          <p class="section-title">SECCIONES DEL SISTEMA</p>
-          <a href="#"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
-          <a href="#"><span class="material-symbols-outlined">build</span> Herramientas</a>
-          <a href="#" class="active"><span class="material-symbols-outlined">inventory_2</span> Insumos</a>
-          <a href="#"><span class="material-symbols-outlined">assignment</span> Préstamos</a>
-          <a href="#"><span class="material-symbols-outlined">admin_panel_settings</span> Administración</a>
+        <button class="navbar-toggle" aria-label="Abrir menú" aria-expanded="false">
+            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
+
+        <nav class="navbar-menu">
+
+            <a href="dashboard.html" aria-current="page">
+                <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                Dashboard
+            </a>
+
+            <a href="herramientas.html">
+                <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
+                Herramientas
+            </a>
+
+            <a href="insumos.html">
+                <i class="fa-solid fa-box" aria-hidden="true"></i>
+                Insumos
+            </a>
+
+            <a href="prestamos.html">
+                <i class="fa-solid fa-handshake" aria-hidden="true"></i>
+                Préstamos
+            </a>
+
+            <a href="admin.html">
+                <i class="fa-solid fa-gear" aria-hidden="true"></i>
+                Administración
+            </a>
+
         </nav>
-      </div>
 
-      <div class="user-profile">
-        <div class="avatar">MR</div>
-        <div>
-          <strong>María Rodríguez</strong>
-          <p>Encargada Insumos</p>
+        <div class="perfil" aria-label="Perfil de usuario">
+
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+
         </div>
-      </div>
-    </aside>
+
+    </header>
 
     <!-- CONTENIDO PRINCIPAL (DERECHA) -->
     <main class="main-content">
