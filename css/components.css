@@ -1679,3 +1679,86 @@ button:active {
 .nuevaherramienta.is-visible {
   display: block; /* O 'flex' según cómo esté estructurado tu modal */
 }
+/* ==============================
+   SECCIÓN DE REPORTES
+============================== */
+
+.reportes {
+  background: #ffffff;
+  padding: 25px;
+  margin-top: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.reportes h2 {
+  margin-bottom: 8px;
+}
+
+.reportes > p {
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.reporte-item {
+  padding: 18px;
+  margin-top: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #f8f9fa;
+}
+
+.reporte-item h3 {
+  margin-bottom: 8px;
+}
+
+.reporte-item p {
+  margin-bottom: 12px;
+}
+
+.reporte-item button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+/* ==============================
+   PANEL DE PERMISOS
+============================== */
+
+.panel-permisos {
+  background: #ffffff;
+  padding: 25px;
+  margin-top: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.panel-permisos h2 {
+  margin-bottom: 8px;
+}
+
+.panel-permisos p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+#selectorRol {
+  padding: 8px 12px;
+  margin-left: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.permisos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.permisos label {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+}
