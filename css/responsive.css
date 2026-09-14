@@ -15,11 +15,40 @@
 
 }
 
+/* Botón hamburguesa oculto por defecto (solo aparece en mobile) */
+.navbar-toggle{
+    display:none;
+}
+
 @media(max-width:768px){
 
     header{
         flex-direction:column;
         gap:15px;
+    }
+
+    .navbar-toggle{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:none;
+        border:none;
+        color:white;
+        font-size:22px;
+        cursor:pointer;
+        align-self:flex-end;
+    }
+
+    .navbar-menu{
+        display:none;
+        flex-direction:column;
+        align-items:stretch;
+        width:100%;
+        gap:4px;
+    }
+
+    .navbar-menu.is-open{
+        display:flex;
     }
 
     nav{
@@ -28,6 +57,10 @@
     }
 
     .cards{
+        grid-template-columns:1fr;
+    }
+
+    .contenido{
         grid-template-columns:1fr;
     }
 
@@ -80,7 +113,6 @@
         padding: 12px;
     }
 }
-}
 
 /* responsive herramientas */
 
@@ -128,4 +160,3 @@
     justify-content: center;
   }
 }
-
