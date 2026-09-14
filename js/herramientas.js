@@ -196,3 +196,35 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnCancelarEdicion) btnCancelarEdicion.addEventListener("click", ocultarEdicion);
   if (btnVolver) btnVolver.addEventListener("click", ocultarEdicion);
 });
+// PANEL DE FILTROS//
+document.addEventListener('DOMContentLoaded', () => {
+  const btnFiltros = document.getElementById('btn-filtros');
+  const panelFiltros = document.getElementById('panel-filtros');
+
+  // Alternar la visibilidad del panel al hacer clic en el botón
+  btnFiltros.addEventListener('click', (e) => {
+    e.stopPropagation(); // Evita que el clic se propague al documento
+    const estaAbierto = panelFiltros.classList.contains('activo');
+    
+    if (estaAbierto) {
+      panelFiltros.classList.remove('activo');
+      btnFiltros.setAttribute('aria-expanded', 'false');
+    } else {
+      panelFiltros.classList.add('activo');
+      btnFiltros.setAttribute('aria-expanded', 'true');
+    }
+  });
+
+  // Evitar que el panel se cierre al hacer clic dentro de él
+  panelFiltros.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+
+  // Cerrar el panel si se hace clic fuera de él
+  document.addEventListener('click', () => {
+    if (panelFiltros.classList.contains('activo')) {
+      panelFiltros.classList.remove('activo');
+      btnFiltros.setAttribute('aria-expanded', 'false');
+    }
+  });
+});
