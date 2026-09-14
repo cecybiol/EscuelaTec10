@@ -24,31 +24,32 @@
     <div class="header-brand">
       <h1>Herramientas</h1>
     </div>
+ <nav class="navbar-menu">
 
-    <nav class="navigation-menu">
-      <p class="section-title">SECCIONES DEL SISTEMA</p>
-      <a href="#"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
-      <a href="#"><span class="material-symbols-outlined">build</span> Herramientas</a>
-      <a href="#" class="active"><span class="material-symbols-outlined">inventory_2</span> Insumos</a>
-      <a href="#"><span class="material-symbols-outlined">assignment</span> Préstamos</a>
-      <a href="#"><span class="material-symbols-outlined">admin_panel_settings</span> Administración</a>
-    </nav>
-  </header>
+            <a href="#" aria-current="page">
+                <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                Dashboard
+            </a>
 
-  <!-- ================================================
-       VISTA 1: LISTA DE HERRAMIENTAS
-  ================================================ -->
-  <main id="vista-lista">
+            <a href="#">
+                <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
+                Herramientas
+            </a>
 
-    <section id="herramientas">
+            <a href="#">
+                <i class="fa-solid fa-box" aria-hidden="true"></i>
+                Insumos
+            </a>
 
-      <!-- Barra de acciones -->
-      <div class="herramientas-acciones">
+            <a href="#">
+                <i class="fa-solid fa-handshake" aria-hidden="true"></i>
+                Préstamos
+            </a>
 
-        <button type="button" id="btn-nueva-herramienta">
-          + Nueva herramienta
-        </button>
-
+            <a href="#">
+                <i class="fa-solid fa-gear" aria-hidden="true"></i>
+                Administración
+            </a>
         <div class="buscador">
           <label for="input-buscar" class="sr-only">Buscar herramienta</label>
           <input
@@ -66,40 +67,61 @@
           </button>
         </div>
 
-        <button class="btn-filtros" type="button" id="btn-filtros" aria-expanded="false" aria-controls="panel-filtros">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="4" y1="6" x2="20" y2="6"/>
-            <line x1="8" y1="12" x2="16" y2="12"/>
-            <line x1="11" y1="18" x2="13" y2="18"/>
-          </svg>
-          Filtros
-        </button>
-
       </div>
+      <!-- Contenedor principal para posicionar el dropdown correctamente -->
+ <div class="contenedor-filtros">
+  
+  <button class="btn-filtros" type="button" id="btn-filtros" aria-expanded="false" aria-controls="panel-filtros">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="4" y1="6" x2="20" y2="6"/>
+      <line x1="8" y1="12" x2="16" y2="12"/>
+      <line x1="11" y1="18" x2="13" y2="18"/>
+    </svg>
+    Filtros
+  </button>
 
-      <!-- Panel de filtros -->
-      <div id="panel-filtros" class="panel-filtros">
+  <!-- Panel de filtros (Desplegable) -->
+  <div id="panel-filtros" class="panel-filtros">
+    <fieldset class="filtro-grupo">
+      <legend>Estado</legend>
+      <label><input type="checkbox" name="estado" value="nueva" /> Nueva</label>
+      <label><input type="checkbox" name="estado" value="usada" /> Usada</label>
+      <label><input type="checkbox" name="estado" value="rota" /> Rota</label>
+   </fieldset>
 
-        <fieldset class="filtro-grupo">
-          <legend>Estado</legend>
-          <label><input type="checkbox" name="estado" value="nueva" /> Nueva</label>
-          <label><input type="checkbox" name="estado" value="usada" /> Usada</label>
-          <label><input type="checkbox" name="estado" value="rota" /> Rota</label>
-        </fieldset>
+      <div class="panel-acciones">
+      <button type="button" id="btn-aplicar-filtros" class="btn-primario">Aplicar filtros</button>
+      <button type="button" id="btn-limpiar-filtros" class="btn-secundario">Limpiar</button>
+        </div>
+       </div>
 
-        <button type="button" id="btn-aplicar-filtros">Aplicar filtros</button>
-        <button type="button" id="btn-limpiar-filtros">Limpiar</button>
+       </div>
 
-      </div>
-      <ul class="herramientas-lista" id="lista-herramientas" aria-label="Listado de herramientas">
+        </nav>
+  </header>
+
+  <!-- ================================================
+       VISTA 1: LISTA DE HERRAMIENTAS
+  ================================================ -->
+  <main id="vista-lista">
+
+  <section id="herramientas">
+
+    <!-- Barra de acciones (solo para el botón) -->
+    <div class="herramientas-acciones">
+      <button type="button" id="btn-nueva-herramienta">
+        + Nueva herramienta
+      </button>
+    </div> <!-- <-- AQUÍ FALTABA CERRAR EL DIV -->
+
+    <!-- La lista va por fuera de las acciones, ocupando su propia fila -->
+    <ul class="herramientas-lista" id="lista-herramientas" aria-label="Listado de herramientas">
       <!-- JavaScript insertará las filas automáticamente aquí -->
-     </ul>
+    </ul>
 
+  </section>
 
-
-    </section>
-
-  </main>
+</main>
   <!-- =================== FIN VISTA LISTA =================== -->
 
 
