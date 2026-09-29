@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof showAlert === 'function') {
       showAlert(mensaje, tipo);
     } else {
-      alert(mensaje);
+      mostrarAlertaAccion(mensaje, tipo);
     }
   };
 
@@ -142,4 +142,106 @@ document.addEventListener('DOMContentLoaded', () => {
 
     tbodyInsumos.appendChild(tr);
   }
+  // =========================================================
+// E3-10 y E3-11: CLASE INSUMO (MODELO Y ENCAPSULACIÓN)
+// =========================================================
+class Insumo {
+  constructor(id, nombre, cantidad, unidad = 'unidades', umbral = 5) {
+    if (!id || !nombre) {
+      throw new Error("El ID y nombre son obligatorios.");
+    }
+    this.id = id;
+    this.nombre = nombre;
+    this.unidad = unidad;
+    
+    // Reglas de validación para cantidad y umbral
+    this.setCantidad(cantidad);
+    this.setUmbral(umbral);
+    this.movimientos = []; // Trazabilidad
+  }
+
+  setCantidad(valor) {
+    const num = Number(valor);
+    if (isNaN(num) || num < 0) {
+      throw new Error("La cantidad debe ser mayor o igual a 0.");
+    }
+    this.cantidad = num;
+  }
+
+  setUmbral(valor) {
+    const num = Number(valor);
+    if (isNaN(num) || num <= 0) {
+      throw new Error("El umbral debe ser mayor a 0.");
+    }
+    this.umbral = num;
+  }
+
+  obtenerEstado() {
+    if (this.cantidad === 0) return 'Critico';
+    if (this.cantidad <= this.umbral) return 'Stock Bajo';
+    return 'Normal';
+  }
+
+  // Tareas E3-11: Registrar Entradas y Salidas con trazabilidad
+  registrarEntrada(cantidad, usuario = 'Usuario Prueba') {
+    const cant = Number(cantidad);
+    if (isNaN(cant) || cant <= 0) {
+      throw new Error("La cantidad a ingresar debe ser mayor a 0.");
+    }
+
+    this.cantidad += cant;
+    this.movimientos.push({
+      tipo: 'Entrada',
+      cantidad: cant,
+      saldoResultante: this.cantidad,
+      fecha: new Date().toISOString(),
+      usuario: usuario
+    });
+    return true;
+  }
+
+  registrarSalida(cantidad, usuario = 'Usuario Prueba') {
+    const cant = Number(cantidad);
+    if (isNaN(cant) || cant <= 0) {
+      throw new Error("La cantidad a retirar debe ser mayor a 0.");
+    }
+    if (cant > this.cantidad) {
+      throw new Error("Stock insuficiente para registrar la salida.");
+    }
+
+    this.cantidad -= cant;
+    this.movimientos.push({
+      tipo: 'Salida',
+      cantidad: cant,
+      saldoResultante: this.cantidad,
+      fecha: new Date().toISOString(),
+      usuario: usuario
+    });
+    return true;
+  }
+}
+
+// =========================================================
+// E3-09: AVISOS DE STOCK SIN DUPLICADOS (TEMPORIZADOR)
+// =========================================================
+let alertaTimeout = null;
+
+function mostrarAlertaStock(mensaje, tipo = 'info') {
+  // Limpiar el temporizador previo si existe para no duplicar avisos
+  if (alertaTimeout) {
+    clearTimeout(alertaTimeout);
+  }
+
+  // Usar la función global showAlert o alert
+  if (typeof showAlert === 'function') {
+    showAlert(mensaje, tipo);
+  } else {
+    alert(mensaje);
+  }
+
+  // Desaparecer la alerta a los 3 segundos sin recargar inventario
+  alertaTimeout = setTimeout(() => {
+    alertaTimeout = null;
+  }, 3000);
+}
 });
