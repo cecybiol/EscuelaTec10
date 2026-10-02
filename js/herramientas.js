@@ -63,7 +63,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const vistaListado = document.getElementById('herramientas');
   const vistaDetalle = document.getElementById('vista-detalle');
   
-  // Búsqueda del Modal (soporta múltiples IDs posibles)
+  // Elementos del buscador
+  const inputBuscar = document.getElementById('input-buscar');
+  const btnBuscar = document.getElementById('btn-buscar');
+
+  // Modal y Botones de Creación
   const modal = document.getElementById('modal-nueva-herramienta') || 
                 document.getElementById('nueva-herramienta') ||
                 document.querySelector('.modal');
@@ -148,17 +152,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // Estado inicial
   mostrarVistaListado();
 
-  // --- RENDERIZADO DE LA LISTA ---
-  const renderizarHerramientas = () => {
+  // --- RENDERIZADO DE LA LISTA (CON BUSCADOR) ---
+  const renderizarHerramientas = (filtro = '') => {
     if (!listaContenedor) return;
     listaContenedor.innerHTML = '';
 
-    if (herramientas.length === 0) {
-      listaContenedor.innerHTML = '<li class="sin-herramientas" style="padding:1rem; text-align:center;">No hay herramientas registradas.</li>';
+    const termino = filtro.toLowerCase().trim();
+
+    // Filtrar herramientas por nombre, ubicación o estado
+    const herramientasFiltradas = herramientas.filter(h => 
+      h.nombre.toLowerCase().includes(termino) ||
+      h.ubicacion.toLowerCase().includes(termino) ||
+      h.obtenerEstadoFormateado().toLowerCase().includes(termino)
+    );
+
+    if (herramientasFiltradas.length === 0) {
+      const mensaje = termino === '' 
+        ? 'No hay herramientas registradas.' 
+        : `No se encontraron herramientas para "${filtro}".`;
+      listaContenedor.innerHTML = `<li class="sin-herramientas" style="padding:1rem; text-align:center;">${mensaje}</li>`;
       return;
     }
 
-    herramientas.forEach((herramienta) => {
+    herramientasFiltradas.forEach((herramienta) => {
       const fila = document.createElement('li');
       fila.classList.add('fila-herramienta');
       fila.style.cursor = 'pointer';
@@ -188,15 +204,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  // --- EVENTOS DEL BUSCADOR ---
+  if (inputBuscar) {
+    // Filtrado en tiempo real mientras el usuario escribe
+    inputBuscar.addEventListener('input', (e) => {
+      renderizarHerramientas(e.target.value);
+    });
+
+    // Detectar cuando se limpia el buscador con la "X" del input tipo search
+    inputBuscar.addEventListener('search', (e) => {
+      renderizarHerramientas(e.target.value);
+    });
+  }
+
+  if (btnBuscar) {
+    btnBuscar.addEventListener('click', () => {
+      if (inputBuscar) renderizarHerramientas(inputBuscar.value);
+    });
+  }
+
   // --- CONTROL DEL MODAL (ABRIR / CERRAR) ---
   const abrirModal = () => {
-    // Busca el modal en el DOM si no fue detectado al inicio
     const targetModal = modal || document.querySelector('.modal') || document.querySelector('[role="dialog"]');
     if (targetModal) {
       targetModal.classList.add('is-visible');
-      targetModal.style.display = 'flex'; // Garantiza visibilidad en caso de estilos CSS planos
-    } else {
-      console.error("No se encontró ningún elemento contenedor para el modal de nueva herramienta.");
+      targetModal.style.display = 'flex';
     }
   };
 
@@ -209,7 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (formNueva) formNueva.reset();
   };
 
-  // ASIGNACIÓN DIRECTA DEL BOTÓN NUEVA HERRAMIENTA
   if (btnAbrirModal) {
     btnAbrirModal.addEventListener('click', (e) => {
       e.preventDefault();
@@ -241,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         herramientas.push(nueva);
         guardarEnLocalStorage();
-        renderizarHerramientas();
+        renderizarHerramientas(inputBuscar ? inputBuscar.value : '');
         cerrarModal();
       } catch (err) {
         alert(err.message);
@@ -262,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
         herramientaSeleccionada.notas = campoNotas.value;
 
         guardarEnLocalStorage();
-        renderizarHerramientas();
+        renderizarHerramientas(inputBuscar ? inputBuscar.value : '');
         mostrarVistaListado();
       } catch (err) {
         alert(err.message);
