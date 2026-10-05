@@ -1,16 +1,15 @@
 // =================================================================
-// MODELO: Clase Herramienta (POO, Validaciones y Encapsulaciones)
+// MODELO: Clase Herramienta (Hereda de ItemInventario)
 // =================================================================
-class Herramienta {
+class Herramienta extends ItemInventario {
   #estado;
 
   static ESTADOS_PERMITIDOS = ['nueva', 'usada', 'rota', 'disponible', 'en_uso', 'en_reparacion', 'baja'];
 
-  constructor({ id = null, nombre, estado, ubicacion = '', notas = '' }) {
-    this.validarNombre(nombre);
+  constructor({ id = null, nombre, categoria = 'Herramientas', estado, ubicacion = '', notas = '' }) {
+    // Hereda id, nombre y categoria desde ItemInventario
+    super({ id, nombre, categoria });
 
-    this.id = id || Date.now().toString();
-    this.nombre = nombre.trim();
     this.ubicacion = ubicacion ? ubicacion.trim() : 'Sin ubicación';
     this.notas = notas ? notas.trim() : '';
 
@@ -23,12 +22,6 @@ class Herramienta {
 
   set estado(nuevoEstado) {
     this.cambiarEstado(nuevoEstado);
-  }
-
-  validarNombre(nombre) {
-    if (!nombre || typeof nombre !== 'string' || nombre.trim() === '') {
-      throw new Error('El nombre de la herramienta es obligatorio.');
-    }
   }
 
   validarEstado(nuevoEstado) {
@@ -63,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const vistaListado = document.getElementById('herramientas');
   const vistaDetalle = document.getElementById('vista-detalle');
   
-  // Elementos del buscador
+  // Buscador
   const inputBuscar = document.getElementById('input-buscar');
   const btnBuscar = document.getElementById('btn-buscar');
 
@@ -121,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dataAguardar = herramientas.map(h => ({
       id: h.id,
       nombre: h.nombre,
+      categoria: h.categoria,
       estado: h.estado,
       ubicacion: h.ubicacion,
       notas: h.notas
@@ -149,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (vistaDetalle) vistaDetalle.style.display = 'block';
   };
 
-  // Estado inicial
   mostrarVistaListado();
 
   // --- RENDERIZADO DE LA LISTA (CON BUSCADOR) ---
@@ -159,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const termino = filtro.toLowerCase().trim();
 
-    // Filtrar herramientas por nombre, ubicación o estado
     const herramientasFiltradas = herramientas.filter(h => 
       h.nombre.toLowerCase().includes(termino) ||
       h.ubicacion.toLowerCase().includes(termino) ||
@@ -206,12 +198,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- EVENTOS DEL BUSCADOR ---
   if (inputBuscar) {
-    // Filtrado en tiempo real mientras el usuario escribe
     inputBuscar.addEventListener('input', (e) => {
       renderizarHerramientas(e.target.value);
     });
 
-    // Detectar cuando se limpia el buscador con la "X" del input tipo search
     inputBuscar.addEventListener('search', (e) => {
       renderizarHerramientas(e.target.value);
     });
@@ -335,6 +325,5 @@ document.addEventListener('DOMContentLoaded', () => {
   if (tabInfo) tabInfo.addEventListener('click', activarTabInfo);
   if (tabHistorial) tabHistorial.addEventListener('click', activarTabHistorial);
 
-  // Carga inicial
   renderizarHerramientas();
 });
