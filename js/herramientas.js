@@ -1,50 +1,171 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Elementos de la página
-  const modal = document.getElementById('-nueva-herramienta');
-  const btnAbrir = document.getElementById('btn-nueva-herramienta');
-  const btnCerrar = document.getElementById('btn-cerrar-modal-nueva');
-  const btnCancelar = document.getElementById('btn-cancelar-nueva');
-  const overlay = document.getElementById('modal-nueva-overlay');
-  const form = document.getElementById('form-nueva-herramienta');
-  const listaContenedor = document.getElementById('lista-herramientas');
+// =================================================================
+// VERIFICACIÓN DE SEGURIDAD (Clase Base ItemInventario)
+// =================================================================
+if (typeof ItemInventario === 'undefined') {
+  window.ItemInventario = class ItemInventario {
+    constructor({ id = null, nombre, categoria = 'General' }) {
+      if (!nombre || typeof nombre !== 'string' || nombre.trim() === '') {
+        throw new Error('El nombre del ítem es obligatorio.');
+      }
+      this.id = id || Date.now().toString();
+      this.nombre = nombre.trim();
+      this.categoria = categoria ? categoria.trim() : 'General';
+    }
+  };
+}
 
-  let herramientas = JSON.parse(localStorage.getItem('herramientas')) || [];
+// =================================================================
+// MODELO: Clase Herramienta (Hereda de ItemInventario)
+// =================================================================
+class Herramienta extends ItemInventario {
+  #estado;
 
-  const abrirModal = () => modal.classList.add('is-visible');
+  static ESTADOS_PERMITIDOS = ['nueva', 'usada', 'rota', 'disponible', 'en_uso', 'en_reparacion', 'baja'];
+
+  constructor({ id = null, codigo = null, nombre, categoria = 'Herramientas', estado = null, ubicacion = '', notas = '', unidades = [] }) {
+    super({ id: id || codigo, nombre, categoria });
+
+    this.codigo = codigo || this.id;
+    this.ubicacion = ubicacion ? ubicacion.trim() : 'Sin ubicación';
+    this.notas = notas ? notas.trim() : '';
+    this.unidades = Array.isArray(unidades) ? unidades : [];
+
+    this.cambiarEstado(estado || 'disponible');
+  }
+
+  get estado() {
+    return this.#estado;
+  }
+
+  set estado(nuevoEstado) {
+    this.cambiarEstado(nuevoEstado);
+  }
+
+  validarEstado(nuevoEstado) {
+    if (!nuevoEstado) return 'disponible';
+    const estadoLimpio = String(nuevoEstado).toLowerCase().trim();
+    return Herramienta.ESTADOS_PERMITIDOS.includes(estadoLimpio) ? estadoLimpio : 'disponible';
+  }
+
+  cambiarEstado(nuevoEstado) {
+    const estadoValidado = this.validarEstado(nuevoEstado);
+    if (this.#estado === 'baja' && estadoValidado !== 'baja') {
+      throw new Error('Una herramienta en estado "baja" no puede cambiar de estado.');
+    }
+    this.#estado = estadoValidado;
+  }
+
+  obtenerEstadoClase() {
+    return this.#estado;
+  }
+
+  obtenerEstadoFormateado() {
+    return this.#estado.charAt(0).toUpperCase() + this.#estado.slice(1).replace('_', ' ');
+  }
+}
+
+// =================================================================
+// CONTROLADOR Y VISTAS
+// =================================================================
+document.addEventListener('DOMContentLoaded', async () => {
+
+  // Vistas principales
+  const vistaListado = document.getElementById('vista-lista') || document.getElementById('herramientas');
+  const vistaDetalle = document.getElementById('vista-detalle');
   
-  const cerrarModal = () => {
-    modal.classList.remove('is-visible');
-    form.reset(); // Limpia los campos tras cerrar
+  // Elementos del listado
+  const btnNuevaHerramienta = document.getElementById('btn-nueva-herramienta');
+  const listaContenedor = document.getElementById('lista-herramientas');
+  const inputBuscar = document.getElementById('input-buscar');
+
+  // Formulario y campos de la vista detalle/edición
+  const formEditar = document.getElementById('form-editar-herramienta') || document.querySelector('#vista-detalle form');
+  const detalleTitulo = document.getElementById('detalle-titulo');
+  const campoNombre = document.getElementById('campo-nombre') || document.querySelector('[name="nombre"]');
+  const campoEstado = document.getElementById('campo-estado') || document.querySelector('[name="estado"]');
+  const campoUbicacion = document.getElementById('campo-ubicacion') || document.querySelector('[name="ubicacion"]');
+  const campoNotas = document.getElementById('campo-notas') || document.querySelector('[name="notas"]');
+  
+  // Botones de navegación
+  const btnVolver = document.getElementById('btn-volver');
+  const btnCancelarEdicion = document.getElementById('btn-cancelar-edicion');
+
+  const tabInfo = document.getElementById('tab-info');
+  const tabHistorial = document.getElementById('tab-historial');
+  const panelInfo = document.getElementById('panel-info');
+  const panelHistorial = document.getElementById('panel-historial');
+
+  // Si es null -> estamos CREANDO una herramienta nueva.
+  // Si tiene un objeto -> estamos EDITANDO una existente.
+  let herramientaSeleccionada = null; 
+  let herramientas = [];
+
+  // NAVEGACIÓN DE PANTALLAS
+  const mostrarVistaListado = () => {
+    herramientaSeleccionada = null;
+    if (vistaDetalle) vistaDetalle.style.setProperty('display', 'none', 'important');
+    if (vistaListado) vistaListado.style.setProperty('display', 'block', 'important');
   };
 
- const renderizarHerramientas = () => {
+  const mostrarVistaDetalle = (herramienta = null) => {
+    herramientaSeleccionada = herramienta;
+
+    if (herramienta) {
+      // MODO EDICIÓN
+      if (detalleTitulo) detalleTitulo.textContent = herramienta.nombre;
+      if (campoNombre) campoNombre.value = herramienta.nombre;
+      if (campoEstado) campoEstado.value = herramienta.estado;
+      if (campoUbicacion) campoUbicacion.value = herramienta.ubicacion;
+      if (campoNotas) campoNotas.value = herramienta.notas;
+    } else {
+      // MODO NUEVA HERRAMIENTA (Campos vacíos)
+      if (detalleTitulo) detalleTitulo.textContent = 'Nueva Herramienta';
+      if (campoNombre) campoNombre.value = '';
+      if (campoEstado) campoEstado.value = 'disponible';
+      if (campoUbicacion) campoUbicacion.value = '';
+      if (campoNotas) campoNotas.value = '';
+    }
+
+    activarTabInfo();
+
+    if (vistaListado) vistaListado.style.setProperty('display', 'none', 'important');
+    if (vistaDetalle) vistaDetalle.style.setProperty('display', 'block', 'important');
+  };
+
+  // RENDERIZAR LISTA
+  const renderizarHerramientas = (filtro = '') => {
     if (!listaContenedor) return;
     listaContenedor.innerHTML = '';
 
-    if (herramientas.length === 0) {
-      listaContenedor.innerHTML = '<li class="sin-herramientas">No hay herramientas registradas.</li>';
+    const termino = filtro.toLowerCase().trim();
+
+    const herramientasFiltradas = herramientas.filter(h => 
+      h.nombre.toLowerCase().includes(termino) ||
+      h.ubicacion.toLowerCase().includes(termino) ||
+      h.obtenerEstadoFormateado().toLowerCase().includes(termino)
+    );
+
+    if (herramientasFiltradas.length === 0) {
+      const mensaje = termino === '' 
+        ? 'No hay herramientas registradas.' 
+        : `No se encontraron herramientas para "${filtro}".`;
+      listaContenedor.innerHTML = `<li class="sin-herramientas" style="padding:1rem; text-align:center;">${mensaje}</li>`;
       return;
     }
 
-    herramientas.forEach((herramienta, index) => {
-      // 1. Creamos la fila <li> con las mismas clases que tu ejemplo
+    herramientasFiltradas.forEach((herramienta) => {
       const fila = document.createElement('li');
       fila.classList.add('fila-herramienta');
-      fila.setAttribute('data-id', index + 1);
-      fila.setAttribute('role', 'button');
-      fila.setAttribute('tabindex', '0');
-      fila.setAttribute('aria-label', `Ver detalle de ${herramienta.nombre}`);
+      fila.style.cursor = 'pointer';
+      fila.setAttribute('data-id', herramienta.id);
 
-      // 2. Formateamos el texto del estado (ej: "nueva" -> "Nueva")
-      const estadoClase = herramienta.estado.toLowerCase();
-      const estadoTexto = herramienta.estado.charAt(0).toUpperCase() + herramienta.estado.slice(1);
+      const tieneQR = herramienta.unidades.some(u => String(u.qr).toUpperCase() === 'SI');
 
-      // 3. Insertamos la estructura idéntica a tu ejemplo
       fila.innerHTML = `
         <span class="herramienta-nombre">${herramienta.nombre}</span>
-        <span class="badge badge--${estadoClase}">${estadoTexto}</span>
-        <span class="herramienta-ubicacion">${herramienta.ubicacion || 'Sin ubicación'}</span>
-        <span class="herramienta-qr" aria-label="Código QR">
+        <span class="badge badge--${herramienta.obtenerEstadoClase()}">${herramienta.obtenerEstadoFormateado()}</span>
+        <span class="herramienta-ubicacion">${herramienta.ubicacion}</span>
+        <span class="herramienta-qr" aria-label="Código QR" style="opacity: ${tieneQR ? '1' : '0.2'};">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="7"></rect>
             <rect x="14" y="3" width="7" height="7"></rect>
@@ -54,177 +175,103 @@ document.addEventListener('DOMContentLoaded', () => {
         </span>
       `;
 
+      fila.addEventListener('click', () => mostrarVistaDetalle(herramienta));
       listaContenedor.appendChild(fila);
     });
   };
 
-  // ESTA FUNCIÓN HACE AMBAS COSAS AL PRESIONAR "GUARDAR"
-  const guardarHerramienta = (e) => {
-    e.preventDefault(); // Evita que se recargue la página
+  // CARGAR DE STORAGE
+  const cargarYRenderizar = async () => {
+    try {
+      if (typeof initStorage === 'function') {
+        await initStorage();
+      }
 
-    // PASO 1: Captura los datos del formulario
-    const nuevaHerramienta = {
-      nombre: document.getElementById('nueva-nombre').value.trim(),
-      estado: document.getElementById('nueva-estado').value,
-      ubicacion: document.getElementById('nueva-ubicacion').value.trim(),
-      notas: document.getElementById('nueva-notas').value.trim()
-    };
-
-    if (!nuevaHerramienta.nombre || !nuevaHerramienta.estado) {
-      alert('Por favor completa el nombre y el estado.');
-      return;
+      const rawData = typeof getCollection === 'function' ? getCollection("herramientas") : [];
+      herramientas = rawData.map(item => new Herramienta(item));
+    } catch (err) {
+      console.error("Error al cargar datos desde storage:", err);
+      herramientas = [];
     }
 
-    // PASO 2: Guarda la información en memoria
-    herramientas.push(nuevaHerramienta);
-    localStorage.setItem('herramientas', JSON.stringify(herramientas));
-
-    // PASO 3: Muestra la nueva herramienta en la pantalla
     renderizarHerramientas();
-
-    // PASO 4: OCULTA Y DESAPARECE EL MODAL AUTOMÁTICAMENTE
-    cerrarModal();
   };
 
-  // Eventos de botones
-  btnAbrir.addEventListener('click', abrirModal);
-  btnCerrar.addEventListener('click', cerrarModal);
-  btnCancelar.addEventListener('click', cerrarModal);
-  if (overlay) overlay.addEventListener('click', cerrarModal);
-
-  // Al hacer clic en "Guardar herramienta"
-  form.addEventListener('submit', guardarHerramienta);
-
-  renderizarHerramientas();
-});
-//edicion de herramientas
-document.addEventListener("DOMContentLoaded", () => {
-  // 1. Selección de elementos del DOM 
-  const filaHerramienta = document.querySelector(".fila-herramienta");
-  const panelInfo = document.getElementById("panel-info");
-  const formEditar = document.getElementById("form-editar-herramienta");
-  const btnVolver = document.getElementById("btn-volver");
-  const btnCancelarEdicion = document.getElementById("btn-cancelar-edicion");
-
-  // Campos del formulario
-  const campoNombre = document.getElementById("campo-nombre");
-  const campoEstado = document.getElementById("campo-estado");
-  const campoUbicacion = document.getElementById("campo-ubicacion");
-  const campoNotas = document.getElementById("campo-notas");
-  const detalleTitulo = document.getElementById("detalle-titulo");
-
-  let herramientaSeleccionadaId = null;
-
-  // paso 1: Mantener oculto el panel de edición de inicio
-  if (panelInfo) {
-    panelInfo.style.display = "none";
-  }
-
-  // paso 2: Al hacer clic en la herramienta, desplegar el panel y cargar sus datos
-  if (filaHerramienta) {
-    filaHerramienta.addEventListener("click", () => {
-      herramientaSeleccionadaId = filaHerramienta.getAttribute("data-id");
-
-      // Consultar datos almacenados en storage.js
-      const coleccion = getCollection("herramientas");
-      const datosGuardados = coleccion.find((item) => String(item.id) === String(herramientaSeleccionadaId));
-
-      const nombre = datosGuardados?.nombre || filaHerramienta.querySelector(".herramienta-nombre")?.textContent || "";
-      const ubicacion = datosGuardados?.ubicacion || filaHerramienta.querySelector(".herramienta-ubicacion")?.textContent || "";
-      const estado = datosGuardados?.estado || "nueva";
-      const notas = datosGuardados?.notas || "";
-
-      // Rellenar formulario
-      if (campoNombre) campoNombre.value = nombre;
-      if (campoUbicacion) campoUbicacion.value = ubicacion;
-      if (campoEstado) campoEstado.value = estado;
-      if (campoNotas) campoNotas.value = notas;
-      if (detalleTitulo) detalleTitulo.textContent = nombre;
-
-      // Desplegar sección
-      if (panelInfo) {
-        panelInfo.style.display = "block";
-      }
-
-      // Alerta con app.js
-      if (typeof showAlert === "function") {
-        showAlert(`Editando herramienta: ${nombre}`, "info");
-      }
+  // BOTÓN + NUEVA HERRAMIENTA -> Muestra la vista con campos limpios
+  if (btnNuevaHerramienta) {
+    btnNuevaHerramienta.addEventListener('click', () => {
+      mostrarVistaDetalle(null); // Pasa null para activar modo creación
     });
   }
 
-  // paso 3: Guardar los cambios editados
+  // GUARDAR (CREAR O EDITAR)
   if (formEditar) {
-    formEditar.addEventListener("submit", (event) => {
-      event.preventDefault(); // Evita recargar la página
+    formEditar.addEventListener('submit', (e) => {
+      e.preventDefault();
 
-      const cambios = {
-        nombre: campoNombre?.value.trim(),
-        estado: campoEstado?.value,
-        ubicacion: campoUbicacion?.value.trim(),
-        notas: campoNotas?.value.trim(),
+      const datosFormulario = {
+        nombre: campoNombre ? campoNombre.value.trim() : '',
+        estado: campoEstado ? campoEstado.value : 'disponible',
+        ubicacion: campoUbicacion ? campoUbicacion.value.trim() : '',
+        notas: campoNotas ? campoNotas.value.trim() : '',
+        categoria: 'Herramientas',
+        unidades: herramientaSeleccionada ? herramientaSeleccionada.unidades : []
       };
 
-      // Guardar actualización en storage.js
-      if (herramientaSeleccionadaId) {
-        updateItem("herramientas", herramientaSeleccionadaId, cambios);
+      if (!datosFormulario.nombre) {
+        alert("El nombre de la herramienta es obligatorio.");
+        return;
       }
 
-      // Actualizar vista visual
-      if (detalleTitulo && cambios.nombre) {
-        detalleTitulo.textContent = cambios.nombre;
-      }
+      try {
+        if (herramientaSeleccionada) {
+          // MODO EDICIÓN -> Actualiza existente
+          if (typeof updateItem === 'function') {
+            updateItem("herramientas", herramientaSeleccionada.id, datosFormulario);
+          }
+        } else {
+          // MODO CREACIÓN -> Agrega nuevo item
+          if (typeof addItem === 'function') {
+            addItem("herramientas", datosFormulario);
+          }
+        }
 
-      const nombreSpan = filaHerramienta?.querySelector(".herramienta-nombre");
-      const ubicacionSpan = filaHerramienta?.querySelector(".herramienta-ubicacion");
-      if (nombreSpan && cambios.nombre) nombreSpan.textContent = cambios.nombre;
-      if (ubicacionSpan && cambios.ubicacion) ubicacionSpan.textContent = cambios.ubicacion;
-
-      // Alerta de confirmación con app.js
-      if (typeof showAlert === "function") {
-        showAlert("Cambios guardados correctamente", "success");
+        // Recarga y regresa a la lista
+        cargarYRenderizar();
+        mostrarVistaListado();
+      } catch (err) {
+        alert(err.message);
       }
     });
   }
 
-  // Ocultar sección al cancelar o volver
-  const ocultarEdicion = () => {
-    if (panelInfo) panelInfo.style.display = "none";
-    if (formEditar) formEditar.reset();
+  // BUSCADOR Y VOLVER
+  if (inputBuscar) {
+    inputBuscar.addEventListener('input', (e) => renderizarHerramientas(e.target.value));
+  }
+
+  if (btnVolver) btnVolver.addEventListener('click', mostrarVistaListado);
+  if (btnCancelarEdicion) btnCancelarEdicion.addEventListener('click', mostrarVistaListado);
+
+  // TABS
+  const activarTabInfo = () => {
+    if (tabInfo) tabInfo.classList.add('tab-btn--activo');
+    if (tabHistorial) tabHistorial.classList.remove('tab-btn--activo');
+    if (panelInfo) panelInfo.style.display = 'block';
+    if (panelHistorial) panelHistorial.style.display = 'none';
   };
 
-  if (btnCancelarEdicion) btnCancelarEdicion.addEventListener("click", ocultarEdicion);
-  if (btnVolver) btnVolver.addEventListener("click", ocultarEdicion);
-});
-// PANEL DE FILTROS//
-document.addEventListener('DOMContentLoaded', () => {
-  const btnFiltros = document.getElementById('btn-filtros');
-  const panelFiltros = document.getElementById('panel-filtros');
+  const activarTabHistorial = () => {
+    if (tabHistorial) tabHistorial.classList.add('tab-btn--activo');
+    if (tabInfo) tabInfo.classList.remove('tab-btn--activo');
+    if (panelHistorial) panelHistorial.style.display = 'block';
+    if (panelInfo) panelInfo.style.display = 'none';
+  };
 
-  // Alternar la visibilidad del panel al hacer clic en el botón
-  btnFiltros.addEventListener('click', (e) => {
-    e.stopPropagation(); // Evita que el clic se propague al documento
-    const estaAbierto = panelFiltros.classList.contains('activo');
-    
-    if (estaAbierto) {
-      panelFiltros.classList.remove('activo');
-      btnFiltros.setAttribute('aria-expanded', 'false');
-    } else {
-      panelFiltros.classList.add('activo');
-      btnFiltros.setAttribute('aria-expanded', 'true');
-    }
-  });
+  if (tabInfo) tabInfo.addEventListener('click', activarTabInfo);
+  if (tabHistorial) tabHistorial.addEventListener('click', activarTabHistorial);
 
-  // Evitar que el panel se cierre al hacer clic dentro de él
-  panelFiltros.addEventListener('click', (e) => {
-    e.stopPropagation();
-  });
-
-  // Cerrar el panel si se hace clic fuera de él
-  document.addEventListener('click', () => {
-    if (panelFiltros.classList.contains('activo')) {
-      panelFiltros.classList.remove('activo');
-      btnFiltros.setAttribute('aria-expanded', 'false');
-    }
-  });
+  // Inicialización
+  mostrarVistaListado();
+  await cargarYRenderizar();
 });
