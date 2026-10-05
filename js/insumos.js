@@ -5,35 +5,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // ITERACIÓN 1: Selección del DOM con IDs exactos y únicos
+  // SELECCIÓN DEL DOM
   // ==========================================
   const searchInput = document.getElementById('search-insumos');
   const btnNuevoInsumo = document.getElementById('btn-nuevo-insumo');
-  const btnFilterCategory = document.getElementById('btn-filter-category');
+  const btnFilterCategory = document.querySelector('.btn-secondary'); // Ajustado al botón de filtrar del HTML
   const tableInsumos = document.getElementById('table-insumos');
   const tbodyInsumos = document.getElementById('tbody-insumos');
-  const rowsInsumos = tbodyInsumos ? Array.from(tbodyInsumos.querySelectorAll('tr')) : [];
 
-  // Verificación en consola pedida en el checklist
-  console.log('Buscador:', searchInput);
-  console.log('Botón Nuevo Insumo:', btnNuevoInsumo);
-  console.log('Tabla Insumos:', tableInsumos);
-  console.log('Filas de Tabla:', rowsInsumos);
-
-  // Helper para notificaciones (usa app.js si está cargado)
+  // Helper para notificaciones
   const notify = (mensaje, tipo = 'info') => {
     if (typeof showAlert === 'function') {
       showAlert(mensaje, tipo);
     } else {
-      mostrarAlertaAccion(mensaje, tipo);
+      mostrarAlertaStock(mensaje, tipo);
     }
   };
 
+  // Cargar insumos guardados en localStorage al iniciar
+  cargarInsumosGuardados();
+
   // ==========================================
-  // ITERACIÓN 2 Y 3: Eventos y Manipulación del DOM
+  // EVENTOS Y MANIPULACIÓN DEL DOM
   // ==========================================
 
-  // 1. BOTÓN + NUEVO INSUMO (Agrega a la tabla y persiste en localStorage)
+  // 1. BOTÓN + NUEVO INSUMO
   if (btnNuevoInsumo) {
     btnNuevoInsumo.addEventListener('click', (e) => {
       e.preventDefault();
@@ -73,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
 
-    // Aplica debounce de app.js si existe
     if (typeof debounce === 'function') {
       searchInput.addEventListener('input', debounce(ejecutarBusqueda, 300));
     } else {
@@ -89,13 +84,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 4. BOTONES RELLENAR (Insumos líquidos)
-  const botonesRellenar = document.querySelectorAll('.btn-refill');
+  // 4. BOTONES RELLENAR (Insumos líquidos - Clase corregida a .btn-action)
+  const botonesRellenar = document.querySelectorAll('.btn-action');
   botonesRellenar.forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       const contenedor = btn.closest('.card-product') || btn.parentElement;
-      const tituloElemento = contenedor ? contenedor.querySelector('h4') : null;
+      const tituloElemento = contenedor ? contenedor.querySelector('.title, h4') : null;
       const nombreInsumo = tituloElemento ? tituloElemento.textContent.trim() : 'Insumo líquido';
 
       notify(`Solicitud de rellenado enviada para: ${nombreInsumo}`, 'success');
@@ -114,19 +109,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ==========================================
-  // ITERACIÓN 3: Función de creación de fila en el DOM
+  // FUNCIONES DE RENDERIZADO Y PERSISTENCIA
   // ==========================================
   function crearFilaInsumo(insumo) {
     if (!tbodyInsumos) return;
 
-    let alertClass = 'alert-success';
+    let tagClass = 'tag-success';
     let estadoTexto = 'Normal';
 
     if (insumo.stock === 0) {
-      alertClass = 'alert-error';
+      tagClass = 'tag-danger';
       estadoTexto = 'Agotado';
     } else if (insumo.stock < 5) {
-      alertClass = 'alert-warning';
+      tagClass = 'tag-warning';
       estadoTexto = 'Stock Bajo';
     }
 
@@ -134,16 +129,23 @@ document.addEventListener('DOMContentLoaded', () => {
     tr.dataset.id = insumo.id || Date.now();
     tr.innerHTML = `
       <td><strong>${insumo.nombre}</strong></td>
-      <td>${insumo.categoria}</td>
+      <td>${insumo.categoria || 'General'}</td>
       <td>${insumo.stock} ${insumo.unidad || 'unidades'}</td>
-      <td><span class="alert ${alertClass}">${estadoTexto}</span></td>
+      <td><span class="status-tag ${tagClass}">${estadoTexto}</span></td>
       <td><button type="button" class="btn-sm btn-edit">Editar</button></td>
     `;
 
     tbodyInsumos.appendChild(tr);
   }
-  // =========================================================
-// E3-10 y E3-11: CLASE INSUMO (MODELO Y ENCAPSULACIÓN)
+
+  function cargarInsumosGuardados() {
+    const insumos = JSON.parse(localStorage.getItem('insumos')) || [];
+    insumos.forEach(insumo => crearFilaInsumo(insumo));
+  }
+});
+
+// =========================================================
+// CLASE INSUMO (MODELO Y ENCAPSULACIÓN)
 // =========================================================
 class Insumo {
   constructor(id, nombre, cantidad, unidad = 'unidades', umbral = 5) {
@@ -154,10 +156,9 @@ class Insumo {
     this.nombre = nombre;
     this.unidad = unidad;
     
-    // Reglas de validación para cantidad y umbral
     this.setCantidad(cantidad);
     this.setUmbral(umbral);
-    this.movimientos = []; // Trazabilidad
+    this.movimientos = [];
   }
 
   setCantidad(valor) {
@@ -182,7 +183,6 @@ class Insumo {
     return 'Normal';
   }
 
-  // Tareas E3-11: Registrar Entradas y Salidas con trazabilidad
   registrarEntrada(cantidad, usuario = 'Usuario Prueba') {
     const cant = Number(cantidad);
     if (isNaN(cant) || cant <= 0) {
@@ -222,26 +222,22 @@ class Insumo {
 }
 
 // =========================================================
-// E3-09: AVISOS DE STOCK SIN DUPLICADOS (TEMPORIZADOR)
+// AVISOS DE STOCK SIN DUPLICADOS
 // =========================================================
 let alertaTimeout = null;
 
 function mostrarAlertaStock(mensaje, tipo = 'info') {
-  // Limpiar el temporizador previo si existe para no duplicar avisos
   if (alertaTimeout) {
     clearTimeout(alertaTimeout);
   }
 
-  // Usar la función global showAlert o alert
   if (typeof showAlert === 'function') {
     showAlert(mensaje, tipo);
   } else {
     alert(mensaje);
   }
 
-  // Desaparecer la alerta a los 3 segundos sin recargar inventario
   alertaTimeout = setTimeout(() => {
     alertaTimeout = null;
   }, 3000);
 }
-});
