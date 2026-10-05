@@ -1,4 +1,20 @@
 // =================================================================
+// VERIFICACIÓN DE SEGURIDAD (Clase Base ItemInventario)
+// =================================================================
+if (typeof ItemInventario === 'undefined') {
+  window.ItemInventario = class ItemInventario {
+    constructor({ id = null, nombre, categoria = 'General' }) {
+      if (!nombre || typeof nombre !== 'string' || nombre.trim() === '') {
+        throw new Error('El nombre del ítem es obligatorio.');
+      }
+      this.id = id || Date.now().toString();
+      this.nombre = nombre.trim();
+      this.categoria = categoria ? categoria.trim() : 'General';
+    }
+  };
+}
+
+// =================================================================
 // MODELO: Clase Herramienta (Hereda de ItemInventario)
 // =================================================================
 class Herramienta extends ItemInventario {
@@ -6,14 +22,16 @@ class Herramienta extends ItemInventario {
 
   static ESTADOS_PERMITIDOS = ['nueva', 'usada', 'rota', 'disponible', 'en_uso', 'en_reparacion', 'baja'];
 
-  constructor({ id = null, nombre, categoria = 'Herramientas', estado, ubicacion = '', notas = '' }) {
-    // Hereda id, nombre y categoria desde ItemInventario
-    super({ id, nombre, categoria });
+  constructor({ id = null, codigo = null, nombre, categoria = 'Herramientas', estado = null, ubicacion = '', notas = '', unidades = [] }) {
+    super({ id: id || codigo, nombre, categoria });
 
+    this.codigo = codigo || this.id;
     this.ubicacion = ubicacion ? ubicacion.trim() : 'Sin ubicación';
     this.notas = notas ? notas.trim() : '';
+    this.unidades = Array.isArray(unidades) ? unidades : [];
 
-    this.cambiarEstado(estado || 'nueva');
+    // Fallback: si el estado viene en null o inválido en el JSON, asigna 'disponible'
+    this.cambiarEstado(estado || 'disponible');
   }
 
   get estado() {
@@ -25,9 +43,9 @@ class Herramienta extends ItemInventario {
   }
 
   validarEstado(nuevoEstado) {
-    if (!nuevoEstado) return 'nueva';
+    if (!nuevoEstado) return 'disponible';
     const estadoLimpio = String(nuevoEstado).toLowerCase().trim();
-    return Herramienta.ESTADOS_PERMITIDOS.includes(estadoLimpio) ? estadoLimpio : 'nueva';
+    return Herramienta.ESTADOS_PERMITIDOS.includes(estadoLimpio) ? estadoLimpio : 'disponible';
   }
 
   cambiarEstado(nuevoEstado) {
@@ -48,19 +66,16 @@ class Herramienta extends ItemInventario {
 }
 
 // =================================================================
-// CONTROLADOR Y NAVEGACIÓN DE VISTAS (DOM & LOCALSTORAGE)
+// CONTROLADOR Y VISTAS (DOM & STORAGE API)
 // =================================================================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
-  // --- ELEMENTOS DEL DOM ---
   const vistaListado = document.getElementById('herramientas');
   const vistaDetalle = document.getElementById('vista-detalle');
   
-  // Buscador
   const inputBuscar = document.getElementById('input-buscar');
   const btnBuscar = document.getElementById('btn-buscar');
 
-  // Modal y Botones de Creación
   const modal = document.getElementById('modal-nueva-herramienta') || 
                 document.getElementById('nueva-herramienta') ||
                 document.querySelector('.modal');
@@ -72,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const formNueva = document.getElementById('form-nueva-herramienta');
   const listaContenedor = document.getElementById('lista-herramientas');
 
-  // Formulario y Detalle
   const formEditar = document.getElementById('form-editar-herramienta');
   const detalleTitulo = document.getElementById('detalle-titulo');
   const campoNombre = document.getElementById('campo-nombre');
@@ -83,49 +97,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnVolver = document.getElementById('btn-volver');
   const btnCancelarEdicion = document.getElementById('btn-cancelar-edicion');
 
-  // Tabs
   const tabInfo = document.getElementById('tab-info');
   const tabHistorial = document.getElementById('tab-historial');
   const panelInfo = document.getElementById('panel-info');
   const panelHistorial = document.getElementById('panel-historial');
 
   let herramientaSeleccionada = null;
-
-  // --- ALMACENAMIENTO DE HERRAMIENTAS ---
-  let datosGuardados = [];
-  try {
-    datosGuardados = JSON.parse(localStorage.getItem('herramientas')) || [];
-  } catch (e) {
-    datosGuardados = [];
-  }
-
   let herramientas = [];
-  datosGuardados.forEach(item => {
-    try {
-      if (item && item.nombre) {
-        herramientas.push(new Herramienta(item));
-      }
-    } catch (e) {
-      console.warn("Dato no válido ignorado:", item);
-    }
-  });
 
-  const guardarEnLocalStorage = () => {
-    const dataAguardar = herramientas.map(h => ({
-      id: h.id,
-      nombre: h.nombre,
-      categoria: h.categoria,
-      estado: h.estado,
-      ubicacion: h.ubicacion,
-      notas: h.notas
-    }));
-    localStorage.setItem('herramientas', JSON.stringify(dataAguardar));
-  };
-
-  // --- NAVEGACIÓN ENTRE VISTAS ---
+  // NAVEGACIÓN VISTAS
   const mostrarVistaListado = () => {
-    if (vistaDetalle) vistaDetalle.style.display = 'none';
-    if (vistaListado) vistaListado.style.display = 'block';
+    if (vistaDetalle) vistaDetalle.style.setProperty('display', 'none', 'important');
+    if (vistaListado) vistaListado.style.setProperty('display', 'block', 'important');
   };
 
   const mostrarVistaDetalle = (herramienta) => {
@@ -139,13 +122,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     activarTabInfo();
 
-    if (vistaListado) vistaListado.style.display = 'none';
-    if (vistaDetalle) vistaDetalle.style.display = 'block';
+    if (vistaListado) vistaListado.style.setProperty('display', 'none', 'important');
+    if (vistaDetalle) vistaDetalle.style.setProperty('display', 'block', 'important');
   };
 
   mostrarVistaListado();
 
-  // --- RENDERIZADO DE LA LISTA (CON BUSCADOR) ---
+  // RENDERIZADO
   const renderizarHerramientas = (filtro = '') => {
     if (!listaContenedor) return;
     listaContenedor.innerHTML = '';
@@ -174,11 +157,13 @@ document.addEventListener('DOMContentLoaded', () => {
       fila.setAttribute('role', 'button');
       fila.setAttribute('tabindex', '0');
 
+      const tieneQR = herramienta.unidades.some(u => String(u.qr).toUpperCase() === 'SI');
+
       fila.innerHTML = `
         <span class="herramienta-nombre">${herramienta.nombre}</span>
         <span class="badge badge--${herramienta.obtenerEstadoClase()}">${herramienta.obtenerEstadoFormateado()}</span>
         <span class="herramienta-ubicacion">${herramienta.ubicacion}</span>
-        <span class="herramienta-qr" aria-label="Código QR">
+        <span class="herramienta-qr" aria-label="Código QR" style="opacity: ${tieneQR ? '1' : '0.2'};">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="7"></rect>
             <rect x="14" y="3" width="7" height="7"></rect>
@@ -188,62 +173,61 @@ document.addEventListener('DOMContentLoaded', () => {
         </span>
       `;
 
-      fila.addEventListener('click', () => {
-        mostrarVistaDetalle(herramienta);
-      });
-
+      fila.addEventListener('click', () => mostrarVistaDetalle(herramienta));
       listaContenedor.appendChild(fila);
     });
   };
 
-  // --- EVENTOS DEL BUSCADOR ---
+  // CARGA Y SINCRONIZACIÓN
+  const cargarYRenderizar = async () => {
+    try {
+      if (typeof initStorage === 'function') {
+        await initStorage();
+      }
+
+      const rawData = typeof getCollection === 'function' ? getCollection("herramientas") : [];
+      herramientas = rawData.map(item => new Herramienta(item));
+    } catch (err) {
+      console.error("Error al cargar datos desde storage:", err);
+      herramientas = [];
+    }
+
+    renderizarHerramientas();
+  };
+
+  // BUSCADOR
   if (inputBuscar) {
-    inputBuscar.addEventListener('input', (e) => {
-      renderizarHerramientas(e.target.value);
-    });
-
-    inputBuscar.addEventListener('search', (e) => {
-      renderizarHerramientas(e.target.value);
-    });
+    inputBuscar.addEventListener('input', (e) => renderizarHerramientas(e.target.value));
+    inputBuscar.addEventListener('search', (e) => renderizarHerramientas(e.target.value));
   }
-
   if (btnBuscar) {
     btnBuscar.addEventListener('click', () => {
       if (inputBuscar) renderizarHerramientas(inputBuscar.value);
     });
   }
 
-  // --- CONTROL DEL MODAL (ABRIR / CERRAR) ---
+  // MODAL
   const abrirModal = () => {
-    const targetModal = modal || document.querySelector('.modal') || document.querySelector('[role="dialog"]');
-    if (targetModal) {
-      targetModal.classList.add('is-visible');
-      targetModal.style.display = 'flex';
+    if (modal) {
+      modal.classList.add('is-visible');
+      modal.style.display = 'flex';
     }
   };
 
   const cerrarModal = () => {
-    const targetModal = modal || document.querySelector('.modal') || document.querySelector('[role="dialog"]');
-    if (targetModal) {
-      targetModal.classList.remove('is-visible');
-      targetModal.style.display = 'none';
+    if (modal) {
+      modal.classList.remove('is-visible');
+      modal.style.display = 'none';
     }
     if (formNueva) formNueva.reset();
   };
 
-  if (btnAbrirModal) {
-    btnAbrirModal.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      abrirModal();
-    });
-  }
-
+  if (btnAbrirModal) btnAbrirModal.addEventListener('click', abrirModal);
   if (btnCerrarModal) btnCerrarModal.addEventListener('click', cerrarModal);
   if (btnCancelarModal) btnCancelarModal.addEventListener('click', cerrarModal);
   if (overlay) overlay.addEventListener('click', cerrarModal);
 
-  // CREAR NUEVA HERRAMIENTA
+  // AGREGAR NUEVA HERRAMIENTA
   if (formNueva) {
     formNueva.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -253,16 +237,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const inputUbicacion = document.getElementById('nueva-ubicacion') || formNueva.querySelector('[name="ubicacion"]');
         const inputNotas = document.getElementById('nueva-notas') || formNueva.querySelector('[name="notas"]');
 
-        const nueva = new Herramienta({
+        const datosNueva = {
           nombre: inputNombre ? inputNombre.value : '',
-          estado: inputEstado ? inputEstado.value : 'nueva',
+          categoria: 'Herramientas',
+          estado: inputEstado ? inputEstado.value : 'disponible',
           ubicacion: inputUbicacion ? inputUbicacion.value : '',
-          notas: inputNotas ? inputNotas.value : ''
-        });
+          notas: inputNotas ? inputNotas.value : '',
+          unidades: []
+        };
 
-        herramientas.push(nueva);
-        guardarEnLocalStorage();
-        renderizarHerramientas(inputBuscar ? inputBuscar.value : '');
+        if (typeof addItem === 'function') {
+          addItem("herramientas", datosNueva);
+        }
+
+        cargarYRenderizar();
         cerrarModal();
       } catch (err) {
         alert(err.message);
@@ -270,20 +258,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // EDICIÓN DE HERRAMIENTAS
+  // EDITAR HERRAMIENTA
   if (formEditar) {
     formEditar.addEventListener('submit', (e) => {
       e.preventDefault();
       if (!herramientaSeleccionada) return;
 
       try {
-        herramientaSeleccionada.nombre = campoNombre.value;
-        herramientaSeleccionada.cambiarEstado(campoEstado.value);
-        herramientaSeleccionada.ubicacion = campoUbicacion.value;
-        herramientaSeleccionada.notas = campoNotas.value;
+        const cambios = {
+          nombre: campoNombre.value,
+          estado: campoEstado.value,
+          ubicacion: campoUbicacion.value,
+          notas: campoNotas.value
+        };
 
-        guardarEnLocalStorage();
-        renderizarHerramientas(inputBuscar ? inputBuscar.value : '');
+        if (typeof updateItem === 'function') {
+          updateItem("herramientas", herramientaSeleccionada.id, cambios);
+        }
+
+        cargarYRenderizar();
         mostrarVistaListado();
       } catch (err) {
         alert(err.message);
@@ -291,33 +284,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // BOTONES VOLVER / CANCELAR
   if (btnVolver) btnVolver.addEventListener('click', mostrarVistaListado);
   if (btnCancelarEdicion) btnCancelarEdicion.addEventListener('click', mostrarVistaListado);
 
-  // PESTAÑAS (INFO / HISTORIAL)
+  // TABS
   const activarTabInfo = () => {
-    if (tabInfo) {
-      tabInfo.classList.add('tab-btn--activo');
-      tabInfo.setAttribute('aria-selected', 'true');
-    }
-    if (tabHistorial) {
-      tabHistorial.classList.remove('tab-btn--activo');
-      tabHistorial.setAttribute('aria-selected', 'false');
-    }
+    if (tabInfo) tabInfo.classList.add('tab-btn--activo');
+    if (tabHistorial) tabHistorial.classList.remove('tab-btn--activo');
     if (panelInfo) panelInfo.style.display = 'block';
     if (panelHistorial) panelHistorial.style.display = 'none';
   };
 
   const activarTabHistorial = () => {
-    if (tabHistorial) {
-      tabHistorial.classList.add('tab-btn--activo');
-      tabHistorial.setAttribute('aria-selected', 'true');
-    }
-    if (tabInfo) {
-      tabInfo.classList.remove('tab-btn--activo');
-      tabInfo.setAttribute('aria-selected', 'false');
-    }
+    if (tabHistorial) tabHistorial.classList.add('tab-btn--activo');
+    if (tabInfo) tabInfo.classList.remove('tab-btn--activo');
     if (panelHistorial) panelHistorial.style.display = 'block';
     if (panelInfo) panelInfo.style.display = 'none';
   };
@@ -325,5 +305,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (tabInfo) tabInfo.addEventListener('click', activarTabInfo);
   if (tabHistorial) tabHistorial.addEventListener('click', activarTabHistorial);
 
-  renderizarHerramientas();
+  // Iniciar
+  await cargarYRenderizar();
 });
