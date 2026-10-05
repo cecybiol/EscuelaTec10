@@ -1,0 +1,287 @@
+[
+  {
+    "id": "INS-001",
+    "codigo": "INS-001",
+    "nombre": "Cable Convertor HDMI / VGA",
+    "categoria": "Eléctrica",
+    "ubicacion": "Armario ( A Caja 2)",
+    "stock": 1,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": null,
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 2
+    }
+  },
+  {
+    "id": "INS-002",
+    "codigo": "INS-002",
+    "nombre": "Cinta Aisladora",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( A Caja 2 )",
+    "stock": 3,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": null,
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 3
+    }
+  },
+  {
+    "id": "INS-003",
+    "codigo": "INS-003",
+    "nombre": "Foco 15W",
+    "categoria": "Eléctrica",
+    "ubicacion": "Armario ( A Caja /2)",
+    "stock": 1,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": "Si",
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 6
+    }
+  },
+  {
+    "id": "INS-004",
+    "codigo": "INS-004",
+    "nombre": "Cinta de Papel",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( A Caja /2)",
+    "stock": 1,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": null,
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 7
+    }
+  },
+  {
+    "id": "INS-005",
+    "codigo": "INS-005",
+    "nombre": "Pasta Termica Mx4",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( A Caja /2)",
+    "stock": 1,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": "Si",
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 8
+    }
+  },
+  {
+    "id": "INS-006",
+    "codigo": "INS-006",
+    "nombre": "Paños Microfibra",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( A Caja /2)",
+    "stock": 8,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": "Si",
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 9
+    }
+  },
+  {
+    "id": "INS-007",
+    "codigo": "INS-007",
+    "nombre": "Bolsa Tornillos",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( A / Caja 1)",
+    "stock": 1,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": "Si",
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 10
+    }
+  },
+  {
+    "id": "INS-008",
+    "codigo": "INS-008",
+    "nombre": "Cinta de Impresora EPSO",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( B )",
+    "stock": 2,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": "Si",
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 11
+    }
+  },
+  {
+    "id": "INS-009",
+    "codigo": "INS-009",
+    "nombre": "Adaptador Usb / SATA",
+    "categoria": "Eléctrica",
+    "ubicacion": "Armario ( C / Caja 10 )",
+    "stock": 1,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": null,
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 13
+    }
+  },
+  {
+    "id": "INS-010",
+    "codigo": "INS-010",
+    "nombre": "Cable Convertor HDMI / VGA",
+    "categoria": "Eléctrica",
+    "ubicacion": "Armario ( C / Caja 10 )",
+    "stock": 1,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": null,
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 14
+    }
+  },
+  {
+    "id": "INS-011",
+    "codigo": "INS-011",
+    "nombre": "Cinta Aisladora",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( C / Caja 10 )",
+    "stock": 2,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": null,
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 15
+    }
+  },
+  {
+    "id": "INS-012",
+    "codigo": "INS-012",
+    "nombre": "Precintos",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( C / Caja 10 )",
+    "stock": 1,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": "SI",
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 16
+    }
+  },
+  {
+    "id": "INS-013",
+    "codigo": "INS-013",
+    "nombre": "Cinta de Papel",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( C / Caja 10 )",
+    "stock": 1,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": null,
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 17
+    }
+  },
+  {
+    "id": "INS-014",
+    "codigo": "INS-014",
+    "nombre": "Pila 9V",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( C / Caja 10 )",
+    "stock": 1,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": "SI",
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 18
+    }
+  },
+  {
+    "id": "INS-015",
+    "codigo": "INS-015",
+    "nombre": "Pilas Cr2032",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( C / Caja 10 )",
+    "stock": 10,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": "Si",
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 19
+    }
+  },
+  {
+    "id": "INS-016",
+    "codigo": "INS-016",
+    "nombre": "Pilas Cr2033",
+    "categoria": "Manual",
+    "ubicacion": "Armario (A/ Caja1)",
+    "stock": null,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": null,
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 20
+    }
+  },
+  {
+    "id": "INS-017",
+    "codigo": "INS-017",
+    "nombre": "Pasta Termica Mx6",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( C / Caja 10 )",
+    "stock": 2,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": "Si",
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 22
+    }
+  },
+  {
+    "id": "INS-018",
+    "codigo": "INS-018",
+    "nombre": "Paños microfibra",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( C / Caja 10 )",
+    "stock": 1,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": null,
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 23
+    }
+  },
+  {
+    "id": "INS-019",
+    "codigo": "INS-019",
+    "nombre": "Botella alcohol isopropilico",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( C / Caja 10 )",
+    "stock": 2,
+    "stockMinimo": null,
+    "unidad": null,
+    "qr": null,
+    "fuente": {
+      "hoja": "INSUMOS",
+      "fila": 24
+    }
+  }
+]
