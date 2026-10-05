@@ -1,0 +1,5 @@
+[
+  {"id":"USR-001","alias":"Operador de prueba 01","rol":"operador","activo":true},
+  {"id":"USR-002","alias":"Lector de prueba","rol":"lector","activo":true},
+  {"id":"USR-003","alias":"Admin de prueba","rol":"admin","activo":true}
+]
