@@ -5,22 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // ITERACIÓN 1: Selección del DOM con IDs exactos y únicos
+  // SELECCIÓN DEL DOM
   // ==========================================
   const searchInput = document.getElementById('search-insumos');
   const btnNuevoInsumo = document.getElementById('btn-nuevo-insumo');
-  const btnFilterCategory = document.getElementById('btn-filter-category');
+  const btnFilterCategory = document.querySelector('.btn-secondary'); // Ajustado al botón de filtrar del HTML
   const tableInsumos = document.getElementById('table-insumos');
   const tbodyInsumos = document.getElementById('tbody-insumos');
-  const rowsInsumos = tbodyInsumos ? Array.from(tbodyInsumos.querySelectorAll('tr')) : [];
 
-  // Verificación en consola pedida en el checklist
-  console.log('Buscador:', searchInput);
-  console.log('Botón Nuevo Insumo:', btnNuevoInsumo);
-  console.log('Tabla Insumos:', tableInsumos);
-  console.log('Filas de Tabla:', rowsInsumos);
-
-  // Helper para notificaciones (usa app.js si está cargado)
+  // Helper para notificaciones
   const notify = (mensaje, tipo = 'info') => {
     if (typeof showAlert === 'function') {
       showAlert(mensaje, tipo);
@@ -29,11 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // Cargar insumos guardados en localStorage al iniciar
+  cargarInsumosGuardados();
+
   // ==========================================
-  // ITERACIÓN 2 Y 3: Eventos y Manipulación del DOM
+  // EVENTOS Y MANIPULACIÓN DEL DOM
   // ==========================================
 
-  // 1. BOTÓN + NUEVO INSUMO (Agrega a la tabla y persiste en localStorage)
+  // 1. BOTÓN + NUEVO INSUMO
   if (btnNuevoInsumo) {
     btnNuevoInsumo.addEventListener('click', (e) => {
       e.preventDefault();
@@ -73,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
 
-    // Aplica debounce de app.js si existe
     if (typeof debounce === 'function') {
       searchInput.addEventListener('input', debounce(ejecutarBusqueda, 300));
     } else {
@@ -89,13 +84,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 4. BOTONES RELLENAR (Insumos líquidos)
-  const botonesRellenar = document.querySelectorAll('.btn-refill');
+  // 4. BOTONES RELLENAR (Insumos líquidos - Clase corregida a .btn-action)
+  const botonesRellenar = document.querySelectorAll('.btn-action');
   botonesRellenar.forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       const contenedor = btn.closest('.card-product') || btn.parentElement;
-      const tituloElemento = contenedor ? contenedor.querySelector('h4') : null;
+      const tituloElemento = contenedor ? contenedor.querySelector('.title, h4') : null;
       const nombreInsumo = tituloElemento ? tituloElemento.textContent.trim() : 'Insumo líquido';
 
       notify(`Solicitud de rellenado enviada para: ${nombreInsumo}`, 'success');
@@ -114,24 +109,25 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ==========================================
-  // ITERACIÓN 3: Función de creación de fila en el DOM
+  // FUNCIONES DE RENDERIZADO Y PERSISTENCIA
   // ==========================================
   function crearFilaInsumo(insumo) {
     if (!tbodyInsumos) return;
 
-    let alertClass = 'alert-success';
+    let tagClass = 'tag-success';
     let estadoTexto = 'Normal';
 
     if (insumo.stock === 0) {
-      alertClass = 'alert-error';
+      tagClass = 'tag-danger';
       estadoTexto = 'Agotado';
     } else if (insumo.stock < 5) {
-      alertClass = 'alert-warning';
+      tagClass = 'tag-warning';
       estadoTexto = 'Stock Bajo';
      } 
 
     const tr = document.createElement('tr');
     tr.dataset.id = insumo.id || Date.now();
+<<<<<<< HEAD
     tr.innerHTML = `${insumo.nombre}${insumo.categoria || 'General'}${insumo.stock}${insumo.unidad || 'unidades'}${estadoTexto}Editar`;tbodyInsumos.appendChild(tr);}});`
     tbodyInsumos.appendChild(tr);
   }
@@ -156,4 +152,119 @@ this.movimientos.push({
   fecha: new Date().toISOString(),
   usuario: usuario});
 return true;
+=======
+    tr.innerHTML = `
+      <td><strong>${insumo.nombre}</strong></td>
+      <td>${insumo.categoria || 'General'}</td>
+      <td>${insumo.stock} ${insumo.unidad || 'unidades'}</td>
+      <td><span class="status-tag ${tagClass}">${estadoTexto}</span></td>
+      <td><button type="button" class="btn-sm btn-edit">Editar</button></td>
+    `;
+
+    tbodyInsumos.appendChild(tr);
+  }
+
+  function cargarInsumosGuardados() {
+    const insumos = JSON.parse(localStorage.getItem('insumos')) || [];
+    insumos.forEach(insumo => crearFilaInsumo(insumo));
+  }
+});
+
+// =========================================================
+// CLASE INSUMO (MODELO Y ENCAPSULACIÓN)
+// =========================================================
+class Insumo {
+  constructor(id, nombre, cantidad, unidad = 'unidades', umbral = 5) {
+    if (!id || !nombre) {
+      throw new Error("El ID y nombre son obligatorios.");
+    }
+    this.id = id;
+    this.nombre = nombre;
+    this.unidad = unidad;
+    
+    this.setCantidad(cantidad);
+    this.setUmbral(umbral);
+    this.movimientos = [];
+  }
+
+  setCantidad(valor) {
+    const num = Number(valor);
+    if (isNaN(num) || num < 0) {
+      throw new Error("La cantidad debe ser mayor o igual a 0.");
+    }
+    this.cantidad = num;
+  }
+
+  setUmbral(valor) {
+    const num = Number(valor);
+    if (isNaN(num) || num <= 0) {
+      throw new Error("El umbral debe ser mayor a 0.");
+    }
+    this.umbral = num;
+  }
+
+  obtenerEstado() {
+    if (this.cantidad === 0) return 'Critico';
+    if (this.cantidad <= this.umbral) return 'Stock Bajo';
+    return 'Normal';
+  }
+
+  registrarEntrada(cantidad, usuario = 'Usuario Prueba') {
+    const cant = Number(cantidad);
+    if (isNaN(cant) || cant <= 0) {
+      throw new Error("La cantidad a ingresar debe ser mayor a 0.");
+    }
+
+    this.cantidad += cant;
+    this.movimientos.push({
+      tipo: 'Entrada',
+      cantidad: cant,
+      saldoResultante: this.cantidad,
+      fecha: new Date().toISOString(),
+      usuario: usuario
+    });
+    return true;
+  }
+
+  registrarSalida(cantidad, usuario = 'Usuario Prueba') {
+    const cant = Number(cantidad);
+    if (isNaN(cant) || cant <= 0) {
+      throw new Error("La cantidad a retirar debe ser mayor a 0.");
+    }
+    if (cant > this.cantidad) {
+      throw new Error("Stock insuficiente para registrar la salida.");
+    }
+
+    this.cantidad -= cant;
+    this.movimientos.push({
+      tipo: 'Salida',
+      cantidad: cant,
+      saldoResultante: this.cantidad,
+      fecha: new Date().toISOString(),
+      usuario: usuario
+    });
+    return true;
+  }
+}
+
+// =========================================================
+// AVISOS DE STOCK SIN DUPLICADOS
+// =========================================================
+let alertaTimeout = null;
+
+function mostrarAlertaStock(mensaje, tipo = 'info') {
+  if (alertaTimeout) {
+    clearTimeout(alertaTimeout);
+  }
+
+  if (typeof showAlert === 'function') {
+    showAlert(mensaje, tipo);
+  } else {
+    alert(mensaje);
+  }
+
+  alertaTimeout = setTimeout(() => {
+    alertaTimeout = null;
+  }, 3000);
+>>>>>>> e478c7920ae2f2d28bc08f64f948e3366d9bf28e
 }
