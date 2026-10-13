@@ -145,31 +145,62 @@ en ese orden).
 - Corregidos el logo y los íconos de las tarjetas (`../img/*.png`, que no
   existían en `assets/`) por íconos de FontAwesome, ya usados en el resto del
   sitio.
-- `js/dashboard.js`: selección de nodos con `querySelectorAll` (cards, filas
-  de la tabla, links del navbar) con `console.log` para depuración; click en
-  una card dispara `showAlert()` (de `app.js`, no `alert()` nativo); alerta de
-  stock bajo insertada dinámicamente con `createElement` + `classList` +
-  `appendChild`.
+- `js/dashboard.js` (todo con datos de `storage.js`, sin cifras escritas a mano):
+  - `calcularResumen()` (función pura, `filter` + `reduce`) calcula las cards:
+    herramientas, insumos, préstamos activos y alertas. Un dato que falta se
+    muestra como "—" y nunca como 0.
+  - `renderMovimientos()` y `renderAlertas()` dibujan la tabla de movimientos
+    recientes y la lista de alertas con `createElement`, `classList` y
+    `textContent` (sin `innerHTML`). Tienen estado vacío y estado de error.
+  - Se actualiza solo al crear, editar o borrar datos (evento
+    `escuelatec:cambio` de `storage.js`, y `storage` para otras pestañas).
+  - Cards: Herramientas, Insumos y Préstamos son enlaces que cubren toda la
+    card (clic, Enter y Espacio). La card Alertas es un botón que lleva al
+    panel de alertas y avisa con `showAlert()`.
+  - Sin `console.log` de depuración.
 - Responsive: navbar a menú hamburguesa por debajo de 768px (usa
   `initMenuMobile()` de `app.js`, clases `.navbar-toggle` / `.navbar-menu` /
   `.is-open`) y "Movimientos recientes" / "Préstamos" apilados a 1 columna
   (`.contenido{grid-template-columns:1fr}`).
-- Enlazados los botones de las cards ("Total", "Stock", "Activos") y "Ver
-  historial completo" a sus páginas correspondientes (`herramientas.html`,
-  `insumos.html`, `prestamos.html`), en vez de quedar sin acción.
+- Cards enlazadas a sus páginas (`herramientas.html`, `insumos.html`,
+  `prestamos.html`) y "Ver historial completo" a `prestamos.html`.
+- `showAlert()` (`app.js`): ya no apila avisos idénticos, se ve arriba a la
+  derecha y avisa a los lectores de pantalla (`aria-live`).
+- Fechas: `parseFecha()` / `formatDate()` (`app.js`) leen "AAAA-MM-DD" como día
+  local (antes `2026-06-16` se mostraba como 15/06 en Argentina).
+- `variables.css`: restauradas `--border-color`, `--card-bg`, `--text-color`,
+  `--bg-main`, `--text-muted` y `--font-main`, que se habían borrado como "sin
+  uso" pero las usa `components.css`.
 
 **Validación:**
 - Chequeo automático de estructura HTML (parser, sin conexión a internet en
   este entorno) sin errores fatales ni ids duplicados.
 - ✅ **W3C Validator** ([validator.w3.org](https://validator.w3.org/)) sobre
   `pages/dashboard.html`: *"Document checking completed. No errors or
-  warnings to show."*
+  warnings to show."* (resultado de la primera entrega).
+- ⏳ **Pendiente:** volver a validar el HTML actual, que cambió (cards
+  enlazadas, tabla dinámica, botón de Alertas).
 
-**Nota — datos de prueba:** los valores de las cards (80, 80, 9, 1), las
-filas de "Movimientos recientes" y los ítems de "Alertas" son *placeholders*
-puestos a mano para esta etapa. Todavía no se calculan dinámicamente desde
-`storage.js`; queda pendiente para una futura iteración si la profesora lo
-pide.
+**Estado de los datos:**
+- Cards, movimientos y alertas se calculan con los datos de `storage.js`.
+- Préstamos activos muestra "—" mientras el módulo de Préstamos no guarde sus
+  registros en `storage.js`.
+- "Movimientos recientes" muestra el estado vacío hasta que cada módulo llame a
+  `registrarMovimiento()`.
+- Las alertas de stock bajo necesitan `stockMinimo` en los insumos; hoy ninguno
+  lo tiene, así que solo se detectan los agotados (stock 0).
+- El gráfico "Préstamos por estado" todavía tiene cifras escritas a mano
+  (pendiente).
+
+**Cómo avisar al Dashboard desde otros módulos:**
+```js
+// Al crear o devolver algo (tipos: prestamo | devolucion | ingreso | egreso)
+registrarMovimiento({ tipo: "prestamo", elemento: nombre, responsable: alias });
+```
+Usar el alias de la persona, no nombre completo ni DNI. Para que cuenten como
+préstamos activos, los préstamos tienen que guardarse con
+`estado: "activo" | "devuelto" | "vencido"`.
+
 ##
  ✅ Antes de pedir el Pull Request
 - [ ] Código validado con [W3C Validator](https://validator.w3.org/)

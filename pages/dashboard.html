@@ -101,19 +101,23 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
         </section>
 
+        <!-- ESTADO DE CARGA / ERROR DE DATOS (lo completa js/dashboard.js) -->
+
+        <div id="estado-datos" class="estado-datos" role="status" aria-live="polite" aria-atomic="true"></div>
+
         <!-- TARJETAS -->
 
         <section class="cards">
 
-            <div class="card azul">
+            <div class="card azul card--enlace" data-metrica="herramientas">
 
                 <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
 
-                <h2>80</h2>
+                <h2 aria-label="Cargando datos">—</h2>
 
                 <h3>Herramientas</h3>
 
-                <a class="footer" href="herramientas.html">
+                <a class="footer card__enlace" href="herramientas.html" aria-label="Ver total de herramientas">
 
                     Total
 
@@ -121,15 +125,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
             </div>
 
-            <div class="card verde">
+            <div class="card verde card--enlace" data-metrica="insumos">
 
                 <i class="fa-solid fa-box" aria-hidden="true"></i>
 
-                <h2>80</h2>
+                <h2 aria-label="Cargando datos">—</h2>
 
                 <h3>Insumos</h3>
 
-                <a class="footer" href="insumos.html">
+                <a class="footer card__enlace" href="insumos.html" aria-label="Ver stock de insumos">
 
                     Stock
 
@@ -137,15 +141,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
             </div>
 
-            <div class="card naranja">
+            <div class="card naranja card--enlace" data-metrica="prestamosActivos">
 
                 <i class="fa-solid fa-handshake" aria-hidden="true"></i>
 
-                <h2>9</h2>
+                <h2 aria-label="Cargando datos">—</h2>
 
                 <h3>Préstamos</h3>
 
-                <a class="footer" href="prestamos.html">
+                <a class="footer card__enlace" href="prestamos.html" aria-label="Ver préstamos activos">
 
                     Activos
 
@@ -153,19 +157,19 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
             </div>
 
-            <div class="card rojo">
+            <div class="card rojo card--enlace" data-metrica="alertas">
 
                 <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
 
-                <h2>1</h2>
+                <h2 aria-label="Cargando datos">—</h2>
 
                 <h3>Alertas</h3>
 
-                <div class="footer">
+                <button type="button" class="footer card__enlace" aria-controls="alertas-panel" aria-label="Atención: ir al detalle de las alertas">
 
                     Atención
 
-                </div>
+                </button>
 
             </div>
 
@@ -179,9 +183,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
             <div class="tabla">
 
-                <h2>Movimientos recientes</h2>
+                <h2 id="movimientos-titulo">Movimientos recientes</h2>
 
-                <table>
+                <!-- Las filas las dibuja js/dashboard.js (renderMovimientos) con datos de storage.js. -->
+
+                <table class="tabla-movimientos" aria-labelledby="movimientos-titulo">
 
                     <thead>
 
@@ -196,66 +202,21 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
                     </thead>
 
-                    <tbody>
+                    <tbody id="movimientos-cuerpo">
 
                         <tr>
-
-                            <td>Proyector BQI</td>
-                            <td>Préstamo</td>
-                            <td>Mauro Giménez</td>
-                            <td>16/06/2026</td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>Cables de puente</td>
-                            <td>Devolución</td>
-                            <td>Juan Sosa</td>
-                            <td>16/06/2026</td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>Kit de Herramientas</td>
-                            <td>Ingreso</td>
-                            <td>Brenda Castillo</td>
-                            <td>16/06/2026</td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>Proyector Epson</td>
-                            <td>Préstamo</td>
-                            <td>Juan Sosa</td>
-                            <td>15/06/2026</td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>Cargador Notebook</td>
-                            <td>Ingreso</td>
-                            <td>Leo Rosales</td>
-                            <td>14/06/2026</td>
-
+                            <td colspan="4" class="movimientos__mensaje movimientos__mensaje--vacio">Cargando movimientos…</td>
                         </tr>
 
                     </tbody>
 
                 </table>
 
-                <button>
-                    
-                <a class="footer" href="prestamos.html">
+                <a class="btn-link" href="prestamos.html">
 
                     Ver historial completo
 
                 </a>
-
-                </button>
 
             </div>
 
@@ -303,19 +264,19 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
                 <!-- ALERTAS -->
 
-                <div class="alertas">
+                <div class="alertas" id="alertas-panel" tabindex="-1">
 
                     <h2>Alertas</h2>
 
-                    <ul>
+                    <!-- Los ítems los dibuja js/dashboard.js (renderAlertas) con datos de storage.js -->
 
-                        <li>📦 Stock bajo en Cables de puente.</li>
+                    <ul id="alertas-lista">
 
-                        <li>⚠ Insumo "Cinta" agotado.</li>
-
-                        <li>📅 Dos préstamos vencen hoy.</li>
+                        <li class="alerta alerta--vacio">Cargando alertas…</li>
 
                     </ul>
+
+                    <p id="alertas-nota" class="alertas__nota"></p>
 
                 </div>
 

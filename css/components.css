@@ -406,6 +406,14 @@ svg {
   width: 42px;
 }
 
+.card i {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  font-size: 28px;
+  opacity: 0.85;
+}
+
 .card h2 {
   font-size: 2.8rem;
   margin: 25px 0 5px 20px;
@@ -423,18 +431,36 @@ svg {
   text-align: center;
   padding: 12px;
   font-weight: var(--semi-bold);
+  display: block;
+  text-decoration: none;
 }
 
-.azul h2 { color: var(--primary); }
+/* Link con aspecto de botón (ej: "Ver historial completo") */
+.btn-link {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 12px 24px;
+  border-radius: 30px;
+  background: var(--secondary);
+  color: white;
+  font-family: inherit;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  background: var(--primary-dark);
+}
+
+.azul h2, .azul i { color: var(--primary); }
 .azul .footer { background: var(--primary); }
 
-.verde h2 { color: var(--success); }
+.verde h2, .verde i { color: var(--success); }
 .verde .footer { background: var(--success); }
 
-.naranja h2 { color: var(--warning); }
+.naranja h2, .naranja i { color: var(--warning); }
 .naranja .footer { background: var(--warning); }
 
-.rojo h2 { color: var(--danger); }
+.rojo h2, .rojo i { color: var(--danger); }
 .rojo .footer { background: var(--danger); }
 
 .tabla, .grafico, .alertas {
@@ -974,7 +1000,6 @@ h1, h2, #detalle-titulo, #modal-nueva-titulo {
 }
 
 .nuevaherramienta.is-visible {
-<<<<<<< HEAD
   display: block; /* O 'flex' según cómo esté estructurado tu modal */
 }
 /* ==============================
@@ -1060,10 +1085,8 @@ h1, h2, #detalle-titulo, #modal-nueva-titulo {
   padding: 12px;
   border-radius: 8px;
 }
-=======
-  display: block;
-}
 
+/* Modal (Herramientas) */
 .modal {
   display: none; 
   position: fixed;
@@ -1095,4 +1118,185 @@ h1, h2, #detalle-titulo, #modal-nueva-titulo {
   z-index: 1001;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
->>>>>>> 2028daf95b59f4953bd2d48eb8a25c4239fe975e
+
+/* ==========================================================================
+   DASHBOARD — Mensajes de estado de carga / error (#estado-datos)
+   ========================================================================== */
+
+.estado-datos__msg {
+  margin: 0 0 20px;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-left-width: 4px;
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  color: var(--text-color);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.estado-datos__msg--info {
+  border-left-color: var(--primary);
+}
+
+.estado-datos__msg--error {
+  border-left-color: var(--danger);
+  background: #fdf3f3;
+}
+
+.estado-datos__reintentar {
+  margin: 0 0 0 12px;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+}
+
+/* ==========================================================================
+   DASHBOARD — Movimientos recientes y alertas dinámicos (E1-05)
+   Colores con contraste mínimo 4.5:1 (WCAG AA)
+   ========================================================================== */
+
+.badge--prestamo   { background-color: #e3f2fd; color: #0f5a86; }
+.badge--devolucion { background-color: #e8f5e9; color: #1b6b3f; }
+.badge--ingreso    { background-color: #f1e8fa; color: #5b2c91; }
+.badge--egreso     { background-color: #fff3e0; color: #8a4b00; }
+.badge--otro       { background-color: #eceff1; color: #37474f; }
+
+.movimientos__mensaje {
+  padding: 24px 12px;
+  text-align: center;
+  color: #5b6770;
+}
+
+.movimientos__mensaje--error {
+  color: #9b2c2c;
+}
+
+.alertas ul {
+  margin: 0;
+  padding: 0;
+}
+
+.alerta {
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border-left: 4px solid var(--border-color);
+  border-radius: 6px;
+  background: #fafafa;
+  font-size: 0.95rem;
+}
+
+.alerta--agotado { border-left-color: var(--danger); }
+.alerta--bajo    { border-left-color: var(--warning); }
+.alerta--vacio   { border-left-color: var(--success); color: #5b6770; }
+.alerta--error   { border-left-color: var(--danger); color: #9b2c2c; }
+
+.alerta--mas a {
+  color: var(--primary-dark);
+  font-weight: var(--semi-bold);
+}
+
+.alertas__nota {
+  margin: 12px 0 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #5b6770;
+}
+
+.alertas__nota:empty {
+  display: none;
+}
+
+/* ==========================================================================
+   AVISOS FLOTANTES — showAlert() de app.js
+   Antes no tenían ningún estilo y quedaban al final de la página, fuera de vista.
+   ========================================================================== */
+
+.alertas-globales {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(360px, calc(100vw - 32px));
+  pointer-events: none; /* el contenedor vacío no tapa clics de la página */
+}
+
+.alertas-globales .alert {
+  pointer-events: auto;
+  padding: 12px 16px;
+  border-left: 4px solid var(--primary);
+  border-radius: 10px;
+  background: #ffffff;
+  color: #2c3e50;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.alertas-globales .alert-success { border-left-color: var(--success); }
+.alertas-globales .alert-warning { border-left-color: var(--warning); }
+.alertas-globales .alert-error   { border-left-color: var(--danger); }
+
+/* ==========================================================================
+   DASHBOARD — Cards interactivas (E1-06)
+   ========================================================================== */
+
+/* El link (o botón) del pie se estira sobre toda la card: se puede hacer clic en cualquier parte */
+.card__enlace::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* El botón de la card Alertas tiene que verse igual que los links de las otras */
+button.card__enlace {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  font: inherit;
+  font-weight: var(--semi-bold);
+  cursor: pointer;
+}
+
+.card--enlace {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Foco de teclado: el anillo rodea toda la card (dentro, porque .card recorta con overflow:hidden) */
+.card__enlace:focus-visible {
+  outline: none;
+}
+
+.card__enlace:focus-visible::after {
+  border-radius: var(--radius);
+  outline: 3px solid var(--primary-dark);
+  outline-offset: -4px;
+}
+
+@media (hover: hover) {
+  .card--enlace:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px -12px rgba(21, 34, 41, 0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card--enlace {
+    transition: none;
+  }
+
+  .card--enlace:hover {
+    transform: none;
+  }
+}
+
+/* Panel de alertas: recibe el foco desde la card "Alertas" y se resalta un momento */
+.alertas:focus-visible,
+.alertas--resaltado {
+  outline: 3px solid var(--danger);
+  outline-offset: 3px;
+}
