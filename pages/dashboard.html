@@ -230,37 +230,22 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
                     <h2>Préstamos por estado</h2>
 
-                    <div class="circulo"></div>
+                    <!-- El círculo y la leyenda los dibuja js/dashboard.js (renderGraficoPrestamos)
+                         con la colección "prestamos" de storage.js. El círculo es solo decorativo:
+                         los datos están en la leyenda, en texto. -->
 
-                    <ul>
+                    <div class="circulo" id="grafico-circulo" aria-hidden="true"></div>
 
-                        <li>
+                    <ul id="grafico-leyenda">
 
-                            <span class="b azul"></span>
-
-                            Activos (9)
-
-                        </li>
-
-                        <li>
-
-                            <span class="b verde"></span>
-
-                            Devueltos (16)
-
-                        </li>
-
-                        <li>
-
-                            <span class="b rojo"></span>
-
-                            Vencidos (6)
-
-                        </li>
+                        <li class="grafico__mensaje">Cargando préstamos…</li>
 
                     </ul>
 
+                    <p id="grafico-nota" class="grafico__nota"></p>
+
                 </div>
+
 
                 <!-- ALERTAS -->
 

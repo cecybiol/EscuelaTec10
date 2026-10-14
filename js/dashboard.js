@@ -102,8 +102,34 @@ function limpiarEstado() {
 // Resumen de las cards con datos reales (E1-04)
 // ---------------------------------------------------------------------------
 
-// Valor de "estado" que cuenta como préstamo activo (los otros: "devuelto", "vencido").
-const ESTADO_PRESTAMO_ACTIVO = "activo";
+// Estados de préstamo que reconoce el Dashboard (campo "estado" de cada préstamo).
+// Define el orden, el texto y el color con que se muestran en el gráfico.
+const ESTADOS_PRESTAMO = [
+  { clave: "activo", etiqueta: "Activos", color: "var(--primary)", clase: "azul" },
+  { clave: "devuelto", etiqueta: "Devueltos", color: "var(--success)", clase: "verde" },
+  { clave: "vencido", etiqueta: "Vencidos", color: "var(--danger)", clase: "rojo" },
+];
+
+// Préstamos con un estado que no es ninguno de los de arriba (o sin estado)
+const ESTADO_OTROS = { clave: "otros", etiqueta: "Otros estados", color: "#9aa5ad", clase: "gris" };
+
+/**
+ * Cuenta los préstamos por estado. Función pura. Ignora mayúsculas y espacios
+ * ("Activo " cuenta como "activo"). Un estado desconocido o ausente va a "otros":
+ * no se descarta ni se confunde con otro, para que la suma siempre dé el total.
+ */
+function contarPrestamosPorEstado(listaPrestamos) {
+  const conocidos = ESTADOS_PRESTAMO.map((estado) => estado.clave);
+  const conteo = { activo: 0, devuelto: 0, vencido: 0, otros: 0, total: listaPrestamos.length };
+
+  listaPrestamos.forEach((prestamo) => {
+    const estado = String(prestamo.estado ?? "").trim().toLowerCase();
+    if (conocidos.includes(estado)) conteo[estado] += 1;
+    else conteo.otros += 1;
+  });
+
+  return conteo;
+}
 
 // Colecciones que no se pudieron cargar (las completa cargarDatos)
 let coleccionesFallidas = new Set();
@@ -155,11 +181,7 @@ function calcularResumen({ herramientas = null, insumos = null, prestamos = null
 
   // Sin ningún préstamo registrado todavía: dato pendiente (null), no "0 activos".
   const prestamosActivos =
-    listaPrestamos && listaPrestamos.length > 0
-      ? listaPrestamos.filter(
-          (prestamo) => String(prestamo.estado ?? "").toLowerCase() === ESTADO_PRESTAMO_ACTIVO
-        ).length
-      : null;
+    listaPrestamos && listaPrestamos.length > 0 ? contarPrestamosPorEstado(listaPrestamos).activo : null;
 
   return {
     herramientas: listaHerramientas ? listaHerramientas.length : null,
@@ -404,6 +426,120 @@ function actualizarPanel() {
   actualizarResumen();
   renderMovimientos();
   renderAlertas();
+  renderGraficoPrestamos();
+}
+
+// ---------------------------------------------------------------------------
+// Gráfico "Préstamos por estado" con datos reales (E1-13)
+// ---------------------------------------------------------------------------
+
+/**
+ * Reparte 100 puntos entre las cantidades de forma que los porcentajes enteros
+ * SIEMPRE sumen 100 (método del resto mayor). Redondear cada uno por separado
+ * podría dar 99 o 101. Función pura.
+ */
+function repartirPorcentajes(cantidades) {
+  const total = cantidades.reduce((suma, cantidad) => suma + cantidad, 0);
+  if (total === 0) return cantidades.map(() => 0);
+
+  const porcentajes = cantidades.map((cantidad) => Math.floor((cantidad * 100) / total));
+  const faltan = 100 - porcentajes.reduce((suma, porcentaje) => suma + porcentaje, 0);
+
+  cantidades
+    .map((cantidad, posicion) => ({ posicion, resto: (cantidad * 100) % total }))
+    .sort((a, b) => b.resto - a.resto || a.posicion - b.posicion)
+    .slice(0, faltan)
+    .forEach(({ posicion }) => (porcentajes[posicion] += 1));
+
+  return porcentajes;
+}
+
+/**
+ * Calcula cómo se reparten los préstamos por estado. Función pura.
+ * Devuelve null si la colección no está disponible; con una colección vacía,
+ * total 0 y sin gradiente (no hay nada que repartir: no se inventa un gráfico).
+ *
+ * segmentos: los 3 estados conocidos siempre (aunque valgan 0, es un dato real) y
+ * "Otros estados" solo si hay alguno. gradiente: cadena para background, solo con
+ * los tramos que tienen préstamos.
+ */
+function calcularDistribucionPrestamos(prestamos) {
+  const lista = soloObjetos(prestamos);
+  if (!lista) return null;
+  if (lista.length === 0) return { total: 0, segmentos: [], gradiente: null };
+
+  const conteo = contarPrestamosPorEstado(lista);
+  const definiciones = conteo.otros > 0 ? [...ESTADOS_PRESTAMO, ESTADO_OTROS] : ESTADOS_PRESTAMO;
+  const cantidades = definiciones.map((definicion) => conteo[definicion.clave]);
+  const porcentajes = repartirPorcentajes(cantidades);
+
+  const segmentos = definiciones.map((definicion, posicion) => ({
+    ...definicion,
+    cantidad: cantidades[posicion],
+    porcentaje: porcentajes[posicion],
+  }));
+
+  // El tramo del círculo se mide con la proporción exacta, no con el porcentaje redondeado
+  let acumulado = 0;
+  const tramos = segmentos
+    .filter((segmento) => segmento.cantidad > 0)
+    .map((segmento) => {
+      const desde = (acumulado / conteo.total) * 100;
+      acumulado += segmento.cantidad;
+      const hasta = (acumulado / conteo.total) * 100;
+      return `${segmento.color} ${desde.toFixed(2)}% ${hasta.toFixed(2)}%`;
+    });
+
+  return { total: conteo.total, segmentos, gradiente: `conic-gradient(${tramos.join(", ")})` };
+}
+
+function crearItemLeyenda(texto, clase) {
+  const item = document.createElement("li");
+  if (clase) item.classList.add(clase);
+  item.textContent = texto;
+  return item;
+}
+
+/** Dibuja el círculo y la leyenda a partir de la colección "prestamos". */
+function renderGraficoPrestamos() {
+  const circulo = document.getElementById("grafico-circulo");
+  const leyenda = document.getElementById("grafico-leyenda");
+  const nota = document.getElementById("grafico-nota");
+  if (!circulo || !leyenda) return;
+
+  leyenda.replaceChildren();
+  if (nota) nota.textContent = "";
+  circulo.style.removeProperty("--grafico"); // sin datos: el CSS muestra un anillo gris neutro
+
+  const prestamos =
+    coleccionesFallidas.has("todas") || coleccionesFallidas.has("prestamos") ? null : getCollection("prestamos");
+  const distribucion = calcularDistribucionPrestamos(prestamos);
+
+  if (!distribucion) {
+    leyenda.appendChild(crearItemLeyenda("No se pudieron cargar los préstamos.", "grafico__mensaje--error"));
+    return;
+  }
+  if (distribucion.total === 0) {
+    leyenda.appendChild(crearItemLeyenda("Todavía no hay préstamos registrados.", "grafico__mensaje"));
+    return;
+  }
+
+  circulo.style.setProperty("--grafico", distribucion.gradiente);
+
+  distribucion.segmentos.forEach((segmento) => {
+    const item = document.createElement("li");
+
+    const punto = document.createElement("span"); // el color acompaña al texto, no lo reemplaza
+    punto.classList.add("b", segmento.clase);
+    punto.setAttribute("aria-hidden", "true");
+
+    item.append(punto, `${segmento.etiqueta}: ${segmento.cantidad} (${segmento.porcentaje}%)`);
+    leyenda.appendChild(item);
+  });
+
+  if (nota) {
+    nota.textContent = `Total: ${distribucion.total} ${distribucion.total === 1 ? "préstamo" : "préstamos"}.`;
+  }
 }
 
 let suscripto = false;

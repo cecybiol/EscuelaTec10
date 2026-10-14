@@ -496,11 +496,7 @@ td, .table td {
   height: 170px;
   margin: 20px auto;
   border-radius: 50%;
-  background: conic-gradient(
-    var(--primary) 0 30%,
-    var(--success) 30% 80%,
-    var(--danger) 80% 100%
-  );
+  background: var(--grafico, conic-gradient(#e3e8ec 0 100%));
   position: relative;
 }
 
@@ -525,6 +521,34 @@ td, .table td {
 .b.azul { background: var(--primary); }
 .b.verde { background: var(--success); }
 .b.rojo { background: var(--danger); }
+.b.gris { background: #9aa5ad; }
+
+/* Gráfico de préstamos: mensajes de vacío / error y total (E1-13) */
+.grafico ul {
+  margin: 0;
+  padding: 0 8px;
+}
+
+.grafico__mensaje,
+.grafico__mensaje--error {
+  text-align: center;
+  color: #5b6770;
+}
+
+.grafico__mensaje--error {
+  color: #9b2c2c;
+}
+
+.grafico__nota {
+  margin: 12px 0 0;
+  font-size: 0.85rem;
+  text-align: center;
+  color: #5b6770;
+}
+
+.grafico__nota:empty {
+  display: none;
+}
 
 .alertas h2 {
   background: var(--danger);

@@ -152,6 +152,10 @@ en ese orden).
   - `renderMovimientos()` y `renderAlertas()` dibujan la tabla de movimientos
     recientes y la lista de alertas con `createElement`, `classList` y
     `textContent` (sin `innerHTML`). Tienen estado vacío y estado de error.
+  - `renderGraficoPrestamos()` dibuja el gráfico circular "Préstamos por estado"
+    (`conic-gradient` calculado con la proporción exacta) y su leyenda con
+    cantidades y porcentajes que siempre suman 100. La card "Préstamos" y el
+    gráfico salen de la misma cuenta (`contarPrestamosPorEstado()`).
   - Se actualiza solo al crear, editar o borrar datos (evento
     `escuelatec:cambio` de `storage.js`, y `storage` para otras pestañas).
   - Cards: Herramientas, Insumos y Préstamos son enlaces que cubren toda la
@@ -189,17 +193,21 @@ en ese orden).
   `registrarMovimiento()`.
 - Las alertas de stock bajo necesitan `stockMinimo` en los insumos; hoy ninguno
   lo tiene, así que solo se detectan los agotados (stock 0).
-- El gráfico "Préstamos por estado" todavía tiene cifras escritas a mano
-  (pendiente).
+- El gráfico "Préstamos por estado" muestra un anillo gris y "Todavía no hay
+  préstamos registrados." mientras la colección `prestamos` esté vacía.
 
 **Cómo avisar al Dashboard desde otros módulos:**
 ```js
 // Al crear o devolver algo (tipos: prestamo | devolucion | ingreso | egreso)
 registrarMovimiento({ tipo: "prestamo", elemento: nombre, responsable: alias });
 ```
-Usar el alias de la persona, no nombre completo ni DNI. Para que cuenten como
-préstamos activos, los préstamos tienen que guardarse con
-`estado: "activo" | "devuelto" | "vencido"`.
+Usar el alias de la persona, no nombre completo ni DNI.
+
+Los préstamos se guardan en la colección `prestamos` con
+`estado: "activo" | "devuelto" | "vencido"` (no importan mayúsculas ni espacios).
+Con eso se calculan la card "Préstamos" y el gráfico circular, y se actualizan
+solos al agregar o cambiar un préstamo. Un estado distinto se cuenta aparte
+como "Otros estados" para que los totales siempre cierren.
 
 ##
  ✅ Antes de pedir el Pull Request
