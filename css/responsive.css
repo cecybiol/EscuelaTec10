@@ -37,6 +37,21 @@
         font-size:22px;
         cursor:pointer;
         align-self:flex-end;
+        width:44px;
+        height:44px;
+    }
+
+    /* Hamburguesa dibujada con CSS: se ve aunque FontAwesome no cargue (sin internet) */
+    .navbar-toggle i{
+        display:none;
+    }
+
+    .navbar-toggle::before{
+        content:"";
+        width:22px;
+        height:2px;
+        background:currentColor;
+        box-shadow:0 -7px 0 currentColor, 0 7px 0 currentColor;
     }
 
     .navbar-menu{
@@ -111,6 +126,65 @@
     
     .dashboard-body {
         padding: 12px;
+    }
+
+    /* Movimientos recientes: cada fila pasa a ser una tarjeta con "Etiqueta: valor".
+       Los títulos de columna se ocultan solo a la vista (siguen para lectores de pantalla). */
+    .tabla-movimientos thead{
+        position:absolute;
+        width:1px;
+        height:1px;
+        overflow:hidden;
+        clip:rect(0 0 0 0);
+        white-space:nowrap;
+    }
+
+    .tabla-movimientos,
+    .tabla-movimientos tbody,
+    .tabla-movimientos tr,
+    .tabla-movimientos td{
+        display:block;
+        width:100%;
+    }
+
+    .tabla-movimientos tr{
+        margin-bottom:12px;
+        padding:6px 14px;
+        border:1px solid #ececec;
+        border-radius:10px;
+    }
+
+    .tabla-movimientos td{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:16px;
+        padding:8px 0;
+        border-bottom:1px solid #f1f1f1;
+        text-align:right;
+        overflow-wrap:anywhere;
+    }
+
+    .tabla-movimientos td:last-child{
+        border-bottom:none;
+    }
+
+    .tabla-movimientos td::before{
+        content:attr(data-label);
+        flex-shrink:0;
+        font-weight:var(--semi-bold);
+        color:var(--secondary);
+        text-align:left;
+    }
+
+    /* La fila de "vacío / error" ocupa todo el ancho y no lleva etiqueta */
+    .tabla-movimientos td[colspan]{
+        display:block;
+        text-align:center;
+    }
+
+    .tabla-movimientos td[colspan]::before{
+        content:none;
     }
 }
 

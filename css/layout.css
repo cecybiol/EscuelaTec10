@@ -167,6 +167,10 @@ header .logo {
   gap: 12px;
 }
 
+header .logo h2 {
+  color: white;
+}
+
 .logo-mark {
   width: 40px;
   height: 40px;
@@ -195,6 +199,13 @@ header nav a {
 
 header nav a.active, header nav a[aria-current="page"], header nav a:hover {
   background-color: var(--primary-dark);
+}
+
+/* Foco visible al navegar con teclado (Tab) */
+header nav a:focus-visible,
+.navbar-toggle:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
 }
 
 .header-actions {
