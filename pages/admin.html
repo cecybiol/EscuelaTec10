@@ -6,9 +6,10 @@
     <title>Administración - EscuelaTec10</title>
 
     <!-- Archivos JavaScript -->
-    <script src="../js/app.js" defer></script>
-    <script src="../js/storage.js" defer></script>
-    <script src="../js/admin.js" defer></script>
+<script src="../js/app.js" defer></script>
+<script src="../js/storage.js" defer></script>
+<script src="../js/admin.js" defer></script>
+<script src="../js/cargadatos.js" defer></script>
 
     <!-- Archivo CSS -->
     <link rel="stylesheet" href="../style.css">
@@ -27,15 +28,33 @@
             ☰
         </button>
 
-        <nav class="navbar" id="navbar">
-            <ul>
-                <li><a href="../index.html">Inicio</a></li>
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="herramientas.html">Herramientas</a></li>
-                <li><a href="insumos.html">Insumos</a></li>
-                <li><a href="prestamos.html">Préstamos</a></li>
-                <li><a href="admin.html" class="active">Administración</a></li>
-            </ul>
+        <nav class="navbar-menu">
+
+            <a href="dashboard.html" aria-current="page">
+                <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                Dashboard
+            </a>
+
+            <a href="herramientas.html">
+                <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
+                Herramientas
+            </a>
+
+            <a href="insumos.html">
+                <i class="fa-solid fa-box" aria-hidden="true"></i>
+                Insumos
+            </a>
+
+            <a href="prestamos.html">
+                <i class="fa-solid fa-handshake" aria-hidden="true"></i>
+                Préstamos
+            </a>
+
+            <a href="admin.html">
+                <i class="fa-solid fa-gear" aria-hidden="true"></i>
+                Administración
+            </a>
+
         </nav>
     </header>
 
