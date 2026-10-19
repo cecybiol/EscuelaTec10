@@ -166,6 +166,11 @@ en ese orden).
   `initMenuMobile()` de `app.js`, clases `.navbar-toggle` / `.navbar-menu` /
   `.is-open`) y "Movimientos recientes" / "Préstamos" apilados a 1 columna
   (`.contenido{grid-template-columns:1fr}`).
+- Header y menú unificados en las cinco páginas (`dashboard`, `herramientas`,
+  `insumos`, `prestamos`, `admin`): mismos cinco enlaces, página actual con
+  `aria-current="page"` y menú plegable en celular con `aria-expanded`. Antes
+  `prestamos.html` tenía enlaces `#` y `admin.html` una hamburguesa que no
+  hacía nada.
 - Cards enlazadas a sus páginas (`herramientas.html`, `insumos.html`,
   `prestamos.html`) y "Ver historial completo" a `prestamos.html`.
 - `showAlert()` (`app.js`): ya no apila avisos idénticos, se ve arriba a la
@@ -183,7 +188,9 @@ en ese orden).
   `pages/dashboard.html`: *"Document checking completed. No errors or
   warnings to show."* (resultado de la primera entrega).
 - ⏳ **Pendiente:** volver a validar el HTML actual, que cambió (cards
-  enlazadas, tabla dinámica, botón de Alertas).
+  enlazadas, tabla dinámica, botón de Alertas). Pasos, checklist de
+  responsive/accesibilidad, resultados del pre-chequeo y hallazgos abiertos:
+  [`docs/E1-07_checklist_validacion.md`](docs/E1-07_checklist_validacion.md).
 
 **Estado de los datos:**
 - Cards, movimientos y alertas se calculan con los datos de `storage.js`.

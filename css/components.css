@@ -426,13 +426,22 @@ svg {
   font-weight: var(--semi-bold);
 }
 
-.footer {
+/* Pie de las cards. Administración usa <footer class="footer"> como pie de página y esta
+   regla le ponía texto blanco sobre fondo claro (1.05:1, ilegible): ahora se limita a .card. */
+.card .footer {
   color: white;
   text-align: center;
   padding: 12px;
   font-weight: var(--semi-bold);
   display: block;
   text-decoration: none;
+}
+
+/* Pie de página de Administración: mismo centrado y relleno de siempre, con texto legible (5.5:1) */
+footer.footer {
+  padding: 12px;
+  text-align: center;
+  color: #5b6770;
 }
 
 /* Link con aspecto de botón (ej: "Ver historial completo") */
@@ -1323,4 +1332,25 @@ button.card__enlace {
 .alertas--resaltado {
   outline: 3px solid var(--danger);
   outline-offset: 3px;
+}
+
+/* ==========================================================================
+   DASHBOARD — Contraste AA en las cards (E1-07)
+   Blanco sobre el azul/verde/naranja originales daba 3.25 / 4.25 / 2.06 : 1 (mínimo 4.5:1).
+   ========================================================================== */
+
+.cards .azul .footer {
+  background: var(--primary-dark); /* 4.84:1 con texto blanco */
+}
+
+.cards .verde .footer {
+  background: #25724a; /* 5.86:1 con texto blanco */
+}
+
+.cards .naranja .footer {
+  color: #212529; /* se mantiene el naranja; texto oscuro: 7.48:1 */
+}
+
+.cards .naranja h2 {
+  color: #c2570c; /* número grande sobre blanco: 4.50:1 (antes 2.06:1) */
 }
