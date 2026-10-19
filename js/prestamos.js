@@ -1,5 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    // =========================
+    // BUSCAR SIN VOLVER A DESCARGAR 
+    // =========================
+    document.querySelector('#buscar-prestamo')
+        .addEventListener('input', event => {
+            const texto = event.target.value.trim().toLocaleLowerCase();
+            
+            // Adaptación: en vez de insumos, filtramos un arreglo "prestamos"
+            const visibles = prestamos.filter(item =>
+                item.solicitante.toLocaleLowerCase().includes(texto)
+            );
+            
+            // Adaptación: función para re-dibujar la tabla
+            renderizarPrestamos(visibles);
+        });
     // Obtener formulario
     const formulario = document.querySelector("#formulario");
 
@@ -11,7 +26,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Obtener cuerpo de la tabla
     const historial = document.querySelector("#historial");
+    // =========================
+    // LISTA Y RENDERIZADO (Págs. 11 y 12 de la teoría)
+    // =========================
+    let prestamos = [
+        {
+            solicitante: "Carlos Gómez",
+            item: "Amoladora Angular Bosch",
+            cantidad: "1",
+            observaciones: "Sin comentarios",
+            estado: "Activo"
+        }
+    ];
 
+    function renderizarPrestamos(datos) {
+        historial.replaceChildren();
+        datos.forEach(item => {
+            const nuevaFila = document.createElement("tr");
+
+            const textoBoton = item.estado === "Devuelto" ? "Devuelto" : "Devolver";
+            const estadoBoton = item.estado === "Devuelto" ? "disabled" : "";
+
+            nuevaFila.innerHTML = `
+                <td>${item.solicitante}</td>
+                <td>${item.item}</td>
+                <td>${item.cantidad} u.</td>
+                <td style="max-width: 250px; overflow-wrap: break-word;">${item.observaciones}</td>
+                <td><span class="badge">${item.estado}</span></td>
+                <td><button type="button" class="btn-sm" ${estadoBoton}>${textoBoton}</button></td>
+            `;
+            historial.appendChild(nuevaFila);
+        });
+    }
+
+    // Dibujar los préstamos iniciales en pantalla
+    renderizarPrestamos(prestamos);
 
     // =========================
     // REGISTRAR PRÉSTAMO LALALA
@@ -31,31 +80,15 @@ document.addEventListener("DOMContentLoaded", () => {
         // Obtener nombre del ítem
         const nombreItem = item.options[item.selectedIndex].text;
 
-        // Crear nueva fila
-        const nuevaFila = document.createElement("tr");
+       prestamos.push({
+            solicitante: solicitante,
+            item: nombreItem,
+            cantidad: cantidad,
+            observaciones: observaciones,
+            estado: "Activo"
+        });
 
-        nuevaFila.innerHTML = `
-            <td>${solicitante}</td>
-
-            <td>${nombreItem}</td>
-
-            <td>${cantidad} u.</td>
-            
-           <td style="max-width: 250px; overflow-wrap: break-word;">${observaciones}</td>
-
-            <td>
-                <span class="badge">Activo</span>
-            </td>
-
-            <td>
-                <button type="button" class="btn-sm">
-                    Devolver
-                </button>
-            </td>
-        `;
-
-        // Agregar fila
-        historial.appendChild(nuevaFila);
+        renderizarPrestamos(prestamos);
 
         // Limpiar formulario
         formulario.reset();
@@ -71,25 +104,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // DEVOLVER PRÉSTAMO
     // =========================
 
-    historial.addEventListener("click", (evento) => {
+   historial.addEventListener("click", (evento) => {
 
         // Verificar si se hizo click en un botón Devolver
         if (evento.target.classList.contains("btn-sm")) {
 
-            // Obtener la fila
             const fila = evento.target.closest("tr");
+            const nombreSolicitante = fila.querySelector("td").textContent;
 
-            // Obtener el estado
-            const estado = fila.querySelector(".badge");
+            // Cambiar estado en la lista
+            const prestamoEncontrado = prestamos.find(p => p.solicitante === nombreSolicitante && p.estado === "Activo");
+            if (prestamoEncontrado) {
+                prestamoEncontrado.estado = "Devuelto";
+            }
 
-            // Cambiar estado
-            estado.textContent = "Devuelto";
-
-            // Cambiar botón
-            evento.target.textContent = "Devuelto";
-
-            // Desactivar botón
-            evento.target.disabled = true;
+            // Re-dibujar la tabla con el estado actualizado
+            renderizarPrestamos(prestamos);
 
             console.log("Préstamo devuelto correctamente");
         }
