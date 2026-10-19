@@ -1,4 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
+// Variable global para almacenar la lista de insumos
+let listaInsumos = [];
+
+document.addEventListener('DOMContentLoaded', async () => {
   // 1. Inicializar almacenamiento si existe la función global
   if (typeof initStorage === 'function') {
     initStorage();
@@ -9,9 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   const searchInput = document.getElementById('search-insumos');
   const btnNuevoInsumo = document.getElementById('btn-nuevo-insumo');
-  const btnFilterCategory = document.querySelector('.btn-secondary'); // Ajustado al botón de filtrar del HTML
-  const tableInsumos = document.getElementById('table-insumos');
+  const btnFilterCategory = document.querySelector('.btn-secondary');
   const tbodyInsumos = document.getElementById('tbody-insumos');
+  const estadoElemento = document.querySelector('#estado-insumos');
 
   // Helper para notificaciones
   const notify = (mensaje, tipo = 'info') => {
@@ -22,11 +25,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Cargar insumos guardados en localStorage al iniciar
-  cargarInsumosGuardados();
+  // ==========================================
+  // CARGA ASÍNCRONA DESDE JSON / LOCALSTORAGE
+  // ==========================================
+  try {
+    if (estadoElemento) estadoElemento.textContent = 'Cargando insumos...';
+
+    const insumosGuardados = JSON.parse(localStorage.getItem('insumos'));
+
+    if (insumosGuardados && insumosGuardados.length > 0) {
+      // Reinstanciar desde localStorage a la clase Insumo
+      listaInsumos = insumosGuardados.map(
+        data => new Insumo(data.id, data.nombre, data.cantidad ?? data.stockActual ?? data.stock, data.unidad, data.umbral || 5)
+      );
+    } else if (typeof cargarDatos === 'function') {
+      // Cargar del JSON asíncrono si localStorage está vacío
+      const datosJson = await cargarDatos({ origen: 'json', recurso: './insumos-reales.json' });
+      
+      listaInsumos = datosJson.map(
+        item => new Insumo(item.id, item.nombre, item.cantidad ?? item.stockActual ?? item.stock, item.unidad, item.umbral || 5)
+      );
+
+      guardarEnLocalStorage();
+    }
+
+    renderizarInsumos(listaInsumos);
+    if (estadoElemento) estadoElemento.textContent = '';
+  } catch (error) {
+    if (estadoElemento) estadoElemento.textContent = `Error: ${error.message}`;
+    notify(`Error al cargar datos: ${error.message}`, 'danger');
+  }
 
   // ==========================================
-  // EVENTOS Y MANIPULACIÓN DEL DOM
+  // EVENTOS DEL DOM
   // ==========================================
 
   // 1. BOTÓN + NUEVO INSUMO
@@ -37,22 +68,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const nombre = prompt('Nombre del nuevo insumo:');
       if (!nombre || !nombre.trim()) return;
 
-      const nuevoInsumo = {
-        id: Date.now(),
-        nombre: nombre.trim(),
-        categoria: 'General',
-        stock: 5,
-        unidad: 'unidades'
-      };
-
-      // Guardar en LocalStorage
-      const insumos = JSON.parse(localStorage.getItem('insumos')) || [];
-      insumos.push(nuevoInsumo);
-      localStorage.setItem('insumos', JSON.stringify(insumos));
-
-      // Insertar en la tabla dinámicamente
-      crearFilaInsumo(nuevoInsumo);
-      notify(`Insumo "${nuevoInsumo.nombre}" agregado con éxito`, 'success');
+      try {
+        const nuevo = new Insumo(Date.now(), nombre.trim(), 5, 'unidades', 5);
+        listaInsumos.push(nuevo);
+        
+        guardarEnLocalStorage();
+        renderizarInsumos(listaInsumos);
+        notify(`Insumo "${nuevo.nombre}" agregado con éxito`, 'success');
+      } catch (err) {
+        notify(err.message, 'danger');
+      }
     });
   }
 
@@ -84,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 4. BOTONES RELLENAR (Insumos líquidos - Clase corregida a .btn-action)
+  // 4. BOTONES RELLENAR
   const botonesRellenar = document.querySelectorAll('.btn-action');
   botonesRellenar.forEach((btn) => {
     btn.addEventListener('click', (e) => {
@@ -97,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 5. DELEGACIÓN DE EVENTOS EN LA TABLA (Botones Editar)
+  // 5. DELEGACIÓN DE EVENTOS EN LA TABLA
   document.addEventListener('click', (e) => {
     const btnEdit = e.target.closest('.btn-sm, .btn-edit');
     if (btnEdit && tbodyInsumos && tbodyInsumos.contains(btnEdit)) {
@@ -107,68 +132,55 @@ document.addEventListener('DOMContentLoaded', () => {
       notify(`Editando insumo: ${nombre}`, 'info');
     }
   });
-
-  // ==========================================
-  // FUNCIONES DE RENDERIZADO Y PERSISTENCIA
-  // ==========================================
-  function crearFilaInsumo(insumo) {
-    if (!tbodyInsumos) return;
-
-    let tagClass = 'tag-success';
-    let estadoTexto = 'Normal';
-
-    if (insumo.stock === 0) {
-      tagClass = 'tag-danger';
-      estadoTexto = 'Agotado';
-    } else if (insumo.stock < 5) {
-      tagClass = 'tag-warning';
-      estadoTexto = 'Stock Bajo';
-     } 
-
-    const tr = document.createElement('tr');
-    tr.dataset.id = insumo.id || Date.now();
-<<<<<<< HEAD
-    tr.innerHTML = `${insumo.nombre}${insumo.categoria || 'General'}${insumo.stock}${insumo.unidad || 'unidades'}${estadoTexto}Editar`;tbodyInsumos.appendChild(tr);}});`
-    tbodyInsumos.appendChild(tr);
-  }
 });
-// Cierre de DOMContentLoaded// =========================================================// E3-09: AVISOS DE STOCK SIN DUPLICADOS (TEMPORIZADOR)// =========================================================
-let alertaTimeout = null;function mostrarAlertaStock(mensaje, tipo = 'info') {if (alertaTimeout) {clearTimeout(alertaTimeout);}if (typeof showAlert === 'function') {showAlert(mensaje, tipo);} else {alert(mensaje);}alertaTimeout = setTimeout(() => {alertaTimeout = null;}, 3000);}
-// // =========================================================// E3-10 y E3-11: CLASE INSUMO (MODELO Y ENCAPSULACIÓN)// =========================================================class Insumo {constructor(id, nombre, cantidad, unidad = 'unidades', umbral = 5) {if (!id || !nombre) {throw new Error("El ID y nombre son obligatorios.");}this.id = id;this.nombre = nombre;this.unidad = unidad;// Reglas de validación para cantidad y umbral
-this.setCantidad(cantidad);
-this.setUmbral(umbral);
-this.movimientos = []; 
-// Trazabilidad
-setCantidad(valor) 
-{const num = Number(valor);if (isNaN(num) || num < 0) {throw new Error("La cantidad debe ser mayor o igual a 0.");}this.cantidad = num;}setUmbral(valor) {const num = Number(valor);if (isNaN(num) || num <= 0) {throw new Error("El umbral debe ser mayor a 0.");}this.umbral = num;}obtenerEstado() {if (this.cantidad === 0) return 'Critico';if (this.cantidad <= this.umbral) return 'Stock Bajo';return 'Normal';}// Tareas E3-11: Registrar Entradas y Salidas con trazabilidadregistrarEntrada(cantidad, usuario = 'Usuario Prueba') {const cant = Number(cantidad);if (isNaN(cant) || cant <= 0) {throw new Error("La cantidad a ingresar debe ser mayor a 0.");}this.cantidad += cant;
-this.movimientos.push
-return true;
-registrarSalida(cantidad, usuario = 'Usuario Prueba') 
-{const cant = Number(cantidad);if (isNaN(cant) || cant <= 0) {throw new Error("La cantidad a retirar debe ser mayor a 0.");}if (cant > this.cantidad) {throw new Error("Stock insuficiente para registrar la salida.");}this.cantidad -= cant;
-this.movimientos.push({
-  tipo: 'Salida',
-  cantidad: cant,
-  saldoResultante: this.cantidad,
-  fecha: new Date().toISOString(),
-  usuario: usuario});
-return true;
-=======
-    tr.innerHTML = `
-      <td><strong>${insumo.nombre}</strong></td>
-      <td>${insumo.categoria || 'General'}</td>
-      <td>${insumo.stock} ${insumo.unidad || 'unidades'}</td>
-      <td><span class="status-tag ${tagClass}">${estadoTexto}</span></td>
-      <td><button type="button" class="btn-sm btn-edit">Editar</button></td>
-    `;
 
-    tbodyInsumos.appendChild(tr);
+// ==========================================
+// FUNCIONES DE RENDERIZADO Y PERSISTENCIA (GLOBALES)
+// ==========================================
+function renderizarInsumos(datos) {
+  const tbody = document.querySelector('#tbody-insumos');
+  const lista = document.querySelector('#lista-insumos');
+
+  if (tbody) {
+    tbody.replaceChildren();
+
+    datos.forEach(item => {
+      const stock = item.cantidad !== undefined ? item.cantidad : (item.stockActual ?? item.stock ?? 0);
+      const estado = typeof item.obtenerEstado === 'function' ? item.obtenerEstado() : (stock === 0 ? 'Critico' : stock < 5 ? 'Stock Bajo' : 'Normal');
+
+      let tagClass = 'tag-success';
+      if (estado === 'Critico' || estado === 'Agotado') tagClass = 'tag-danger';
+      else if (estado === 'Stock Bajo') tagClass = 'tag-warning';
+
+      const tr = document.createElement('tr');
+      tr.dataset.id = item.id;
+      tr.innerHTML = `
+        <td><strong>${item.nombre}</strong></td>
+        <td>${item.categoria || 'General'}</td>
+        <td>${stock} ${item.unidad || 'unidades'}</td>
+        <td><span class="status-tag ${tagClass}">${estado}</span></td>
+        <td><button type="button" class="btn-sm btn-edit">Editar</button></td>
+      `;
+      tbody.append(tr);
+    });
   }
 
-  function cargarInsumosGuardados() {
-    const insumos = JSON.parse(localStorage.getItem('insumos')) || [];
-    insumos.forEach(insumo => crearFilaInsumo(insumo));
+  if (lista) {
+    lista.replaceChildren();
+
+    datos.forEach(item => {
+      const stock = item.cantidad !== undefined ? item.cantidad : (item.stockActual ?? item.stock ?? 0);
+      const fila = document.createElement('li');
+      fila.textContent = `${item.nombre} · stock: ${stock}`;
+      fila.dataset.id = item.id;
+      lista.append(fila);
+    });
   }
-});
+}
+
+function guardarEnLocalStorage() {
+  localStorage.setItem('insumos', JSON.stringify(listaInsumos));
+}
 
 // =========================================================
 // CLASE INSUMO (MODELO Y ENCAPSULACIÓN)
@@ -266,5 +278,4 @@ function mostrarAlertaStock(mensaje, tipo = 'info') {
   alertaTimeout = setTimeout(() => {
     alertaTimeout = null;
   }, 3000);
->>>>>>> e478c7920ae2f2d28bc08f64f948e3366d9bf28e
 }
