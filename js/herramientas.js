@@ -22,13 +22,14 @@ class Herramienta extends ItemInventario {
 
   static ESTADOS_PERMITIDOS = ['nueva', 'usada', 'rota', 'disponible', 'en_uso', 'en_reparacion', 'baja'];
 
-  constructor({ id = null, codigo = null, nombre, categoria = 'Herramientas', estado = null, ubicacion = '', notas = '', unidades = [] }) {
+  constructor({ id = null, codigo = null, nombre, categoria = 'Herramientas', estado = null, ubicacion = '', notas = '', fechaCreacion = null, unidades = [] }) {
     super({ id: id || codigo, nombre, categoria });
 
     this.codigo = codigo || this.id;
     this.ubicacion = ubicacion ? ubicacion.trim() : 'Sin ubicación';
     this.notas = notas ? notas.trim() : '';
     this.unidades = Array.isArray(unidades) ? unidades : [];
+    this.fechaCreacion = fechaCreacion || new Date().toISOString();
 
     this.cambiarEstado(estado || 'disponible');
   }
@@ -78,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const listaContenedor = document.getElementById('lista-herramientas');
   const inputBuscar = document.getElementById('input-buscar');
 
-  // Formulario y campos de la vista detalle/edición
+  // Formulario y campos de detalle
   const formEditar = document.getElementById('form-editar-herramienta') || document.querySelector('#vista-detalle form');
   const detalleTitulo = document.getElementById('detalle-titulo');
   const campoNombre = document.getElementById('campo-nombre') || document.querySelector('[name="nombre"]');
@@ -86,6 +87,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const campoUbicacion = document.getElementById('campo-ubicacion') || document.querySelector('[name="ubicacion"]');
   const campoNotas = document.getElementById('campo-notas') || document.querySelector('[name="notas"]');
   
+  // Historial DOM
+  const contenedorHistorial = document.querySelector('#panel-historial .historial-lista') || 
+                               document.querySelector('.historial-lista');
+
   // Botones de navegación
   const btnVolver = document.getElementById('btn-volver');
   const btnCancelarEdicion = document.getElementById('btn-cancelar-edicion');
@@ -95,10 +100,102 @@ document.addEventListener('DOMContentLoaded', async () => {
   const panelInfo = document.getElementById('panel-info');
   const panelHistorial = document.getElementById('panel-historial');
 
-  // Si es null -> estamos CREANDO una herramienta nueva.
-  // Si tiene un objeto -> estamos EDITANDO una existente.
   let herramientaSeleccionada = null; 
   let herramientas = [];
+
+  // FUNCIÓN AUXILIAR: Formatear fechas (ej: "15 jun 2025")
+  const formatearFecha = (fechaString) => {
+    if (!fechaString) return 'Fecha desconocida';
+    const fecha = new Date(fechaString);
+    if (isNaN(fecha.getTime())) return fechaString;
+
+    return fecha.toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+  };
+
+  // =================================================================
+  // RENDERIZAR HISTORIAL DINÁMICO
+  // =================================================================
+  const renderHistorial = (herramientaId) => {
+    if (!contenedorHistorial) return;
+
+    // Limpia el HTML estático de ejemplo
+    contenedorHistorial.innerHTML = '';
+
+    const herramienta = herramientas.find(h => String(h.id) === String(herramientaId));
+    if (!herramienta) return;
+
+    let eventos = [];
+
+    // 1. Evento inicial: Registro de la herramienta
+    eventos.push({
+      id: `reg-${herramienta.id}`,
+      fecha: herramienta.fechaCreacion || new Date().toISOString(),
+      descripcion: 'Registrada en el sistema'
+    });
+
+    // 2. Eventos desde la colección "prestamos" en storage
+    if (typeof getCollection === 'function') {
+      const todosPrestamos = getCollection('prestamos') || [];
+
+      // Filtra préstamos que pertenecen a esta herramienta
+      const prestamosHerramienta = todosPrestamos.filter(p => 
+        String(p.herramientaId) === String(herramientaId) || 
+        String(p.idHerramienta) === String(herramientaId)
+      );
+
+      prestamosHerramienta.forEach(p => {
+        const usuario = p.usuarioNombre || p.usuario || p.solicitante || 'Usuario no especificado';
+        
+        // Evento de salida por préstamo
+        if (p.fechaPrestamo || p.fecha) {
+          eventos.push({
+            id: `p-inicio-${p.id}`,
+            fecha: p.fechaPrestamo || p.fecha,
+            descripcion: `Prestada a ${usuario}`
+          });
+        }
+
+        // Evento de devolución si ya fue devuelta
+        if (p.devuelto || p.estado === 'devuelto' || p.fechaDevolucion) {
+          eventos.push({
+            id: `p-fin-${p.id}`,
+            fecha: p.fechaDevolucion || p.fechaPrestamo || new Date().toISOString(),
+            descripcion: 'Devuelta al depósito'
+          });
+        }
+      });
+    }
+
+    // 3. Ordenar cronológicamente: de más reciente a más antiguo
+    eventos.sort((a, b) => {
+      const fechaA = new Date(a.fecha).getTime() || 0;
+      const fechaB = new Date(b.fecha).getTime() || 0;
+      if (fechaB !== fechaA) {
+        return fechaB - fechaA; // Orden por fecha
+      }
+      return String(b.id).localeCompare(String(a.id)); // Desempate seguro por ID
+    });
+
+    // 4. Inyectar dinámicamente en el DOM
+    if (eventos.length === 0) {
+      contenedorHistorial.innerHTML = '<li class="historial-item">Sin historial registrado.</li>';
+      return;
+    }
+
+    eventos.forEach(ev => {
+      const li = document.createElement('li');
+      li.classList.add('historial-item');
+      li.innerHTML = `
+        <span class="historial-fecha">${formatearFecha(ev.fecha)}</span>
+        <span class="historial-evento">${ev.descripcion}</span>
+      `;
+      contenedorHistorial.appendChild(li);
+    });
+  };
 
   // NAVEGACIÓN DE PANTALLAS
   const mostrarVistaListado = () => {
@@ -117,13 +214,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (campoEstado) campoEstado.value = herramienta.estado;
       if (campoUbicacion) campoUbicacion.value = herramienta.ubicacion;
       if (campoNotas) campoNotas.value = herramienta.notas;
+
+      // Generar el historial de la herramienta seleccionada
+      renderHistorial(herramienta.id);
     } else {
-      // MODO NUEVA HERRAMIENTA (Campos vacíos)
+      // MODO NUEVA HERRAMIENTA
       if (detalleTitulo) detalleTitulo.textContent = 'Nueva Herramienta';
       if (campoNombre) campoNombre.value = '';
       if (campoEstado) campoEstado.value = 'disponible';
       if (campoUbicacion) campoUbicacion.value = '';
       if (campoNotas) campoNotas.value = '';
+
+      if (contenedorHistorial) {
+        contenedorHistorial.innerHTML = '<li class="historial-item">Se generará historial al guardar.</li>';
+      }
     }
 
     activarTabInfo();
@@ -132,7 +236,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (vistaDetalle) vistaDetalle.style.setProperty('display', 'block', 'important');
   };
 
-  // RENDERIZAR LISTA
+  // RENDERIZAR LISTA PRINCIPAL
   const renderizarHerramientas = (filtro = '') => {
     if (!listaContenedor) return;
     listaContenedor.innerHTML = '';
@@ -197,11 +301,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderizarHerramientas();
   };
 
-  // BOTÓN + NUEVA HERRAMIENTA -> Muestra la vista con campos limpios
+  // BOTÓN NUEVA HERRAMIENTA
   if (btnNuevaHerramienta) {
-    btnNuevaHerramienta.addEventListener('click', () => {
-      mostrarVistaDetalle(null); // Pasa null para activar modo creación
-    });
+    btnNuevaHerramienta.addEventListener('click', () => mostrarVistaDetalle(null));
   }
 
   // GUARDAR (CREAR O EDITAR)
@@ -225,18 +327,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       try {
         if (herramientaSeleccionada) {
-          // MODO EDICIÓN -> Actualiza existente
           if (typeof updateItem === 'function') {
             updateItem("herramientas", herramientaSeleccionada.id, datosFormulario);
           }
         } else {
-          // MODO CREACIÓN -> Agrega nuevo item
+          datosFormulario.fechaCreacion = new Date().toISOString();
           if (typeof addItem === 'function') {
             addItem("herramientas", datosFormulario);
           }
         }
 
-        // Recarga y regresa a la lista
         cargarYRenderizar();
         mostrarVistaListado();
       } catch (err) {
@@ -245,7 +345,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // BUSCADOR Y VOLVER
+  // BUSCADOR Y NAVEGACIÓN
   if (inputBuscar) {
     inputBuscar.addEventListener('input', (e) => renderizarHerramientas(e.target.value));
   }
@@ -253,7 +353,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (btnVolver) btnVolver.addEventListener('click', mostrarVistaListado);
   if (btnCancelarEdicion) btnCancelarEdicion.addEventListener('click', mostrarVistaListado);
 
-  // TABS
+  // PESTAÑAS (TABS)
   const activarTabInfo = () => {
     if (tabInfo) tabInfo.classList.add('tab-btn--activo');
     if (tabHistorial) tabHistorial.classList.remove('tab-btn--activo');
@@ -266,6 +366,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (tabInfo) tabInfo.classList.remove('tab-btn--activo');
     if (panelHistorial) panelHistorial.style.display = 'block';
     if (panelInfo) panelInfo.style.display = 'none';
+
+    // Re-renderiza el historial cuando la pestaña se vuelve activa
+    if (herramientaSeleccionada) {
+      renderHistorial(herramientaSeleccionada.id);
+    }
   };
 
   if (tabInfo) tabInfo.addEventListener('click', activarTabInfo);
