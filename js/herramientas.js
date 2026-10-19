@@ -1,20 +1,36 @@
 // =================================================================
-// MODELO: Clase Herramienta (POO, Validaciones y Encapsulaciones)
+// VERIFICACIÓN DE SEGURIDAD (Clase Base ItemInventario)
 // =================================================================
-class Herramienta {
+if (typeof ItemInventario === 'undefined') {
+  window.ItemInventario = class ItemInventario {
+    constructor({ id = null, nombre, categoria = 'General' }) {
+      if (!nombre || typeof nombre !== 'string' || nombre.trim() === '') {
+        throw new Error('El nombre del ítem es obligatorio.');
+      }
+      this.id = id || Date.now().toString();
+      this.nombre = nombre.trim();
+      this.categoria = categoria ? categoria.trim() : 'General';
+    }
+  };
+}
+
+// =================================================================
+// MODELO: Clase Herramienta (Hereda de ItemInventario)
+// =================================================================
+class Herramienta extends ItemInventario {
   #estado;
 
   static ESTADOS_PERMITIDOS = ['nueva', 'usada', 'rota', 'disponible', 'en_uso', 'en_reparacion', 'baja'];
 
-  constructor({ id = null, nombre, estado, ubicacion = '', notas = '' }) {
-    this.validarNombre(nombre);
+  constructor({ id = null, codigo = null, nombre, categoria = 'Herramientas', estado = null, ubicacion = '', notas = '', unidades = [] }) {
+    super({ id: id || codigo, nombre, categoria });
 
-    this.id = id || Date.now().toString();
-    this.nombre = nombre.trim();
+    this.codigo = codigo || this.id;
     this.ubicacion = ubicacion ? ubicacion.trim() : 'Sin ubicación';
     this.notas = notas ? notas.trim() : '';
+    this.unidades = Array.isArray(unidades) ? unidades : [];
 
-    this.cambiarEstado(estado || 'nueva');
+    this.cambiarEstado(estado || 'disponible');
   }
 
   get estado() {
@@ -25,16 +41,10 @@ class Herramienta {
     this.cambiarEstado(nuevoEstado);
   }
 
-  validarNombre(nombre) {
-    if (!nombre || typeof nombre !== 'string' || nombre.trim() === '') {
-      throw new Error('El nombre de la herramienta es obligatorio.');
-    }
-  }
-
   validarEstado(nuevoEstado) {
-    if (!nuevoEstado) return 'nueva';
+    if (!nuevoEstado) return 'disponible';
     const estadoLimpio = String(nuevoEstado).toLowerCase().trim();
-    return Herramienta.ESTADOS_PERMITIDOS.includes(estadoLimpio) ? estadoLimpio : 'nueva';
+    return Herramienta.ESTADOS_PERMITIDOS.includes(estadoLimpio) ? estadoLimpio : 'disponible';
   }
 
   cambiarEstado(nuevoEstado) {
@@ -55,111 +65,80 @@ class Herramienta {
 }
 
 // =================================================================
-// CONTROLADOR Y NAVEGACIÓN DE VISTAS (DOM & LOCALSTORAGE)
+// CONTROLADOR Y VISTAS
 // =================================================================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
-  // --- ELEMENTOS DEL DOM ---
-  const vistaListado = document.getElementById('herramientas');
+  // Vistas principales
+  const vistaListado = document.getElementById('vista-lista') || document.getElementById('herramientas');
   const vistaDetalle = document.getElementById('vista-detalle');
   
-  // Elementos del buscador
-  const inputBuscar = document.getElementById('input-buscar');
-  const btnBuscar = document.getElementById('btn-buscar');
-
-  // Modal y Botones de Creación
-  const modal = document.getElementById('modal-nueva-herramienta') || 
-                document.getElementById('nueva-herramienta') ||
-                document.querySelector('.modal');
-                
-  const btnAbrirModal = document.getElementById('btn-nueva-herramienta');
-  const btnCerrarModal = document.getElementById('btn-cerrar-modal-nueva');
-  const btnCancelarModal = document.getElementById('btn-cancelar-nueva');
-  const overlay = document.getElementById('modal-nueva-overlay');
-  const formNueva = document.getElementById('form-nueva-herramienta');
+  // Elementos del listado
+  const btnNuevaHerramienta = document.getElementById('btn-nueva-herramienta');
   const listaContenedor = document.getElementById('lista-herramientas');
+  const inputBuscar = document.getElementById('input-buscar');
 
-  // Formulario y Detalle
-  const formEditar = document.getElementById('form-editar-herramienta');
+  // Formulario y campos de la vista detalle/edición
+  const formEditar = document.getElementById('form-editar-herramienta') || document.querySelector('#vista-detalle form');
   const detalleTitulo = document.getElementById('detalle-titulo');
-  const campoNombre = document.getElementById('campo-nombre');
-  const campoEstado = document.getElementById('campo-estado');
-  const campoUbicacion = document.getElementById('campo-ubicacion');
-  const campoNotas = document.getElementById('campo-notas');
+  const campoNombre = document.getElementById('campo-nombre') || document.querySelector('[name="nombre"]');
+  const campoEstado = document.getElementById('campo-estado') || document.querySelector('[name="estado"]');
+  const campoUbicacion = document.getElementById('campo-ubicacion') || document.querySelector('[name="ubicacion"]');
+  const campoNotas = document.getElementById('campo-notas') || document.querySelector('[name="notas"]');
   
+  // Botones de navegación
   const btnVolver = document.getElementById('btn-volver');
   const btnCancelarEdicion = document.getElementById('btn-cancelar-edicion');
 
-  // Tabs
   const tabInfo = document.getElementById('tab-info');
   const tabHistorial = document.getElementById('tab-historial');
   const panelInfo = document.getElementById('panel-info');
   const panelHistorial = document.getElementById('panel-historial');
 
-  let herramientaSeleccionada = null;
-
-  // --- ALMACENAMIENTO DE HERRAMIENTAS ---
-  let datosGuardados = [];
-  try {
-    datosGuardados = JSON.parse(localStorage.getItem('herramientas')) || [];
-  } catch (e) {
-    datosGuardados = [];
-  }
-
+  // Si es null -> estamos CREANDO una herramienta nueva.
+  // Si tiene un objeto -> estamos EDITANDO una existente.
+  let herramientaSeleccionada = null; 
   let herramientas = [];
-  datosGuardados.forEach(item => {
-    try {
-      if (item && item.nombre) {
-        herramientas.push(new Herramienta(item));
-      }
-    } catch (e) {
-      console.warn("Dato no válido ignorado:", item);
-    }
-  });
 
-  const guardarEnLocalStorage = () => {
-    const dataAguardar = herramientas.map(h => ({
-      id: h.id,
-      nombre: h.nombre,
-      estado: h.estado,
-      ubicacion: h.ubicacion,
-      notas: h.notas
-    }));
-    localStorage.setItem('herramientas', JSON.stringify(dataAguardar));
-  };
-
-  // --- NAVEGACIÓN ENTRE VISTAS ---
+  // NAVEGACIÓN DE PANTALLAS
   const mostrarVistaListado = () => {
-    if (vistaDetalle) vistaDetalle.style.display = 'none';
-    if (vistaListado) vistaListado.style.display = 'block';
+    herramientaSeleccionada = null;
+    if (vistaDetalle) vistaDetalle.style.setProperty('display', 'none', 'important');
+    if (vistaListado) vistaListado.style.setProperty('display', 'block', 'important');
   };
 
-  const mostrarVistaDetalle = (herramienta) => {
+  const mostrarVistaDetalle = (herramienta = null) => {
     herramientaSeleccionada = herramienta;
 
-    if (detalleTitulo) detalleTitulo.textContent = herramienta.nombre;
-    if (campoNombre) campoNombre.value = herramienta.nombre;
-    if (campoEstado) campoEstado.value = herramienta.estado;
-    if (campoUbicacion) campoUbicacion.value = herramienta.ubicacion;
-    if (campoNotas) campoNotas.value = herramienta.notas;
+    if (herramienta) {
+      // MODO EDICIÓN
+      if (detalleTitulo) detalleTitulo.textContent = herramienta.nombre;
+      if (campoNombre) campoNombre.value = herramienta.nombre;
+      if (campoEstado) campoEstado.value = herramienta.estado;
+      if (campoUbicacion) campoUbicacion.value = herramienta.ubicacion;
+      if (campoNotas) campoNotas.value = herramienta.notas;
+    } else {
+      // MODO NUEVA HERRAMIENTA (Campos vacíos)
+      if (detalleTitulo) detalleTitulo.textContent = 'Nueva Herramienta';
+      if (campoNombre) campoNombre.value = '';
+      if (campoEstado) campoEstado.value = 'disponible';
+      if (campoUbicacion) campoUbicacion.value = '';
+      if (campoNotas) campoNotas.value = '';
+    }
 
     activarTabInfo();
 
-    if (vistaListado) vistaListado.style.display = 'none';
-    if (vistaDetalle) vistaDetalle.style.display = 'block';
+    if (vistaListado) vistaListado.style.setProperty('display', 'none', 'important');
+    if (vistaDetalle) vistaDetalle.style.setProperty('display', 'block', 'important');
   };
 
-  // Estado inicial
-  mostrarVistaListado();
-
-  // --- RENDERIZADO DE LA LISTA (CON BUSCADOR) ---
+  // RENDERIZAR LISTA
   const renderizarHerramientas = (filtro = '') => {
     if (!listaContenedor) return;
     listaContenedor.innerHTML = '';
 
     const termino = filtro.toLowerCase().trim();
 
-    // Filtrar herramientas por nombre, ubicación o estado
     const herramientasFiltradas = herramientas.filter(h => 
       h.nombre.toLowerCase().includes(termino) ||
       h.ubicacion.toLowerCase().includes(termino) ||
@@ -179,14 +158,14 @@ document.addEventListener('DOMContentLoaded', () => {
       fila.classList.add('fila-herramienta');
       fila.style.cursor = 'pointer';
       fila.setAttribute('data-id', herramienta.id);
-      fila.setAttribute('role', 'button');
-      fila.setAttribute('tabindex', '0');
+
+      const tieneQR = herramienta.unidades.some(u => String(u.qr).toUpperCase() === 'SI');
 
       fila.innerHTML = `
         <span class="herramienta-nombre">${herramienta.nombre}</span>
         <span class="badge badge--${herramienta.obtenerEstadoClase()}">${herramienta.obtenerEstadoFormateado()}</span>
         <span class="herramienta-ubicacion">${herramienta.ubicacion}</span>
-        <span class="herramienta-qr" aria-label="Código QR">
+        <span class="herramienta-qr" aria-label="Código QR" style="opacity: ${tieneQR ? '1' : '0.2'};">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="7"></rect>
             <rect x="14" y="3" width="7" height="7"></rect>
@@ -196,104 +175,69 @@ document.addEventListener('DOMContentLoaded', () => {
         </span>
       `;
 
-      fila.addEventListener('click', () => {
-        mostrarVistaDetalle(herramienta);
-      });
-
+      fila.addEventListener('click', () => mostrarVistaDetalle(herramienta));
       listaContenedor.appendChild(fila);
     });
   };
 
-  // --- EVENTOS DEL BUSCADOR ---
-  if (inputBuscar) {
-    // Filtrado en tiempo real mientras el usuario escribe
-    inputBuscar.addEventListener('input', (e) => {
-      renderizarHerramientas(e.target.value);
-    });
-
-    // Detectar cuando se limpia el buscador con la "X" del input tipo search
-    inputBuscar.addEventListener('search', (e) => {
-      renderizarHerramientas(e.target.value);
-    });
-  }
-
-  if (btnBuscar) {
-    btnBuscar.addEventListener('click', () => {
-      if (inputBuscar) renderizarHerramientas(inputBuscar.value);
-    });
-  }
-
-  // --- CONTROL DEL MODAL (ABRIR / CERRAR) ---
-  const abrirModal = () => {
-    const targetModal = modal || document.querySelector('.modal') || document.querySelector('[role="dialog"]');
-    if (targetModal) {
-      targetModal.classList.add('is-visible');
-      targetModal.style.display = 'flex';
-    }
-  };
-
-  const cerrarModal = () => {
-    const targetModal = modal || document.querySelector('.modal') || document.querySelector('[role="dialog"]');
-    if (targetModal) {
-      targetModal.classList.remove('is-visible');
-      targetModal.style.display = 'none';
-    }
-    if (formNueva) formNueva.reset();
-  };
-
-  if (btnAbrirModal) {
-    btnAbrirModal.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      abrirModal();
-    });
-  }
-
-  if (btnCerrarModal) btnCerrarModal.addEventListener('click', cerrarModal);
-  if (btnCancelarModal) btnCancelarModal.addEventListener('click', cerrarModal);
-  if (overlay) overlay.addEventListener('click', cerrarModal);
-
-  // CREAR NUEVA HERRAMIENTA
-  if (formNueva) {
-    formNueva.addEventListener('submit', (e) => {
-      e.preventDefault();
-      try {
-        const inputNombre = document.getElementById('nueva-nombre') || formNueva.querySelector('[name="nombre"]');
-        const inputEstado = document.getElementById('nueva-estado') || formNueva.querySelector('[name="estado"]');
-        const inputUbicacion = document.getElementById('nueva-ubicacion') || formNueva.querySelector('[name="ubicacion"]');
-        const inputNotas = document.getElementById('nueva-notas') || formNueva.querySelector('[name="notas"]');
-
-        const nueva = new Herramienta({
-          nombre: inputNombre ? inputNombre.value : '',
-          estado: inputEstado ? inputEstado.value : 'nueva',
-          ubicacion: inputUbicacion ? inputUbicacion.value : '',
-          notas: inputNotas ? inputNotas.value : ''
-        });
-
-        herramientas.push(nueva);
-        guardarEnLocalStorage();
-        renderizarHerramientas(inputBuscar ? inputBuscar.value : '');
-        cerrarModal();
-      } catch (err) {
-        alert(err.message);
+  // CARGAR DE STORAGE
+  const cargarYRenderizar = async () => {
+    try {
+      if (typeof initStorage === 'function') {
+        await initStorage();
       }
+
+      const rawData = typeof getCollection === 'function' ? getCollection("herramientas") : [];
+      herramientas = rawData.map(item => new Herramienta(item));
+    } catch (err) {
+      console.error("Error al cargar datos desde storage:", err);
+      herramientas = [];
+    }
+
+    renderizarHerramientas();
+  };
+
+  // BOTÓN + NUEVA HERRAMIENTA -> Muestra la vista con campos limpios
+  if (btnNuevaHerramienta) {
+    btnNuevaHerramienta.addEventListener('click', () => {
+      mostrarVistaDetalle(null); // Pasa null para activar modo creación
     });
   }
 
-  // EDICIÓN DE HERRAMIENTAS
+  // GUARDAR (CREAR O EDITAR)
   if (formEditar) {
     formEditar.addEventListener('submit', (e) => {
       e.preventDefault();
-      if (!herramientaSeleccionada) return;
+
+      const datosFormulario = {
+        nombre: campoNombre ? campoNombre.value.trim() : '',
+        estado: campoEstado ? campoEstado.value : 'disponible',
+        ubicacion: campoUbicacion ? campoUbicacion.value.trim() : '',
+        notas: campoNotas ? campoNotas.value.trim() : '',
+        categoria: 'Herramientas',
+        unidades: herramientaSeleccionada ? herramientaSeleccionada.unidades : []
+      };
+
+      if (!datosFormulario.nombre) {
+        alert("El nombre de la herramienta es obligatorio.");
+        return;
+      }
 
       try {
-        herramientaSeleccionada.nombre = campoNombre.value;
-        herramientaSeleccionada.cambiarEstado(campoEstado.value);
-        herramientaSeleccionada.ubicacion = campoUbicacion.value;
-        herramientaSeleccionada.notas = campoNotas.value;
+        if (herramientaSeleccionada) {
+          // MODO EDICIÓN -> Actualiza existente
+          if (typeof updateItem === 'function') {
+            updateItem("herramientas", herramientaSeleccionada.id, datosFormulario);
+          }
+        } else {
+          // MODO CREACIÓN -> Agrega nuevo item
+          if (typeof addItem === 'function') {
+            addItem("herramientas", datosFormulario);
+          }
+        }
 
-        guardarEnLocalStorage();
-        renderizarHerramientas(inputBuscar ? inputBuscar.value : '');
+        // Recarga y regresa a la lista
+        cargarYRenderizar();
         mostrarVistaListado();
       } catch (err) {
         alert(err.message);
@@ -301,33 +245,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // BOTONES VOLVER / CANCELAR
+  // BUSCADOR Y VOLVER
+  if (inputBuscar) {
+    inputBuscar.addEventListener('input', (e) => renderizarHerramientas(e.target.value));
+  }
+
   if (btnVolver) btnVolver.addEventListener('click', mostrarVistaListado);
   if (btnCancelarEdicion) btnCancelarEdicion.addEventListener('click', mostrarVistaListado);
 
-  // PESTAÑAS (INFO / HISTORIAL)
+  // TABS
   const activarTabInfo = () => {
-    if (tabInfo) {
-      tabInfo.classList.add('tab-btn--activo');
-      tabInfo.setAttribute('aria-selected', 'true');
-    }
-    if (tabHistorial) {
-      tabHistorial.classList.remove('tab-btn--activo');
-      tabHistorial.setAttribute('aria-selected', 'false');
-    }
+    if (tabInfo) tabInfo.classList.add('tab-btn--activo');
+    if (tabHistorial) tabHistorial.classList.remove('tab-btn--activo');
     if (panelInfo) panelInfo.style.display = 'block';
     if (panelHistorial) panelHistorial.style.display = 'none';
   };
 
   const activarTabHistorial = () => {
-    if (tabHistorial) {
-      tabHistorial.classList.add('tab-btn--activo');
-      tabHistorial.setAttribute('aria-selected', 'true');
-    }
-    if (tabInfo) {
-      tabInfo.classList.remove('tab-btn--activo');
-      tabInfo.setAttribute('aria-selected', 'false');
-    }
+    if (tabHistorial) tabHistorial.classList.add('tab-btn--activo');
+    if (tabInfo) tabInfo.classList.remove('tab-btn--activo');
     if (panelHistorial) panelHistorial.style.display = 'block';
     if (panelInfo) panelInfo.style.display = 'none';
   };
@@ -335,6 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (tabInfo) tabInfo.addEventListener('click', activarTabInfo);
   if (tabHistorial) tabHistorial.addEventListener('click', activarTabHistorial);
 
-  // Carga inicial
-  renderizarHerramientas();
+  // Inicialización
+  mostrarVistaListado();
+  await cargarYRenderizar();
 });
