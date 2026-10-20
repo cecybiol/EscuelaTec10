@@ -40,8 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       );
     } else if (typeof cargarDatos === 'function') {
       // Cargar del JSON asíncrono si localStorage está vacío
-      const datosJson = await cargarDatos({ origen: 'json', recurso: './insumos-reales.json' });
-      
+      const datosJson = await cargarDatos({ origen: 'json', recurso: '../data/insumos.json' });      
       listaInsumos = datosJson.map(
         item => new Insumo(item.id, item.nombre, item.cantidad ?? item.stockActual ?? item.stock, item.unidad, item.umbral || 5)
       );
