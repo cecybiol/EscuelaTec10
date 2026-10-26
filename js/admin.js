@@ -31,6 +31,38 @@ if (selectorRol) {
 }
 
 
+// Función para actualizar las tarjetas de resumen y reportes de forma dinámica
+function actualizarEstadisticas() {
+  const totalRegistrados = usuariosCargados.length;
+
+  const totalAdmins = usuariosCargados.filter(usuario => {
+    const rol = usuario.rol ? usuario.rol.toLowerCase() : '';
+    return rol === 'admin' || rol === 'administrador';
+  }).length;
+
+  const solicitudesGuardadas = JSON.parse(localStorage.getItem('escuelatec10_solicitudes')) || [];
+  const totalSolicitudes = solicitudesGuardadas.length > 0 ? solicitudesGuardadas.length : 2;
+
+  const elRegistrados = document.getElementById('totalRegistrados');
+  const elAdmins = document.getElementById('totalAdministradores');
+  const elSolicitudes = document.getElementById('totalSolicitudes');
+
+  if (elRegistrados) elRegistrados.textContent = totalRegistrados;
+  if (elAdmins) elAdmins.textContent = totalAdmins;
+  if (elSolicitudes) elSolicitudes.textContent = totalSolicitudes;
+
+  const textoRepUsuarios = document.getElementById('textoReporteUsuarios');
+  const textoRepAdmins = document.getElementById('textoReporteAdmins');
+
+  if (textoRepUsuarios) {
+    textoRepUsuarios.textContent = `Total de usuarios registrados: ${totalRegistrados}`;
+  }
+  if (textoRepAdmins) {
+    textoRepAdmins.textContent = `Administradores registrados: ${totalAdmins}`;
+  }
+}
+
+
 // Crear una fila de usuario
 function agregarUsuario(id, nombre, email, rol, estado) {
   const lista = document.getElementById('listaUsuarios');
@@ -42,10 +74,7 @@ function agregarUsuario(id, nombre, email, rol, estado) {
 
   const tr = document.createElement('tr');
 
-  // Guardar el rol como atributo
   tr.setAttribute('data-rol', rol.toLowerCase());
-
-  // Guardar el ID como atributo
   tr.setAttribute('data-id', id);
 
   const tdId = document.createElement('td');
@@ -60,32 +89,27 @@ function agregarUsuario(id, nombre, email, rol, estado) {
   tdEmail.textContent = email;
   tdRol.textContent = rol;
 
-  // Estado
   const estadoBadge = document.createElement('span');
   estadoBadge.textContent = estado;
   estadoBadge.classList.add('badge', 'active');
 
   tdEstado.appendChild(estadoBadge);
 
-  // Botón Editar
   const botonEditar = document.createElement('button');
   botonEditar.textContent = 'Editar';
   botonEditar.classList.add('btn-action', 'btn-edit');
   botonEditar.setAttribute('data-accion', 'editar');
   botonEditar.setAttribute('data-id', id);
 
-  // Botón Eliminar
   const botonEliminar = document.createElement('button');
   botonEliminar.textContent = 'Eliminar';
   botonEliminar.classList.add('btn-action', 'btn-delete');
   botonEliminar.setAttribute('data-accion', 'eliminar');
   botonEliminar.setAttribute('data-id', id);
 
-  // Agregar botones
   tdAcciones.appendChild(botonEditar);
   tdAcciones.appendChild(botonEliminar);
 
-  // Agregar celdas
   tr.appendChild(tdId);
   tr.appendChild(tdNombre);
   tr.appendChild(tdEmail);
@@ -93,7 +117,6 @@ function agregarUsuario(id, nombre, email, rol, estado) {
   tr.appendChild(tdEstado);
   tr.appendChild(tdAcciones);
 
-  // Agregar fila
   lista.appendChild(tr);
 }
 
@@ -110,7 +133,6 @@ function mostrarUsuarios(usuarios) {
   lista.innerHTML = '';
 
   usuarios.forEach((usuario) => {
-
     const estado = usuario.activo ? 'Activo' : 'Inactivo';
 
     agregarUsuario(
@@ -135,286 +157,173 @@ function guardarUsuarios() {
 
 // Cargar usuarios
 async function cargarUsuarios() {
-
   try {
-
-    // Comprobar si ya hay cambios guardados
     const usuariosGuardados = localStorage.getItem(claveUsuarios);
 
     if (usuariosGuardados) {
-
       usuariosCargados = JSON.parse(usuariosGuardados);
-
-      console.log(
-        'Usuarios cargados desde localStorage:',
-        usuariosCargados
-      );
-
+      console.log('Usuarios cargados desde localStorage:', usuariosCargados);
       mostrarUsuarios(usuariosCargados);
-
+      actualizarEstadisticas();
       return;
     }
 
-
-    // Si no hay cambios guardados, cargar JSON
     const respuesta = await fetch('../data/usuarios.json');
 
     if (!respuesta.ok) {
-      throw new Error(
-        'No se pudo cargar el archivo usuarios.json'
-      );
+      throw new Error('No se pudo cargar el archivo usuarios.json');
     }
 
     const usuarios = await respuesta.json();
-
-    console.log(
-      'Usuarios cargados desde JSON:',
-      usuarios
-    );
+    console.log('Usuarios cargados desde JSON:', usuarios);
 
     usuariosCargados = usuarios;
-
     mostrarUsuarios(usuariosCargados);
+    actualizarEstadisticas();
 
   } catch (error) {
-
-    console.error(
-      'Error al cargar usuarios:',
-      error
-    );
-
+    console.error('Error al cargar usuarios:', error);
   }
 }
 
 
 // BUSCADOR
 if (buscador) {
-
   buscador.addEventListener('input', () => {
+    const texto = buscador.value.toLowerCase().trim();
 
-    const texto = buscador.value
-      .toLowerCase()
-      .trim();
-
-    const usuariosFiltrados =
-      usuariosCargados.filter((usuario) => {
-
-        return (
-          usuario.id.toLowerCase().includes(texto) ||
-          usuario.alias.toLowerCase().includes(texto) ||
-          usuario.rol.toLowerCase().includes(texto)
-        );
-
-      });
+    const usuariosFiltrados = usuariosCargados.filter((usuario) => {
+      return (
+        usuario.id.toLowerCase().includes(texto) ||
+        usuario.alias.toLowerCase().includes(texto) ||
+        usuario.rol.toLowerCase().includes(texto)
+      );
+    });
 
     mostrarUsuarios(usuariosFiltrados);
-
   });
 }
 
 
 // BOTÓN NUEVO USUARIO
 if (botonNuevo) {
-
   botonNuevo.addEventListener('click', () => {
+    const alias = prompt('Ingrese el nombre del nuevo usuario:');
+    if (!alias) return;
 
-    const alias = prompt(
-      'Ingrese el nombre del nuevo usuario:'
-    );
+    const rol = prompt('Ingrese el rol del usuario:\n\nadmin\noperador\nlector');
+    if (!rol) return;
 
-    if (!alias) {
-      return;
-    }
+    const nuevoNumero = usuariosCargados.length + 1;
+    const nuevoId = 'USR-' + String(nuevoNumero).padStart(3, '0');
 
-    const rol = prompt(
-      'Ingrese el rol del usuario:\n\nadmin\noperador\nlector'
-    );
-
-    if (!rol) {
-      return;
-    }
-
-
-    // Generar un nuevo ID
-    const nuevoNumero =
-      usuariosCargados.length + 1;
-
-    const nuevoId =
-      'USR-' +
-      String(nuevoNumero).padStart(3, '0');
-
-
-    // Crear nuevo usuario
     const nuevoUsuario = {
-
       id: nuevoId,
-
       alias: alias,
-
       rol: rol.toLowerCase(),
-
       activo: true
-
     };
 
-
-    // Agregarlo al array
     usuariosCargados.push(nuevoUsuario);
-
-
-    // Guardar cambios
     guardarUsuarios();
-
-
-    // Actualizar tabla
     mostrarUsuarios(usuariosCargados);
+    actualizarEstadisticas();
 
-
-    console.log(
-      'Nuevo usuario agregado:',
-      nuevoUsuario
-    );
-
+    console.log('Nuevo usuario agregado:', nuevoUsuario);
   });
-
 }
 
 
 // BOTONES EDITAR Y ELIMINAR
-const listaUsuarios =
-  document.getElementById('listaUsuarios');
-
+const listaUsuarios = document.getElementById('listaUsuarios');
 
 if (listaUsuarios) {
+  listaUsuarios.addEventListener('click', (e) => {
+    const boton = e.target.closest('button');
+    if (!boton) return;
 
-  listaUsuarios.addEventListener(
-    'click',
-    (e) => {
+    const accion = boton.getAttribute('data-accion');
+    const id = boton.getAttribute('data-id');
 
-      const boton =
-        e.target.closest('button');
+    const usuario = usuariosCargados.find((usuario) => usuario.id === id);
+    if (!usuario) return;
 
-      if (!boton) {
-        return;
-      }
+    // EDITAR
+    if (accion === 'editar') {
+      const nuevoAlias = prompt('Modificar nombre del usuario:', usuario.alias);
+      if (!nuevoAlias) return;
 
+      const nuevoRol = prompt('Modificar rol:\n\nadmin\noperador\nlector', usuario.rol);
+      if (!nuevoRol) return;
 
-      const accion =
-        boton.getAttribute('data-accion');
+      usuario.alias = nuevoAlias;
+      usuario.rol = nuevoRol.toLowerCase();
 
-      const id =
-        boton.getAttribute('data-id');
+      guardarUsuarios();
+      mostrarUsuarios(usuariosCargados);
+      actualizarEstadisticas();
 
-
-      const usuario =
-        usuariosCargados.find(
-          (usuario) => usuario.id === id
-        );
-
-
-      if (!usuario) {
-        return;
-      }
-
-
-      // EDITAR
-      if (accion === 'editar') {
-
-        const nuevoAlias =
-          prompt(
-            'Modificar nombre del usuario:',
-            usuario.alias
-          );
-
-
-        if (!nuevoAlias) {
-          return;
-        }
-
-
-        const nuevoRol =
-          prompt(
-            'Modificar rol:\n\nadmin\noperador\nlector',
-            usuario.rol
-          );
-
-
-        if (!nuevoRol) {
-          return;
-        }
-
-
-        usuario.alias = nuevoAlias;
-
-        usuario.rol =
-          nuevoRol.toLowerCase();
-
-
-        guardarUsuarios();
-
-        mostrarUsuarios(
-          usuariosCargados
-        );
-
-
-        console.log(
-          'Usuario editado:',
-          usuario
-        );
-
-      }
-
-
-      // ELIMINAR
-      if (accion === 'eliminar') {
-
-        const confirmar =
-          confirm(
-            '¿Seguro que querés eliminar al usuario ' +
-            usuario.alias +
-            '?'
-          );
-
-
-        if (!confirmar) {
-          return;
-        }
-
-
-        usuariosCargados =
-          usuariosCargados.filter(
-            (usuarioActual) =>
-              usuarioActual.id !== id
-          );
-
-
-        guardarUsuarios();
-
-        mostrarUsuarios(
-          usuariosCargados
-        );
-
-
-        console.log(
-          'Usuario eliminado:',
-          id
-        );
-
-      }
-
+      console.log('Usuario editado:', usuario);
     }
-  );
 
+    // ELIMINAR
+    if (accion === 'eliminar') {
+      const confirmar = confirm('¿Seguro que querés eliminar al usuario ' + usuario.alias + '?');
+      if (!confirmar) return;
+
+      usuariosCargados = usuariosCargados.filter((usuarioActual) => usuarioActual.id !== id);
+
+      guardarUsuarios();
+      mostrarUsuarios(usuariosCargados);
+      actualizarEstadisticas();
+
+      console.log('Usuario eliminado:', id);
+    }
+  });
 }
 
 
-// Sección de reportes
-if (seccionReportes) {
+// --- FUNCIONALIDAD DE LOS BOTONES DE EXPORTACIÓN ---
 
-  seccionReportes.innerHTML += `
-    <p>Los reportes están disponibles para consultar.</p>
-  `;
+function descargarCSV(nombreArchivo, datosArray) {
+  if (datosArray.length === 0) {
+    alert('No hay datos para exportar.');
+    return;
+  }
 
+  let csvContent = 'data:text/csv;charset=utf-8,ID,Nombre,Rol,Estado\n';
+
+  datosArray.forEach(user => {
+    const estadoTexto = user.activo ? 'Activo' : 'Inactivo';
+    csvContent += `${user.id},"${user.alias}",${user.rol},${estadoTexto}\n`;
+  });
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement('a');
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', nombreArchivo);
+  document.body.appendChild(link);
+
+  link.click();
+  document.body.removeChild(link);
+}
+
+const btnExportarUsuarios = document.getElementById('exportarUsuarios');
+if (btnExportarUsuarios) {
+  btnExportarUsuarios.addEventListener('click', () => {
+    descargarCSV('reporte_usuarios_escuelatec10.csv', usuariosCargados);
+  });
+}
+
+const btnExportarAdmins = document.getElementById('exportarAdministradores');
+if (btnExportarAdmins) {
+  btnExportarAdmins.addEventListener('click', () => {
+    const soloAdmins = usuariosCargados.filter(usuario => {
+      const rol = usuario.rol ? usuario.rol.toLowerCase() : '';
+      return rol === 'admin' || rol === 'administrador';
+    });
+    descargarCSV('reporte_administradores_escuelatec10.csv', soloAdmins);
+  });
 }
 
 
