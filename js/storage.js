@@ -146,3 +146,40 @@ function resetStorage() {
   });
   console.log("Storage reiniciado. Recargá la página para volver a sembrar los datos de ejemplo.");
 }
+/**
+ * Busca un ítem por su ID dentro de cualquier colección (herramientas, insumos, etc.)
+ * @param {string} nombreColeccion Nombre de la colección ('herramientas', 'prestamos', etc.)
+ * @param {string|number} id ID del ítem a buscar
+ * @returns {Object|null} Objeto encontrado o null si no existe
+ */
+function buscarPorId(nombreColeccion, id) {
+  if (!id) return null;
+  const coleccion = getCollection(nombreColeccion);
+  return coleccion.find(item => String(item.id) === String(id) || String(item.codigo) === String(id)) || null;
+}
+
+/**
+ * Registra un movimiento de préstamo y emite la actualización para mantener el ID estable.
+ * @param {Object} datosPrestamo { herramientaId, usuario, fechaPrestamo, ... }
+ */
+function registrarMovimientoPrestamo(datosPrestamo) {
+  if (!datosPrestamo.herramientaId) {
+    console.error("No se puede registrar préstamo sin herramientaId");
+    return null;
+  }
+
+  // 1. Guardar el préstamo usando el ID de la herramienta
+  const nuevoPrestamo = addItem("prestamos", {
+    ...datosPrestamo,
+    fechaPrestamo: datosPrestamo.fechaPrestamo || new Date().toISOString(),
+    devuelto: false
+  });
+
+  // 2. Actualizar el estado de la herramienta a 'en_uso' para sincronizar con Catálogo y Dashboard
+  const herramienta = buscarPorId("herramientas", datosPrestamo.herramientaId);
+  if (herramienta) {
+    updateItem("herramientas", herramienta.id, { estado: "en_uso" });
+  }
+
+  return nuevoPrestamo;
+}
