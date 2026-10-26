@@ -6,11 +6,10 @@
     <title>Administración - EscuelaTec10</title>
 
     <!-- Archivos JavaScript -->
-<script src="../js/app.js" defer></script>
-<script src="../js/storage.js" defer></script>
-<script src="../js/cargadatos.js" defer></script>
-<script src="../js/admin.js" defer></script>
-
+    <script src="../js/app.js" defer></script>
+    <script src="../js/storage.js" defer></script>
+    <script src="../js/admin.js" defer></script>
+    <script src="../js/cargadatos.js" defer></script>
 
     <!-- Archivo CSS -->
     <!-- Íconos (FontAwesome) -->
@@ -93,19 +92,19 @@
         <section class="cards">
             <div class="card azul">
                 <h3>Usuarios Registrados</h3>
-                <h2>120</h2>
+                <h2 id="totalRegistrados">0</h2>
                 <div class="footer">Total registrados</div>
             </div>
 
             <div class="card verde">
                 <h3>Administradores</h3>
-                <h2>4</h2>
+                <h2 id="totalAdministradores">0</h2>
                 <div class="footer">Con permisos</div>
             </div>
 
             <div class="card naranja">
                 <h3>Solicitudes Pendientes</h3>
-                <h2>2</h2>
+                <h2 id="totalSolicitudes">0</h2>
                 <div class="footer">En revisión</div>
             </div>
         </section>
@@ -178,13 +177,13 @@
 
             <div class="reporte-item">
                 <h3>Reporte de usuarios</h3>
-                <p>Total de usuarios registrados: 120</p>
+                <p id="textoReporteUsuarios">Total de usuarios registrados: 0</p>
                 <button id="exportarUsuarios">Exportar usuarios</button>
             </div>
 
             <div class="reporte-item">
                 <h3>Reporte de administradores</h3>
-                <p>Administradores registrados: 4</p>
+                <p id="textoReporteAdmins">Administradores registrados: 0</p>
                 <button id="exportarAdministradores">Exportar reporte</button>
             </div>
         </section>
