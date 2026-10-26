@@ -50,3 +50,17 @@
     --shadow:0 2px 8px rgba(0,0,0,.12);
 
 }
+
+/* Variables que usan components.css y layout.css (Herramientas e Insumos, entre otros).
+   Se habían borrado como "sin uso" y quedaron sin definir: sin ellas se descartan los
+   bordes, los fondos de tarjetas y modales, y los colores de texto que las referencian.
+   Valores originales del commit 4f4c515. */
+:root {
+  --font-main: 'Poppins', sans-serif;
+
+  --bg-main: #F4F7F6;
+  --card-bg: #FFFFFF;
+  --border-color: #E2E8F0;
+  --text-color: #2C3E50;
+  --text-muted: #7F8C8D;
+}
