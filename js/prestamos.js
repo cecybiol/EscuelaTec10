@@ -19,9 +19,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             const texto = event.target.value.trim().toLocaleLowerCase();
             
             // Adaptación: en vez de insumos, filtramos un arreglo "prestamos"
-            const visibles = prestamos.filter(item =>
-                item.solicitante.toLocaleLowerCase().includes(texto)
-            );
+           const visibles = prestamos.filter(item =>
+    (item.solicitante && item.solicitante.toLocaleLowerCase().includes(texto)) ||
+    (item.item && item.item.toLocaleLowerCase().includes(texto))
+);
             
             // Adaptación: función para re-dibujar la tabla
             renderizarPrestamos(visibles);
