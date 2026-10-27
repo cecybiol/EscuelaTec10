@@ -26,6 +26,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Obtener cuerpo de la tabla
     const historial = document.querySelector("#historial");
+    // ==========================================
+    // CARGAR HERRAMIENTAS DESDE EL ALMACENAMIENTO (Equipo Herramientas)
+    // ==========================================
+    function cargarSelectHerramientas() {
+        const selectItem = document.getElementById('item');
+        if (!selectItem) return;
+
+        // Obtener las herramientas almacenadas
+        const herramientas = typeof getCollection === 'function' ? getCollection('herramientas') : [];
+
+        selectItem.innerHTML = '<option value="">-- Seleccionar herramienta --</option>';
+
+        herramientas.forEach(h => {
+            const opcion = document.createElement('option');
+
+            // Asignamos el ID estable
+            opcion.value = h.id;
+            opcion.setAttribute('data-id', h.id);
+            opcion.textContent = `${h.nombre} (${h.ubicacion || 'Sin ubicación'}) - [${h.estado || 'disponible'}]`;
+
+            // Si la herramienta está en uso o rota, la deshabilitamos en la lista
+            if (h.estado === 'en_uso' || h.estado === 'baja' || h.estado === 'rota') {
+                opcion.disabled = true;
+            }
+
+            selectItem.appendChild(opcion);
+        });
+    }
+
+    // Cargar las herramientas en el select apenas inicia la página
+    cargarSelectHerramientas();
     // =========================
     // LISTA Y RENDERIZADO (Págs. 11 y 12 de la teoría)
     // =========================
@@ -79,7 +110,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Obtener nombre del ítem
         const nombreItem = item.options[item.selectedIndex].text;
+        // Validar que se haya seleccionado una herramienta válida
+        if (!item.value) {
+            alert("Debe seleccionar una herramienta válida.");
+            return;
+        }
 
+        // Registrar movimiento si existe la función global del sistema
+        if (typeof registrarMovimientoPrestamo === 'function') {
+            registrarMovimientoPrestamo({
+                herramientaId: item.value,
+                usuarioNombre: solicitante,
+                fechaPrestamo: new Date().toISOString()
+            });
+        }
        prestamos.push({
             solicitante: solicitante,
             item: nombreItem,
@@ -95,7 +139,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Volver cantidad a 1
         document.querySelector("#cantidad").value = 1;
-
+        // Refrescar el selector por si la herramienta cambió de estado
+        cargarSelectHerramientas();
         console.log("Préstamo registrado correctamente");
     });
 
