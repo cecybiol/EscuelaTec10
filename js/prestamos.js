@@ -141,29 +141,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await cargarSelectHerramientas();
     await cargarPrestamos();
 
-    function renderizarPrestamos(datos) {
-        historial.replaceChildren();
-        datos.forEach(item => {
-            const nuevaFila = document.createElement("tr");
-
-            const textoBoton = item.estado === "Devuelto" ? "Devuelto" : "Devolver";
-            const estadoBoton = item.estado === "Devuelto" ? "disabled" : "";
-
-            nuevaFila.innerHTML = `
-                <td>${item.solicitante}</td>
-                <td>${item.item}</td>
-                <td>${item.cantidad} u.</td>
-                <td style="max-width: 250px; overflow-wrap: break-word;">${item.observaciones}</td>
-                <td><span class="badge">${item.estado}</span></td>
-                <td><button type="button" class="btn-sm" ${estadoBoton}>${textoBoton}</button></td>
-            `;
-            historial.appendChild(nuevaFila);
-        });
-    }
-
-    // Dibujar los préstamos iniciales en pantalla
-    renderizarPrestamos(prestamos);
-
     // =========================
     // REGISTRAR PRÉSTAMO LALALA
     // =========================
@@ -210,40 +187,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Préstamo registrado correctamente");
     });
 
-        // Registrar movimiento si existe la función global del sistema
-        if (typeof registrarMovimientoPrestamo === 'function') {
-            registrarMovimientoPrestamo({
-                herramientaId: item.value,
-                usuarioNombre: solicitante,
-                fechaPrestamo: new Date().toISOString()
-            });
-        }
-       prestamos.push({
-            solicitante: solicitante,
-            item: nombreItem,
-            cantidad: cantidad,
-            observaciones: observaciones,
-            estado: "Activo"
-        });
-
-        renderizarPrestamos(prestamos);
-
-        // Limpiar formulario
-        formulario.reset();
-
-        // Volver cantidad a 1
-        document.querySelector("#cantidad").value = 1;
-        // Refrescar el selector por si la herramienta cambió de estado
-        cargarSelectHerramientas();
-        console.log("Préstamo registrado correctamente");
-    });
-
-
     // =========================
     // DEVOLVER PRÉSTAMO
     // =========================
-
-   historial.addEventListener("click", (evento) => {
 
       historial.addEventListener("click", async (evento) => {
         if (evento.target.classList.contains("btn-sm")) {
