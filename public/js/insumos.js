@@ -182,17 +182,28 @@ function guardarEnLocalStorage() {
 }
 
 // =========================================================
-// CLASE INSUMO (MODELO Y ENCAPSULACIÓN)
+// E3-12: HERENCIA APLICADA (CLASE PADRE ITEM INVENTARIO)
 // =========================================================
-class Insumo {
-  constructor(id, nombre, cantidad, unidad = 'unidades', umbral = 5) {
+class ItemInventario {
+  constructor(id, nombre, categoria = 'General') {
     if (!id || !nombre) {
-      throw new Error("El ID y nombre son obligatorios.");
+      throw new Error("El ID y el nombre son obligatorios.");
     }
     this.id = id;
     this.nombre = nombre;
+    this.categoria = categoria;
+  }
+}
+
+// =========================================================
+// E3-10, E3-11, E3-12: CLASE INSUMO (HEREDA DE ITEM INVENTARIO)
+// =========================================================
+class Insumo extends ItemInventario {
+  constructor(id, nombre, cantidad, unidad = 'unidades', umbral = 5, categoria = 'General') {
+    // Llamada al constructor de la clase padre (ItemInventario)
+    super(id, nombre, categoria);
+
     this.unidad = unidad;
-    
     this.setCantidad(cantidad);
     this.setUmbral(umbral);
     this.movimientos = [];
@@ -207,16 +218,21 @@ class Insumo {
   }
 
   setUmbral(valor) {
+    if (valor === null || valor === undefined || valor === '') {
+      this.umbral = null; // Mínimo faltante representado como null (E3-21)
+      return;
+    }
     const num = Number(valor);
     if (isNaN(num) || num <= 0) {
-      throw new Error("El umbral debe ser mayor a 0.");
+      throw new Error("El umbral debe ser un número mayor a 0 o ser null.");
     }
     this.umbral = num;
   }
 
   obtenerEstado() {
     if (this.cantidad === 0) return 'Critico';
-    if (this.cantidad <= this.umbral) return 'Stock Bajo';
+    // Si el umbral es null, solo evaluamos si hay stock o si está en 0
+    if (this.umbral !== null && this.cantidad <= this.umbral) return 'Stock Bajo';
     return 'Normal';
   }
 
@@ -257,24 +273,166 @@ class Insumo {
     return true;
   }
 }
-
 // =========================================================
-// AVISOS DE STOCK SIN DUPLICADOS
+// E3-13: FUNCIONAL - CALCULAR ALERTAS DE MÍNIMO
 // =========================================================
-let alertaTimeout = null;
 
-function mostrarAlertaStock(mensaje, tipo = 'info') {
-  if (alertaTimeout) {
-    clearTimeout(alertaTimeout);
+/**
+ * Obtiene los insumos que están en estado crítico (stock 0) o stock bajo (<= umbral).
+ * Utiliza funciones puras con .filter() para no mutar el arreglo original.
+ */
+function obtenerInsumosConAlerta(lista) {
+  if (!Array.isArray(lista)) return [];
+
+  return lista.filter(insumo => {
+    const cantidad = insumo.cantidad ?? insumo.stock ?? 0;
+    const umbral = insumo.umbral ?? insumo.stockMinimo ?? 5;
+    return cantidad <= umbral;
+  });
+}
+
+/**
+ * Obtiene solo los insumos completamente agotados (stock === 0).
+ */
+function obtenerInsumosAgotados(lista) {
+  if (!Array.isArray(lista))
+    return [];
+
+  return lista.filter(insumo => {
+    const cantidad = insumo.cantidad ?? insumo.stock ?? 0;
+    return cantidad === 0;
+  });
+}
+
+/**
+ * Formatea y mapea las alertas para mostrar en resúmenes sin modificar la lista base.
+ */
+function obtenerResumenAlertas(lista) {
+  const alertas = obtenerInsumosConAlerta(lista);
+
+  return alertas.map(insumo => {
+    const cantidad = insumo.cantidad ?? insumo.stock ?? 0;
+    const umbral = insumo.umbral ?? insumo.stockMinimo ?? 5;
+    const estado = cantidad === 0 ? 'Crítico' : 'Stock Bajo';
+
+    return {
+      id: insumo.id,
+      nombre: insumo.nombre,
+      categoria: insumo.categoria || 'General',
+      cantidadActual: cantidad,
+      umbralMinimo: umbral,
+      estado: estado
+    };
+  });
+}
+// =========================================================
+// E3-14: RESUMEN - CALCULAR TOTALES POR CATEGORÍA
+// =========================================================
+
+/**
+ * Agrupa y suma la cantidad total de insumos y unidades por categoría.
+ * Utiliza .reduce() para generar un resumen sin mutar el arreglo original.
+ * @param {Array} lista - Arreglo de insumos u objetos Insumo.
+ * @returns {Object} Objeto indexado por categoría con total de ítems y unidades.
+ */
+function calcularTotalesPorCategoria(lista) {
+  if (!Array.isArray(lista)) return {};
+
+  return lista.reduce((resumen, insumo) => {
+    const categoria = insumo.categoria || 'General';
+    const cantidad = Number(insumo.cantidad ?? insumo.stock ?? 0);
+
+    if (!resumen[categoria]) {
+      resumen[categoria] = {
+        totalItems: 0,       // Cantidad de registros/tipos de insumos en la categoría
+        totalUnidades: 0     // Suma física del stock de todos esos insumos
+      };
+    }
+
+    resumen[categoria].totalItems += 1;
+    resumen[categoria].totalUnidades += isNaN(cantidad) ? 0 : cantidad;
+
+    return resumen;
+  }, {});
+}
+// =========================================================
+// E3-16: INTEGRACIÓN Y EXPORTACIÓN DE FUNCIONES PARA DASHBOARD
+// =========================================================
+function obtenerMetricasDashboard() {
+  const lista = JSON.parse(localStorage.getItem('insumos')) || listaInsumos;
+  
+  return {
+    totalesPorCategoria: calcularTotalesPorCategoria(lista),
+    alertas: obtenerResumenAlertas(lista),
+    totalInsumos: lista.length,
+    insumosAgotados: obtenerInsumosAgotados(lista).length
+  };
+}
+
+// Hacer disponible globalmente para el script de Dashboard
+if (typeof window !== 'undefined') {
+  window.obtenerMetricasDashboard = obtenerMetricasDashboard;
+}
+// =========================================================
+// E3-18: MIGRACIÓN Y SINCRONIZACIÓN CON FIREBASE / FIRESTORE
+// =========================================================
+
+// Estructura para sincronizar el catálogo con Firestore
+async function sincronizarInsumoFirestore(db, insumo) {
+  try {
+    const docRef = db.collection('insumos').doc(String(insumo.id));
+    await docRef.set({
+      id: insumo.id,
+      nombre: insumo.nombre,
+      categoria: insumo.categoria || 'General',
+      cantidad: insumo.cantidad,
+      unidad: insumo.unidad || 'unidades',
+      umbral: insumo.umbral ?? null,
+      ultimomovimiento: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+
+    console.log(`Insumo ${insumo.id} sincronizado exitosamente en Firestore.`);
+  } catch (error) {
+    console.error("Error al sincronizar con Firestore:", error);
+    throw error;
   }
+}
 
-  if (typeof showAlert === 'function') {
-    showAlert(mensaje, tipo);
-  } else {
-    alert(mensaje);
-  }
+// Operación atómica de entrada/salida de stock usando transacciones de Firestore
+async function registrarTransaccionStockFirestore(db, insumoId, cantidad, tipoOperacion, usuario) {
+  const insumoRef = db.collection('insumos').doc(String(insumoId));
+  const movimientoRef = db.collection('movimientos').doc();
 
-  alertaTimeout = setTimeout(() => {
-    alertaTimeout = null;
-  }, 3000);
+  return db.runTransaction(async (transaction) => {
+    const doc = await transaction.get(insumoRef);
+    if (!doc.exists) {
+      throw new Error("El insumo no existe en Firestore.");
+    }
+
+    const stockActual = doc.data().cantidad || 0;
+    const cambio = Number(cantidad);
+    let nuevoStock = stockActual;
+
+    if (tipoOperacion === 'Entrada') {
+      nuevoStock += cambio;
+    } else if (tipoOperacion === 'Salida') {
+      if (cambio > stockActual) {
+        throw new Error("Stock insuficiente en Firestore.");
+      }
+      nuevoStock -= cambio;
+    }
+
+    // Actualización atómica de stock e historial de movimiento
+    transaction.update(insumoRef, { cantidad: nuevoStock });
+    transaction.set(movimientoRef, {
+      insumoId: insumoId,
+      tipo: tipoOperacion,
+      cantidad: cambio,
+      saldoResultante: nuevoStock,
+      usuario: usuario || 'Anonimo',
+      fecha: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    return nuevoStock;
+  });
 }
