@@ -1,0 +1,156 @@
+[
+  {
+    "id": "HW-001",
+    "nombre": "Adaptador PCI",
+    "categoria": "Periferico",
+    "ubicacion": "Armario ( A )",
+    "stock": 1,
+    "fuente": {
+      "hoja": "REPUESTOS_HW",
+      "fila": 2
+    }
+  },
+  {
+    "id": "HW-002",
+    "nombre": "Router Tp Link",
+    "categoria": "Periferico",
+    "ubicacion": "Armario ( A )",
+    "stock": 1,
+    "fuente": {
+      "hoja": "REPUESTOS_HW",
+      "fila": 3
+    }
+  },
+  {
+    "id": "HW-003",
+    "nombre": "Netbook Colegio Rotas",
+    "categoria": "Equipo",
+    "ubicacion": "Armario ( A )",
+    "stock": 3,
+    "fuente": {
+      "hoja": "REPUESTOS_HW",
+      "fila": 4
+    }
+  },
+  {
+    "id": "HW-004",
+    "nombre": "Discos HDD",
+    "categoria": "Componente",
+    "ubicacion": "Armario ( B Caja 8 )",
+    "stock": null,
+    "fuente": {
+      "hoja": "REPUESTOS_HW",
+      "fila": 5
+    }
+  },
+  {
+    "id": "HW-005",
+    "nombre": "Netbook conectar Igualdad",
+    "categoria": "Equipo",
+    "ubicacion": "Armario ( C )",
+    "stock": 18,
+    "fuente": {
+      "hoja": "REPUESTOS_HW",
+      "fila": 6
+    }
+  },
+  {
+    "id": "HW-006",
+    "nombre": "Netbook EXO",
+    "categoria": "Equipo",
+    "ubicacion": "Armario ( C )",
+    "stock": 8,
+    "fuente": {
+      "hoja": "REPUESTOS_HW",
+      "fila": 7
+    }
+  },
+  {
+    "id": "HW-007",
+    "nombre": "Netbook Edunec",
+    "categoria": "Equipo",
+    "ubicacion": "Armario ( C )",
+    "stock": 1,
+    "fuente": {
+      "hoja": "REPUESTOS_HW",
+      "fila": 8
+    }
+  },
+  {
+    "id": "HW-008",
+    "nombre": "Repustos Conectar Igualdad",
+    "categoria": "Componente",
+    "ubicacion": "Armario ( C )",
+    "stock": null,
+    "fuente": {
+      "hoja": "REPUESTOS_HW",
+      "fila": 9
+    }
+  },
+  {
+    "id": "HW-009",
+    "nombre": "Teclado Respuestos HP",
+    "categoria": "Periferico",
+    "ubicacion": "Armario ( C )",
+    "stock": 3,
+    "fuente": {
+      "hoja": "REPUESTOS_HW",
+      "fila": 10
+    }
+  },
+  {
+    "id": "HW-010",
+    "nombre": "Placas Madres",
+    "categoria": "Componente",
+    "ubicacion": "Estanteria (Caja 5)",
+    "stock": null,
+    "fuente": {
+      "hoja": "REPUESTOS_HW",
+      "fila": 11
+    }
+  },
+  {
+    "id": "HW-011",
+    "nombre": "Coolers",
+    "categoria": "Componente",
+    "ubicacion": "Estanteria (Caja 4)",
+    "stock": null,
+    "fuente": {
+      "hoja": "REPUESTOS_HW",
+      "fila": 12
+    }
+  },
+  {
+    "id": "HW-012",
+    "nombre": "Cargadores sanos",
+    "categoria": "Periferico",
+    "ubicacion": "Estanteria (Caja 6)",
+    "stock": null,
+    "fuente": {
+      "hoja": "REPUESTOS_HW",
+      "fila": 13
+    }
+  },
+  {
+    "id": "HW-013",
+    "nombre": "Cargadores rotos",
+    "categoria": "Periferico",
+    "ubicacion": "Estanteria (Caja 7)",
+    "stock": null,
+    "fuente": {
+      "hoja": "REPUESTOS_HW",
+      "fila": 14
+    }
+  },
+  {
+    "id": "HW-014",
+    "nombre": "Cables Sata",
+    "categoria": "Componente",
+    "ubicacion": "Estanteria (Caja 8)",
+    "stock": null,
+    "fuente": {
+      "hoja": "REPUESTOS_HW",
+      "fila": 15
+    }
+  }
+]

@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Plantilla cerrada: usar en emulador para observar PERMISSION_DENIED.
+    // Sustituir por reglas por colección/rol, probarlas y revisar antes de publicar.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

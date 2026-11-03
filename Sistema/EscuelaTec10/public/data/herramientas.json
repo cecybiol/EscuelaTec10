@@ -1,0 +1,753 @@
+[
+  {
+    "id": "HER-001",
+    "codigo": "HER-001",
+    "nombre": "Destornilladores caja",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( A )",
+    "cantidadTotal": 4,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-001-1",
+        "qr": "SI",
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 2
+      },
+      {
+        "id": "HER-001-2",
+        "qr": "SI",
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 3
+      },
+      {
+        "id": "HER-001-3",
+        "qr": "SI",
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 4
+      },
+      {
+        "id": "HER-001-4",
+        "qr": "SI",
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 5
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 2
+    }
+  },
+  {
+    "id": "HER-002",
+    "codigo": "HER-002",
+    "nombre": "Tester",
+    "categoria": "Eléctrica",
+    "ubicacion": "Armario ( A )",
+    "cantidadTotal": 3,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-002-1",
+        "qr": "SI",
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 6
+      },
+      {
+        "id": "HER-002-2",
+        "qr": "SI",
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 7
+      },
+      {
+        "id": "HER-002-3",
+        "qr": "FALTO",
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 8
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 6
+    }
+  },
+  {
+    "id": "HER-003",
+    "codigo": "HER-003",
+    "nombre": "Lupa",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( A )",
+    "cantidadTotal": 2,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-003-1",
+        "qr": "SI",
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 9
+      },
+      {
+        "id": "HER-003-2",
+        "qr": "SI",
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 10
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 9
+    }
+  },
+  {
+    "id": "HER-004",
+    "codigo": "HER-004",
+    "nombre": "Destornilladores Philip",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( A )",
+    "cantidadTotal": 3,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-004-1",
+        "qr": null,
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 11
+      },
+      {
+        "id": "HER-004-2",
+        "qr": null,
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 12
+      },
+      {
+        "id": "HER-004-3",
+        "qr": null,
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 13
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 11
+    }
+  },
+  {
+    "id": "HER-005",
+    "codigo": "HER-005",
+    "nombre": "Destornilladores Plano",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( A )",
+    "cantidadTotal": 2,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-005-1",
+        "qr": null,
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 14
+      },
+      {
+        "id": "HER-005-2",
+        "qr": null,
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 15
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 14
+    }
+  },
+  {
+    "id": "HER-006",
+    "codigo": "HER-006",
+    "nombre": "Destornillador Hueco",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( A )",
+    "cantidadTotal": 1,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-006-1",
+        "qr": null,
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 16
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 16
+    }
+  },
+  {
+    "id": "HER-007",
+    "codigo": "HER-007",
+    "nombre": "Pela Cable",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( A )",
+    "cantidadTotal": 2,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-007-1",
+        "qr": null,
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 17
+      },
+      {
+        "id": "HER-007-2",
+        "qr": null,
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 18
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 17
+    }
+  },
+  {
+    "id": "HER-008",
+    "codigo": "HER-008",
+    "nombre": "Pulsera Antiestatica",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( A )",
+    "cantidadTotal": 1,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-008-1",
+        "qr": null,
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 19
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 19
+    }
+  },
+  {
+    "id": "HER-009",
+    "codigo": "HER-009",
+    "nombre": "Atomizadores",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( A )",
+    "cantidadTotal": 3,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-009-1",
+        "qr": null,
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 20
+      },
+      {
+        "id": "HER-009-2",
+        "qr": null,
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 21
+      },
+      {
+        "id": "HER-009-3",
+        "qr": null,
+        "ubicacion": "Armario ( A )",
+        "fuenteFila": 22
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 20
+    }
+  },
+  {
+    "id": "HER-010",
+    "codigo": "HER-010",
+    "nombre": "RAM 64MB",
+    "categoria": "Eléctrica",
+    "ubicacion": "Armario ( A  / Caja 1)",
+    "cantidadTotal": 11,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-010-1",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 23
+      },
+      {
+        "id": "HER-010-2",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 24
+      },
+      {
+        "id": "HER-010-3",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 25
+      },
+      {
+        "id": "HER-010-4",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 26
+      },
+      {
+        "id": "HER-010-5",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 27
+      },
+      {
+        "id": "HER-010-6",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 28
+      },
+      {
+        "id": "HER-010-7",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 29
+      },
+      {
+        "id": "HER-010-8",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 30
+      },
+      {
+        "id": "HER-010-9",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 31
+      },
+      {
+        "id": "HER-010-10",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 32
+      },
+      {
+        "id": "HER-010-11",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 33
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 23
+    }
+  },
+  {
+    "id": "HER-011",
+    "codigo": "HER-011",
+    "nombre": "Pilas Recargables",
+    "categoria": "Eléctrica",
+    "ubicacion": "Armario ( A  / Caja 1)",
+    "cantidadTotal": 2,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-011-1",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 34
+      },
+      {
+        "id": "HER-011-2",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 35
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 34
+    }
+  },
+  {
+    "id": "HER-012",
+    "codigo": "HER-012",
+    "nombre": "HDD",
+    "categoria": "Eléctrica",
+    "ubicacion": "Armario ( A  / Caja 1)",
+    "cantidadTotal": 3,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-012-1",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 36
+      },
+      {
+        "id": "HER-012-2",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 37
+      },
+      {
+        "id": "HER-012-3",
+        "qr": null,
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 38
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 36
+    }
+  },
+  {
+    "id": "HER-013",
+    "codigo": "HER-013",
+    "nombre": "Cargador de Pilas",
+    "categoria": "Eléctrica",
+    "ubicacion": "Armario ( A  / Caja 1)",
+    "cantidadTotal": 1,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-013-1",
+        "qr": "Si",
+        "ubicacion": "Armario ( A  / Caja 1)",
+        "fuenteFila": 39
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 39
+    }
+  },
+  {
+    "id": "HER-014",
+    "codigo": "HER-014",
+    "nombre": "Modulo de Carga USB",
+    "categoria": "Eléctrica",
+    "ubicacion": "Armario ( A  / Caja 1)",
+    "cantidadTotal": 1,
+    "estado": null,
+    "disponible": null,
+    "unidades": [],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 40
+    }
+  },
+  {
+    "id": "HER-015",
+    "codigo": "HER-015",
+    "nombre": "Pendrive",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( A / Caja 1)",
+    "cantidadTotal": 3,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-015-1",
+        "qr": "Si",
+        "ubicacion": "Armario ( A / Caja 1)",
+        "fuenteFila": 41
+      },
+      {
+        "id": "HER-015-2",
+        "qr": "Si",
+        "ubicacion": "Armario ( A / Caja 1)",
+        "fuenteFila": 42
+      },
+      {
+        "id": "HER-015-3",
+        "qr": null,
+        "ubicacion": "Armario ( A / Caja 1)",
+        "fuenteFila": 43
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 41
+    }
+  },
+  {
+    "id": "HER-016",
+    "codigo": "HER-016",
+    "nombre": "Estacion de Soldadora",
+    "categoria": "Soldadura",
+    "ubicacion": "Armario ( B )",
+    "cantidadTotal": 1,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-016-1",
+        "qr": null,
+        "ubicacion": "Armario ( B )",
+        "fuenteFila": 44
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 44
+    }
+  },
+  {
+    "id": "HER-017",
+    "codigo": "HER-017",
+    "nombre": "Pistola de Calor",
+    "categoria": "Eléctrica",
+    "ubicacion": "Armario ( B )",
+    "cantidadTotal": 1,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-017-1",
+        "qr": null,
+        "ubicacion": "Armario ( B )",
+        "fuenteFila": 45
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 45
+    }
+  },
+  {
+    "id": "HER-018",
+    "codigo": "HER-018",
+    "nombre": "Manta Antiestatica",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( B )",
+    "cantidadTotal": 2,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-018-1",
+        "qr": null,
+        "ubicacion": "Armario ( B )",
+        "fuenteFila": 46
+      },
+      {
+        "id": "HER-018-2",
+        "qr": null,
+        "ubicacion": "Armario ( B )",
+        "fuenteFila": 47
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 46
+    }
+  },
+  {
+    "id": "HER-019",
+    "codigo": "HER-019",
+    "nombre": "Proyector",
+    "categoria": "Eléctrica",
+    "ubicacion": "Armario ( B )",
+    "cantidadTotal": 1,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-019-1",
+        "qr": "SI",
+        "ubicacion": "Armario ( B )",
+        "fuenteFila": 48
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 48
+    }
+  },
+  {
+    "id": "HER-020",
+    "codigo": "HER-020",
+    "nombre": "Alargue/Zapatilla",
+    "categoria": "Eléctrica",
+    "ubicacion": "Armario ( B )",
+    "cantidadTotal": 2,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-020-1",
+        "qr": null,
+        "ubicacion": "Armario ( B )",
+        "fuenteFila": 49
+      },
+      {
+        "id": "HER-020-2",
+        "qr": null,
+        "ubicacion": "Armario ( B )",
+        "fuenteFila": 50
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 49
+    }
+  },
+  {
+    "id": "HER-021",
+    "codigo": "HER-021",
+    "nombre": "Linterna de Cabeza",
+    "categoria": "Eléctrica",
+    "ubicacion": "Armario ( C / Caja 10 )",
+    "cantidadTotal": 1,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-021-1",
+        "qr": null,
+        "ubicacion": "Armario ( C / Caja 10 )",
+        "fuenteFila": 51
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 51
+    }
+  },
+  {
+    "id": "HER-022",
+    "codigo": "HER-022",
+    "nombre": "Kit de Herramientas de Limpieza",
+    "categoria": "Limpieza",
+    "ubicacion": "Armario ( C / Caja 10 )",
+    "cantidadTotal": 1,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-022-1",
+        "qr": null,
+        "ubicacion": "Armario ( C / Caja 10 )",
+        "fuenteFila": 52
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 52
+    }
+  },
+  {
+    "id": "HER-023",
+    "codigo": "HER-023",
+    "nombre": "Tester de Fuente de Alimentacion",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( C / Caja 10 )",
+    "cantidadTotal": 1,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-023-1",
+        "qr": null,
+        "ubicacion": "Armario ( C / Caja 10 )",
+        "fuenteFila": 53
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 53
+    }
+  },
+  {
+    "id": "HER-024",
+    "codigo": "HER-024",
+    "nombre": "Guantes Antiestatico",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( C / Caja 10 )",
+    "cantidadTotal": 1,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-024-1",
+        "qr": null,
+        "ubicacion": "Armario ( C / Caja 10 )",
+        "fuenteFila": 54
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 54
+    }
+  },
+  {
+    "id": "HER-025",
+    "codigo": "HER-025",
+    "nombre": "Manta Antiestatica",
+    "categoria": "Manual",
+    "ubicacion": "Armario ( C )",
+    "cantidadTotal": 1,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-025-1",
+        "qr": null,
+        "ubicacion": "Armario ( C )",
+        "fuenteFila": 55
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 55
+    }
+  },
+  {
+    "id": "HER-026",
+    "codigo": "HER-026",
+    "nombre": "Pulsera antiestatica nuev azules",
+    "categoria": "Manual",
+    "ubicacion": "Armario (A)",
+    "cantidadTotal": 3,
+    "estado": null,
+    "disponible": null,
+    "unidades": [
+      {
+        "id": "HER-026-1",
+        "qr": null,
+        "ubicacion": "Armario (A)",
+        "fuenteFila": 56
+      },
+      {
+        "id": "HER-026-2",
+        "qr": null,
+        "ubicacion": "Armario ( C / Caja 10 )",
+        "fuenteFila": 57
+      },
+      {
+        "id": "HER-026-3",
+        "qr": null,
+        "ubicacion": "Armario ( C / Caja 10 )",
+        "fuenteFila": 58
+      }
+    ],
+    "fuente": {
+      "hoja": "HERRAMIENTAS",
+      "fila": 56
+    }
+  }
+]

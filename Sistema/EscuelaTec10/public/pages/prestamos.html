@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EscuelaTEC - Gestión de Préstamos</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Hojas de Estilo Modulares -->
+    <!-- Íconos (FontAwesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <link rel="stylesheet" href="../style.css">
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/cargadatos.js"></script>
+    <script src="../js/prestamos.js"></script>
+</head>
+
+<body>
+
+    <!-- ENCABEZADO -->
+    <header>
+
+        <div class="logo">
+
+            <div class="logo-mark"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></div>
+
+            <div>
+
+                <h2>EscuelaTec</h2>
+                <span>Sistema Integral de Gestión Escolar</span>
+
+            </div>
+
+        </div>
+
+        <button class="navbar-toggle" aria-label="Abrir menú" aria-expanded="false">
+            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
+
+        <nav class="navbar-menu">
+
+            <a href="dashboard.html">
+                <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                Dashboard
+            </a>
+
+            <a href="herramientas.html">
+                <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
+                Herramientas
+            </a>
+
+            <a href="insumos.html">
+                <i class="fa-solid fa-box" aria-hidden="true"></i>
+                Insumos
+            </a>
+
+            <a href="prestamos.html" aria-current="page">
+                <i class="fa-solid fa-handshake" aria-hidden="true"></i>
+                Préstamos
+            </a>
+
+            <a href="admin.html">
+                <i class="fa-solid fa-gear" aria-hidden="true"></i>
+                Administración
+            </a>
+
+        </nav>
+
+        <div class="perfil" role="img" aria-label="Perfil de usuario">
+
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <h2>Gestión de Préstamos</h2>
+
+
+        <!-- ========================= -->
+        <!-- FORMULARIO DE PRÉSTAMO    -->
+        <!-- ========================= -->
+
+        <section class="card">
+
+            <h3>Nuevo Préstamo</h3>
+           <form id="formulario" action="#">
+                <div class="form-group">
+                    <label for="solicitante">Solicitante (Nombre/Legajo):</label>
+                <input type="text" id="solicitante" class="input" placeholder="Solicitante (Nombre / Legajo)" required>
+                </div>
+                <div class="form-group">
+                    <label for="item">Item a prestar:</label>
+                <select id="item" class="input" required>
+                    <option value="">Seleccionar Ítem...</option>
+                    <option value="1">Tester Digital Fluke</option>
+                    <option value="2">Amoladora Angular Bosch</option>
+                </select>
+                </div>
+
+                <!-- CANTIDAD -->
+                 <div class="form-group">
+                    <label for="cantidad">Cantidad:</label>
+                <input
+                    type="number"
+                    id="cantidad"
+                    placeholder="Cantidad" class="input"
+                    min="1"
+                    value="1"
+                    required
+                >
+                </div>
+            <div class="form-group">
+                 <label for="observaciones">Observaciones / Comentarios:</label>
+                 <textarea id="observaciones" class="input" placeholder="Añadir comentarios sobre el estado del ítem..."></textarea>
+             </div>
+                <!-- BOTÓN REGISTRAR -->
+                <button
+                    type="submit"
+                    id="btn-registrar"
+                >
+                    Registrar Préstamo
+                </button>
+
+            </form>
+
+        </section>
+
+
+
+        <!-- ========================= -->
+        <!-- TABLA DE PRÉSTAMOS        -->
+        <!-- ========================= -->
+
+        <section class="card">
+
+            <h3>Préstamos Activos</h3>
+            <label>Buscar <input id="buscar-prestamo" type="search"></label>
+
+            <div style="overflow-x: auto;">
+
+                <table id="tabla-historial">
+
+                    <!-- ENCABEZADOS -->
+                    <thead>
+
+                        <tr>
+                            <th>Solicitante</th>
+                            <th>Ítem</th>
+                            <th>Cant.</th>
+                           <th>Observaciones</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+
+                    </thead>
+                    <tbody id="historial">
+                        <tr>
+                            <td>Carlos Gómez</td>
+                            <td>Amoladora Angular Bosch</td>
+                            <td>1 u.</td>
+                           <td style="max-width: 250px; overflow-wrap: break-word;">Sin comentarios</td>
+                            <td><span class="badge">Activo</span></td>
+                <td><button type="button" class="btn-sm">Devolver</button></td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+</body>
+
+</html>

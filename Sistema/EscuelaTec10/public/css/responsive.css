@@ -1,0 +1,256 @@
+@media (min-width: 768px) {
+    form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    form button {
+        grid-column: span 2;
+    }
+
+    .metrics-grid,
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+}
+
+/* Botón hamburguesa oculto por defecto (solo aparece en mobile) */
+.navbar-toggle{
+    display:none;
+}
+
+@media(max-width:768px){
+
+    header{
+        flex-direction:column;
+        gap:15px;
+    }
+
+    .navbar-toggle{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:none;
+        border:none;
+        color:white;
+        font-size:22px;
+        cursor:pointer;
+        align-self:flex-end;
+        width:44px;
+        height:44px;
+    }
+
+    /* Hamburguesa dibujada con CSS: se ve aunque FontAwesome no cargue (sin internet) */
+    .navbar-toggle i{
+        display:none;
+    }
+
+    .navbar-toggle::before{
+        content:"";
+        width:22px;
+        height:2px;
+        background:currentColor;
+        box-shadow:0 -7px 0 currentColor, 0 7px 0 currentColor;
+    }
+
+    .navbar-menu{
+        display:none;
+        flex-direction:column;
+        align-items:stretch;
+        width:100%;
+        gap:4px;
+    }
+
+    .navbar-menu.is-open{
+        display:flex;
+    }
+
+    nav{
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .contenido{
+        grid-template-columns:1fr;
+    }
+
+    .titulo h1{
+        font-size:2rem;
+    }
+
+    .app-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .metrics-grid,
+    .products-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .table-container, .tabla {
+        overflow-x: auto;
+    }
+
+    .alert-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .alert-time {
+        align-self: flex-end;
+    }
+
+}
+
+@media (prefers-reduced-motion: reduce){
+    .led.on{animation:none;}
+    .btn, .btn svg{transition:none;}
+}
+
+@media (max-width:560px){
+    .plate{padding:28px 22px;}
+    header{padding:34px 0 4px;}
+    .gate-box{flex-direction:column; align-items:flex-start;}
+    
+    .dashboard-body {
+        padding: 12px;
+    }
+
+    /* Movimientos recientes: cada fila pasa a ser una tarjeta con "Etiqueta: valor".
+       Los títulos de columna se ocultan solo a la vista (siguen para lectores de pantalla). */
+    .tabla-movimientos thead{
+        position:absolute;
+        width:1px;
+        height:1px;
+        overflow:hidden;
+        clip:rect(0 0 0 0);
+        white-space:nowrap;
+    }
+
+    .tabla-movimientos,
+    .tabla-movimientos tbody,
+    .tabla-movimientos tr,
+    .tabla-movimientos td{
+        display:block;
+        width:100%;
+    }
+
+    .tabla-movimientos tr{
+        margin-bottom:12px;
+        padding:6px 14px;
+        border:1px solid #ececec;
+        border-radius:10px;
+    }
+
+    .tabla-movimientos td{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:16px;
+        padding:8px 0;
+        border-bottom:1px solid #f1f1f1;
+        text-align:right;
+        overflow-wrap:anywhere;
+    }
+
+    .tabla-movimientos td:last-child{
+        border-bottom:none;
+    }
+
+    .tabla-movimientos td::before{
+        content:attr(data-label);
+        flex-shrink:0;
+        font-weight:var(--semi-bold);
+        color:var(--secondary);
+        text-align:left;
+    }
+
+    /* La fila de "vacío / error" ocupa todo el ancho y no lleva etiqueta */
+    .tabla-movimientos td[colspan]{
+        display:block;
+        text-align:center;
+    }
+
+    .tabla-movimientos td[colspan]::before{
+        content:none;
+    }
+}
+
+/* responsive herramientas */
+
+
+@media (max-width: 640px) {
+  body {
+    padding: 12px;
+  }
+
+  #vista-lista,
+  #vista-detalle {
+    padding: 16px;
+  }
+
+  /* La barra superior se apila verticalmente */
+  .herramientas-acciones {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .buscador {
+    width: 100%;
+  }
+
+  /* Las filas de la lista de herramientas pasan a columna */
+  .fila-herramienta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .herramienta-nombre {
+    font-size: 16px;
+  }
+
+  /* Los botones de pie de formulario se estiran al ancho total */
+  .detalle-footer,
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .detalle-footer button,
+  .modal-footer button {
+    width: 100%;
+    justify-content: center;
+  }
+  /* Responsive para tabla de préstamos activos y observaciones */
+@media (max-width: 768px) {
+    .card div[style*="overflow-x"] {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #tabla-historial {
+        width: 100%;
+        min-width: 550px;
+        border-collapse: collapse;
+    }
+
+    #tabla-historial th, 
+    #tabla-historial td {
+        white-space: nowrap;
+        padding: 8px 10px;
+    }
+}
+}
