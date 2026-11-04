@@ -160,13 +160,10 @@ async function cargarUsuarios() {
   try {
     const usuariosGuardados = localStorage.getItem(claveUsuarios);
 
-    if (usuariosGuardados) {
-      usuariosCargados = JSON.parse(usuariosGuardados);
-      console.log('Usuarios cargados desde localStorage:', usuariosCargados);
-      mostrarUsuarios(usuariosCargados);
-      actualizarEstadisticas();
-      return;
-    }
+    usuariosCargados = await api('usuarios');
+    mostrarUsuarios(usuariosCargados);
+    actualizarEstadisticas();
+    aplicarPermisos();
 
     const respuesta = await fetch('../data/usuarios.json');
 
@@ -328,4 +325,25 @@ if (btnExportarAdmins) {
 
 
 // Iniciar carga de usuarios
-cargarUsuarios();
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+      if (!await comprobarSesion()) return;
+
+      if (!puede('usuarios.gestionar')) {
+          showAlert('Acceso no permitido', 'error');
+          return;
+      }
+
+      await cargarUsuarios();
+
+      const roles = await api('roles');
+      selectorRol.replaceChildren();
+
+      roles.forEach(rol => {
+          selectorRol.add(new Option(rol.nombre, rol.id));
+      });
+
+  } catch (error) {
+      showAlert(error.message, 'error');
+  }
+});
