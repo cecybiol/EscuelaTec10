@@ -70,6 +70,13 @@ class Herramienta extends ItemInventario {
 // =================================================================
 document.addEventListener('DOMContentLoaded', async () => {
 
+  try {
+    if (!await comprobarSesion()) return;
+  } catch (error) {
+    showAlert(error.message, 'error');
+    return;
+  }
+
   const vistaListado = document.getElementById('vista-lista') || document.getElementById('herramientas');
   const vistaDetalle = document.getElementById('vista-detalle');
   
@@ -274,20 +281,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
-  // CARGA DESDE REPOSITORIO (COMPARTIDO O FALLBACK)
-  const cargarYRenderizar = async () => {
+   // CARGA DESDE LA API CENTRALIZADA
+   const cargaryRenderizar = async () => {
     mostrarCargando();
-
     try {
-      if (typeof initStorage === 'function') {
-        await initStorage();
-      }
-
-      // Usa la función del repositorio para obtener el catálogo
       const rawData = typeof listarHerramientas === 'function' 
         ? await listarHerramientas() 
         : (typeof getCollection === 'function' ? getCollection('herramientas') : []);
-
+      
       herramientas = rawData.map(item => new Herramienta(item));
       renderizarHerramientas();
     } catch (err) {
@@ -295,6 +296,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       mostrarError(err.message || 'Error al conectar con el catálogo compartido.');
     }
   };
+
 
   // BOTÓN + NUEVA HERRAMIENTA
   if (btnNuevaHerramienta) {
