@@ -102,6 +102,36 @@ document.addEventListener('DOMContentLoaded', async () => {
   const panelInfo = document.getElementById('panel-info');
   const panelHistorial = document.getElementById('panel-historial');
 
+  document.querySelector('#form-ejemplar')
+  .addEventListener('submit', async evento => {
+    evento.preventDefault();
+    if (!herramientaSeleccionada) {
+      showAlert('Primero guardar y seleccionar la ficha', 'error');
+      return;
+    }
+    try {
+      const idCatalogo = herramientaSeleccionada.id;
+      await api('detalle_objeto', {
+        metodo: 'POST', 
+        datos: {
+          objeto_id: idCatalogo,
+          estado: 'disponible', 
+          qr: 'FALTO',
+          ubicacion: document.querySelector('#ej-ubicacion').value,
+          numero_serie: '', 
+          observaciones: ''
+        }
+      });
+      await cargarYRenderizar();
+      mostrarVistaDetalle(herramientas.find(x => x.id === idCatalogo));
+      aplicarPermisos();
+    } catch (error) { 
+      showAlert(error.message, 'error'); 
+    }
+  });
+  
+
+
   let herramientaSeleccionada = null; 
   let herramientas = [];
 
