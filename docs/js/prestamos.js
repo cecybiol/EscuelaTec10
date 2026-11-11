@@ -1,63 +1,42 @@
-document.addEventListener("DOMContentLoaded", () => {
-
-    // =========================
-    // MOCK API (Simulador temporal para trabajar en casa)
-    // =========================
-    const api = {
-        listarPrestamos: async () => {
-            return new Promise(resolve => setTimeout(() => resolve([
-                { detalle_id: 1, solicitante: "Carlos Gómez", item: "Amoladora Angular Bosch", cantidad: "1", observaciones: "Sin comentarios", estado: "Activo" }
-            ]), 500)); // Simula medio segundo de carga
-        },
-        crearPrestamo: async (datos) => {
-            return new Promise(resolve => setTimeout(() => resolve({ success: true }), 500));
-        },
-        devolverUnidad: async (detalle_id) => {
-            return new Promise(resolve => setTimeout(() => resolve({ success: true }), 500));
-        }
-    };
+// El listener inicial debe ser async
+document.addEventListener("DOMContentLoaded", async () => {
     
-    let prestamosGlobales = []; // Reemplaza tu arreglo fijo para que el buscador siga funcionando
-    // =========================
-    // BUSCAR SIN VOLVER A DESCARGAR 
-    // =========================
-    document.querySelector('#buscar-prestamo')
-        .addEventListener('input', event => {
-            const texto = event.target.value.trim().toLocaleLowerCase();
-            
-            // Adaptación: en vez de insumos, filtramos un arreglo "prestamos"
-            const visibles = prestamos.filter(item =>
-                item.solicitante.toLocaleLowerCase().includes(texto)
-            );
-            
-            // Adaptación: función para re-dibujar la tabla
-            renderizarPrestamos(visibles);
-        });
-        
-    // Obtener formulario
     const formulario = document.querySelector("#formulario");
-
-    // Obtener botón Registrar
-    const botonRegistrar = document.querySelector("#btn-registrar");
-
-    // Obtener tabla
-    const tablaHistorial = document.querySelector("#tabla-historial");
-
-    // Obtener cuerpo de la tabla
     const historial = document.querySelector("#historial");
-    // =========================
-    // LISTA Y RENDERIZADO (Págs. 11 y 12 de la teoría)
-    // =========================
-   /* let prestamos = [
-        {
-            solicitante: "Carlos Gómez",
-            item: "Amoladora Angular Bosch",
-            cantidad: "1",
-            observaciones: "Sin comentarios",
-            estado: "Activo"
+    let prestamosGlobales = []; 
+
+    // ==========================================
+    // F17: Cargar opciones para los Selectores
+    // ==========================================
+    async function cargarOpciones() {
+        try {
+            // Consumimos la API para usuarios (activos) y detalles de objetos
+            const usuarios = await api('usuarios');
+            const items = await api('detalle_objeto');
+            
+            const selectSolicitante = document.querySelector('#solicitante');
+            const selectItem = document.querySelector('#item');
+            
+            // Limpiamos y llenamos Solicitantes
+            selectSolicitante.innerHTML = '<option value="">Seleccione un solicitante...</option>';
+            usuarios.filter(u => u.activo).forEach(user => {
+                selectSolicitante.innerHTML += `<option value="${user.id}">${user.nombre} (${user.legajo})</option>`;
+            });
+
+            // Limpiamos y llenamos Items
+            selectItem.innerHTML = '';
+            items.forEach(item => {
+                selectItem.innerHTML += `<option value="${item.id}">${item.nombre} - ${item.codigo}</option>`;
+            });
+            
+        } catch (error) {
+            console.error("Error al cargar las opciones:", error);
         }
-    ];
-*/
+    }
+
+    // ==========================================
+    // F10 y F12: Listar y Renderizar Préstamos
+    // ==========================================
     function renderizarPrestamos(datos) {
         historial.replaceChildren();
         datos.forEach(item => {
@@ -70,91 +49,103 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${item.solicitante}</td>
                 <td>${item.item}</td>
                 <td>${item.cantidad} u.</td>
-                <td style="max-width: 250px; overflow-wrap: break-word;">${item.observaciones}</td>
+                <td style="max-width: 250px; overflow-wrap: break-word;">${item.observaciones || 'Sin comentarios'}</td>
                 <td><span class="badge">${item.estado}</span></td>
-               <td><button type="button" class="btn-sm btn-devolver" data-id="${item.detalle_id}" ${estadoBoton}>${textoBoton}</button></td>
+                <!-- Añadido data-detalle-id como lo pide la guía -->
+                <td><button type="button" class="btn-sm btn-devolver" data-detalle-id="${item.detalle_id}" ${estadoBoton}>${textoBoton}</button></td>
             `;
             historial.appendChild(nuevaFila);
         });
     }
 
- // =========================
-// CARGAR PRÉSTAMOS DESDE LA "BASE DE DATOS"
-// =========================
-async function cargarPrestamos() {
-    historial.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Cargando datos...</td></tr>";
-    try {
-        prestamosGlobales = await api.listarPrestamos();
-        renderizarPrestamos(prestamosGlobales);
-    } catch (error) {
-        console.error("Error al cargar:", error);
-        historial.innerHTML = "<tr><td colspan='6'>Error al conectar con la base de datos.</td></tr>";
-    }
-}
-
-// Llamada inicial
-cargarPrestamos();
-    // =========================
-    // REGISTRAR PRÉSTAMO LALALA
-    // =========================
-
-    formulario.addEventListener("submit", (evento) => {
-
-        // Evitar que se recargue la página
-        evento.preventDefault();
-
-        // Obtener datos
-        const solicitante = document.querySelector("#solicitante").value;
-        const item = document.querySelector("#item");
-        const cantidad = document.querySelector("#cantidad").value;
-        const observaciones = document.querySelector("#observaciones").value;
-
-        // Obtener nombre del ítem
-        const nombreItem = item.options[item.selectedIndex].text;
-
-       prestamos.push({
-            solicitante: solicitante,
-            item: nombreItem,
-            cantidad: cantidad,
-            observaciones: observaciones,
-            estado: "Activo"
-        });
-
-        renderizarPrestamos(prestamos);
-
-        // Limpiar formulario
-        formulario.reset();
-
-        // Volver cantidad a 1
-        document.querySelector("#cantidad").value = 1;
-
-        console.log("Préstamo registrado correctamente");
-    });
-
-
-    // =========================
-    // DEVOLVER PRÉSTAMO
-    // =========================
-
-   historial.addEventListener("click", (evento) => {
-
-        // Verificar si se hizo click en un botón Devolver
-        if (evento.target.classList.contains("btn-sm")) {
-
-            const fila = evento.target.closest("tr");
-            const nombreSolicitante = fila.querySelector("td").textContent;
-
-            // Cambiar estado en la lista
-            const prestamoEncontrado = prestamos.find(p => p.solicitante === nombreSolicitante && p.estado === "Activo");
-            if (prestamoEncontrado) {
-                prestamoEncontrado.estado = "Devuelto";
+    async function cargarPrestamos() {
+        historial.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Cargando datos...</td></tr>";
+        try {
+            // Suponiendo que listarPrestamos o api('prestamos') es tu endpoint real
+            prestamosGlobales = await api('prestamos'); 
+            renderizarPrestamos(prestamosGlobales);
+            
+            // Si tienes un script app.js que maneja permisos
+            if (typeof aplicarPermisos === "function") {
+                aplicarPermisos();
             }
+        } catch (error) {
+            console.error("Error al cargar:", error);
+            historial.innerHTML = "<tr><td colspan='6'>Error al conectar con la base de datos.</td></tr>";
+        }
+    }
 
-            // Re-dibujar la tabla con el estado actualizado
-            renderizarPrestamos(prestamos);
+    // ==========================================
+    // F11: Alta de Préstamo
+    // ==========================================
+    formulario.addEventListener("submit", async (evento) => {
+        evento.preventDefault(); // Evitar recarga
 
-            console.log("Préstamo devuelto correctamente");
+        const solicitante_id = document.querySelector("#solicitante").value;
+        const fecha_prevista = document.querySelector("#fecha-prevista").value;
+        const observaciones = document.querySelector("#observaciones").value;
+        
+        // Obtener array de IDs de las opciones seleccionadas en el select múltiple
+        const selectItem = document.querySelector("#item");
+        const unidades = Array.from(selectItem.selectedOptions).map(option => option.value);
+
+        const nuevoPrestamo = {
+            solicitante_id,
+            fecha_prevista,
+            unidades,
+            observaciones
+        };
+
+        try {
+            await crearPrestamo(nuevoPrestamo); // O await api('prestamos', 'POST', nuevoPrestamo) según tu api.js
+            console.log("Préstamo registrado correctamente");
+            
+            formulario.reset();
+            await cargarPrestamos();
+            await cargarOpciones(); // Refrescar stock visual
+
+        } catch (error) {
+            console.error("Error al registrar préstamo:", error);
         }
     });
 
+    // ==========================================
+    // F17: Devolución por Detalle
+    // ==========================================
+    historial.addEventListener("click", async (evento) => {
+        // Atrapamos el elemento más cercano que tenga el data-detalle-id
+        const boton = evento.target.closest('[data-detalle-id]');
+        
+        if (boton && !boton.disabled) {
+            const detalleId = boton.dataset.detalleId;
+            
+            try {
+                await devolverUnidad(detalleId); // O await api(`prestamos/devolver/${detalleId}`, 'POST')
+                console.log("Préstamo devuelto correctamente");
+                
+                await cargarPrestamos();
+                await cargarOpciones(); // Refrescar stock visual
+
+            } catch (error) {
+                console.error("Error al devolver la unidad:", error);
+            }
+        }
+    });
+
+    // ==========================================
+    // BUSCADOR EN TIEMPO REAL
+    // ==========================================
+    document.querySelector('#buscar-prestamo').addEventListener('input', event => {
+        const texto = event.target.value.trim().toLocaleLowerCase();
+        const visibles = prestamosGlobales.filter(item =>
+            item.solicitante.toLocaleLowerCase().includes(texto)
+        );
+        renderizarPrestamos(visibles);
+    });
+
+    // ==========================================
+    // INICIALIZACIÓN
+    // ==========================================
+    await cargarOpciones();
+    await cargarPrestamos();
 });
