@@ -14,33 +14,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     // =========================
     // BUSCAR SIN VOLVER A DESCARGAR 
     // =========================
-    document.querySelector('#buscar-prestamo')
-        .addEventListener('input', event => {
-            const texto = event.target.value.trim().toLocaleLowerCase();
-            
-            // Adaptación: en vez de insumos, filtramos un arreglo "prestamos"
-           const visibles = prestamos.filter(item =>
-    (item.solicitante && item.solicitante.toLocaleLowerCase().includes(texto)) ||
-    (item.item && item.item.toLocaleLowerCase().includes(texto))
-);
-            
-            // Adaptación: función para re-dibujar la tabla
-            renderizarPrestamos(visibles);
-        });
-    // Obtener formulario
+    document.querySelector('#buscar-prestamo').addEventListener('input', event => {
+        const texto = event.target.value.trim().toLocaleLowerCase();
+        
+        const visibles = prestamos.filter(item =>
+            (item.solicitante && item.solicitante.toLocaleLowerCase().includes(texto)) ||
+            (item.item && item.item.toLocaleLowerCase().includes(texto))
+        );
+        
+        renderizarPrestamos(visibles);
+    });
+
     const formulario = document.querySelector("#formulario");
-
-    // Obtener botón Registrar
-    const botonRegistrar = document.querySelector("#btn-registrar");
-
-    // Obtener tabla
-    const tablaHistorial = document.querySelector("#tabla-historial");
-
-    // Obtener cuerpo de la tabla
     const historial = document.querySelector("#historial");
-    // ==========================================
-    // CARGAR HERRAMIENTAS DESDE EL ALMACENAMIENTO (Equipo Herramientas)
-    // ==========================================
+
     // ==========================================
     // CARGAR HERRAMIENTAS Y SOLICITANTES (API / BD)
     // ==========================================
@@ -51,7 +38,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         let herramientas = [];
         try {
             if (typeof api === 'function') {
-                // Consulta los ejemplares reales registrados en MariaDB
                 herramientas = await api('detalle_objeto');
             } else {
                 herramientas = typeof getCollection === 'function' ? getCollection('herramientas') : [];
@@ -87,7 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 selectSolicitante.innerHTML = '<option value="">-- Seleccionar Solicitante --</option>';
                 usuarios.filter(u => u.activo).forEach(u => {
                     const opt = document.createElement('option');
-                    opt.value = u.id; // Guarda el ID de usuario (ej: USR-001)
+                    opt.value = u.id; 
                     opt.textContent = `${u.alias} (${u.rol || 'Usuario'})`;
                     selectSolicitante.appendChild(opt);
                 });
@@ -96,9 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Error cargando solicitantes:", e);
         }
     }
-    // =========================
-    // LISTA Y RENDERIZADO (Págs. 11 y 12 de la teoría)
-    // =========================
+
     // =========================
     // LISTA Y RENDERIZADO
     // =========================
@@ -143,15 +127,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     await cargarPrestamos();
 
     // =========================
-    // REGISTRAR PRÉSTAMO LALALA
+    // REGISTRAR PRÉSTAMO
     // =========================
-
     formulario.addEventListener("submit", async (evento) => {
         evento.preventDefault();
 
         const solicitante = document.querySelector("#solicitante").value;
         const item = document.querySelector("#item");
-        const cantidad = document.querySelector("#cantidad").value;
+        
+        // Solución al error del HTML: asume 1 unidad o verifica si existe el input
+        const inputCantidad = document.querySelector("#cantidad");
+        const cantidad = inputCantidad ? inputCantidad.value : 1;
+        
         const observaciones = document.querySelector("#observaciones").value;
         const fechaPrevistaInput = document.querySelector("#fecha_prevista");
         const fecha_prevista = fechaPrevistaInput ? fechaPrevistaInput.value : new Date().toISOString().split('T')[0];
@@ -184,15 +171,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         formulario.reset();
-        if (document.querySelector("#cantidad")) document.querySelector("#cantidad").value = 1;
         console.log("Préstamo registrado correctamente");
     });
 
     // =========================
     // DEVOLVER PRÉSTAMO
     // =========================
-
-      historial.addEventListener("click", async (evento) => {
+    historial.addEventListener("click", async (evento) => {
         if (evento.target.classList.contains("btn-sm")) {
             const boton = evento.target;
             const detalleId = boton.dataset.detalleId;
@@ -215,5 +200,4 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
     });
-
 });
