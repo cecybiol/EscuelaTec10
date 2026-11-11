@@ -1,6 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     // =========================
+    // MOCK API (Simulador temporal para trabajar en casa)
+    // =========================
+    const api = {
+        listarPrestamos: async () => {
+            return new Promise(resolve => setTimeout(() => resolve([
+                { detalle_id: 1, solicitante: "Carlos Gómez", item: "Amoladora Angular Bosch", cantidad: "1", observaciones: "Sin comentarios", estado: "Activo" }
+            ]), 500)); // Simula medio segundo de carga
+        },
+        crearPrestamo: async (datos) => {
+            return new Promise(resolve => setTimeout(() => resolve({ success: true }), 500));
+        },
+        devolverUnidad: async (detalle_id) => {
+            return new Promise(resolve => setTimeout(() => resolve({ success: true }), 500));
+        }
+    };
+    
+    let prestamosGlobales = []; // Reemplaza tu arreglo fijo para que el buscador siga funcionando
+    // =========================
     // BUSCAR SIN VOLVER A DESCARGAR 
     // =========================
     document.querySelector('#buscar-prestamo')
@@ -15,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Adaptación: función para re-dibujar la tabla
             renderizarPrestamos(visibles);
         });
+        
     // Obtener formulario
     const formulario = document.querySelector("#formulario");
 
@@ -29,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================
     // LISTA Y RENDERIZADO (Págs. 11 y 12 de la teoría)
     // =========================
-    let prestamos = [
+   /* let prestamos = [
         {
             solicitante: "Carlos Gómez",
             item: "Amoladora Angular Bosch",
@@ -38,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
             estado: "Activo"
         }
     ];
-
+*/
     function renderizarPrestamos(datos) {
         historial.replaceChildren();
         datos.forEach(item => {
@@ -53,15 +72,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${item.cantidad} u.</td>
                 <td style="max-width: 250px; overflow-wrap: break-word;">${item.observaciones}</td>
                 <td><span class="badge">${item.estado}</span></td>
-                <td><button type="button" class="btn-sm" ${estadoBoton}>${textoBoton}</button></td>
+               <td><button type="button" class="btn-sm btn-devolver" data-id="${item.detalle_id}" ${estadoBoton}>${textoBoton}</button></td>
             `;
             historial.appendChild(nuevaFila);
         });
     }
 
-    // Dibujar los préstamos iniciales en pantalla
-    renderizarPrestamos(prestamos);
+ // =========================
+// CARGAR PRÉSTAMOS DESDE LA "BASE DE DATOS"
+// =========================
+async function cargarPrestamos() {
+    historial.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Cargando datos...</td></tr>";
+    try {
+        prestamosGlobales = await api.listarPrestamos();
+        renderizarPrestamos(prestamosGlobales);
+    } catch (error) {
+        console.error("Error al cargar:", error);
+        historial.innerHTML = "<tr><td colspan='6'>Error al conectar con la base de datos.</td></tr>";
+    }
+}
 
+// Llamada inicial
+cargarPrestamos();
     // =========================
     // REGISTRAR PRÉSTAMO LALALA
     // =========================
