@@ -9,5 +9,11 @@ if($m!=='POST'){existe('usuarios',$id);if($id===$_SESSION['usuario_id'])responde
 if($m==='DELETE'){consulta('UPDATE usuarios SET activo=0 WHERE id=?',[$id]);responder(['ok'=>true]);}
 $alias=texto($d,'alias');$rol=texto($d,'rol_id',20);
 if(!consulta('SELECT id FROM roles WHERE id=?',[$rol])->fetch())responder(['error'=>'Rol inexistente'],400);
-if($m==='POST'){consulta('INSERT INTO usuarios(id,alias,rol_id) VALUES(?,?,?)',[$id,$alias,$rol]);responder(['id'=>$id],201);}
+$hash=null;
+if(isset($d['clave']) && $d['clave']!=='') {
+ if(!is_string($d['clave']) || strlen($d['clave'])<12 || strlen($d['clave'])>200) responder(['error'=>'La clave debe tener entre 12 y 200 caracteres'],400);
+ $hash=password_hash($d['clave'],PASSWORD_DEFAULT);
+}
+if($m==='POST'){consulta('INSERT INTO usuarios(id,alias,rol_id,password_hash) VALUES(?,?,?,?)',[$id,$alias,$rol,$hash]);responder(['id'=>$id],201);}
+if($hash!==null) consulta('UPDATE usuarios SET password_hash=? WHERE id=?',[$hash,$id]);
 consulta('UPDATE usuarios SET alias=?,rol_id=? WHERE id=?',[$alias,$rol,$id]);responder(['id'=>$id]);

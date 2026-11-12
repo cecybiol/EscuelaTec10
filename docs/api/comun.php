@@ -7,10 +7,11 @@ set_exception_handler(function(Throwable $e) {
  global $pdo;
  if (isset($pdo) && $pdo->inTransaction()) $pdo->rollBack();
  error_log((string)$e);
- $status = $e instanceof PDOException && $e->getCode()==='23000' ? 409 : 500;
- responder(['error'=>$status===409 ? 'El registro ya existe o tiene relaciones que lo impiden' : 'Error del servidor. Revisar el registro de PHP'], $status);
+ $status = $e instanceof PDOException && $e->getCode()==='23000' ? 409 : (($e instanceof PDOException || $e instanceof RuntimeException) ? 503 : 500);
+ responder(['error'=>$status===409 ? 'El registro ya existe o tiene relaciones que lo impiden' : ($status===503 ? 'No se pudo conectar con la base de datos. Revisar la configuración del servidor' : 'Error del servidor. Revisar el registro de PHP')], $status);
 });
 session_set_cookie_params(['httponly'=>true,'samesite'=>'Strict','secure'=>!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off']);
+ini_set('session.use_strict_mode','1');
 session_start();
 $pdo = require __DIR__ . '/../../privado/db.php';
 // Fechas de las operaciones expresadas en hora de San Luis.

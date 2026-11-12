@@ -1,1 +1,4 @@
 .recurso/
+privado/config.local.php
+.env
+*.log

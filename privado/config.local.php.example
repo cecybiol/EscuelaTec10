@@ -1,0 +1,2 @@
+<?php
+return ['host'=>'127.0.0.1','port'=>3306,'database'=>'escuelatec10_objetos_lab','user'=>'escuelatec_app','password'=>'COMPLETAR_EN_EL_SERVIDOR'];

@@ -14,11 +14,11 @@ async function api(recurso,{metodo='GET',datos,params={}}={}) {
 async function iniciarSesion(id,clave){sesionActual=await api('sesion',{metodo:'POST',datos:{id,clave}});return sesionActual;}
 async function comprobarSesion(){
  try {sesionActual=await api('sesion');return sesionActual;}
- catch(e){if(e.status===401){sesionActual=null;location.replace(new URL('../pages/login.html',API_BASE));return null;}throw e;}
+ catch(e){if(e.status===401){sesionActual=null;const loginURL=new URL('../pages/login.html',API_BASE);loginURL.searchParams.set('next',location.pathname+location.search);location.replace(loginURL);return null;}throw e;}
 }
 function puede(codigo){return sesionActual?.permisos.some(p=>p.codigo===codigo)??false;}
 function aplicarPermisos(){document.querySelectorAll('[data-permiso]').forEach(el=>{el.hidden=!puede(el.dataset.permiso);});}
-async function cerrarSesion(){await api('sesion',{metodo:'DELETE'});sesionActual=null;location.replace(new URL('../pages/login.html',API_BASE));}
+async function cerrarSesion(){await api('sesion',{metodo:'DELETE'});sesionActual=null;const loginURL=new URL('../pages/login.html',API_BASE);loginURL.searchParams.set('next',location.pathname+location.search);location.replace(loginURL);}
 async function listarObjetos(tipo){return api('objetos',{params:{tipo}});}
 async function listarHerramientas(){return listarObjetos('herramienta');}
 async function guardarObjeto(datos){return api('objetos',{metodo:datos.id?'PUT':'POST',datos});}

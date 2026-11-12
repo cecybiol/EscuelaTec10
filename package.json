@@ -1,0 +1,1 @@
+{"name":"escuelatec10-inventario","private":true,"scripts":{"dev":"node scripts/dev.mjs","check":"node --check docs/js/api.js && node --check docs/js/gestion.js"}}
