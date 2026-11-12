@@ -266,14 +266,15 @@ class Insumo extends ItemInventario {
       return;
     }
     const num = Number(valor);
-    if (isNaN(num) || num <= 0) {
-      throw new Error("El umbral debe ser un número mayor a 0 o ser null.");
+    if (!Number.isFinite(num) || num < 0) {
+      throw new Error('Mínimo inválido');
     }
     this.umbral = num;
   }
 
   obtenerEstado() {
     if (this.cantidad === 0) return 'Critico';
+    if (this.umbral === null) return 'Sin mínimo definido';
     if (this.umbral !== null && this.cantidad <= this.umbral) return 'Stock Bajo';
     return 'Normal';
   }
