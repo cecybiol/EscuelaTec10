@@ -1,1 +1,283 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panel del taller · ET10</title><link rel="stylesheet" href="../css/gestion.css"><script defer src="../js/api.js"></script><script defer src="../vendor/qrcode.js"></script><script defer src="../js/gestion.js"></script></head><body data-page="dashboard"><header><strong>ET10 / TALLER DE INFORMÁTICA</strong><small>Escuela Técnica N.º 10 “Martín Miguel de Güemes”</small><nav id="nav"></nav></header><main><h1>Panel del taller</h1><p class="subtitle">Inventario escolar · Prácticas Profesionalizantes</p><div id="status" role="status" aria-live="polite"></div><div id="content"></div></main><dialog id="editor"><div id="editor-content"></div></dialog><footer>EscuelaTEC10 · 7.º año Informática · 2026</footer></body></html>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | EscuelaTec</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/layout.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/responsive.css">
+
+
+
+
+
+
+<link rel="stylesheet" href="../css/bd-ui.css">
+<script defer src="../js/app.js"></script>
+<script defer src="../js/api.js"></script>
+<script defer src="../vendor/qrcode.js"></script>
+<script defer src="../js/bd-ui.js"></script>
+<script defer src="../js/dashboard.js"></script>
+</head>
+
+<body>
+
+    <header>
+
+        <div class="logo">
+
+            <div class="logo-mark"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></div>
+
+            <div>
+
+                <h2>EscuelaTec</h2>
+                <span>Sistema Integral de Gestión Escolar</span>
+
+            </div>
+
+        </div>
+
+        <button class="navbar-toggle" aria-label="Abrir menú" aria-expanded="false">
+            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
+
+        <nav class="navbar-menu">
+
+            <a href="dashboard.html" aria-current="page">
+                <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                Dashboard
+            </a>
+
+            <a href="herramientas.html">
+                <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
+                Herramientas
+            </a>
+
+            <a href="insumos.html">
+                <i class="fa-solid fa-box" aria-hidden="true"></i>
+                Insumos
+            </a>
+
+            <a href="prestamos.html">
+                <i class="fa-solid fa-handshake" aria-hidden="true"></i>
+                Préstamos
+            </a>
+
+            <a href="admin.html">
+                <i class="fa-solid fa-gear" aria-hidden="true"></i>
+                Administración
+            </a>
+
+        </nav>
+
+        <div class="perfil" role="img" aria-label="Perfil de usuario">
+
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+
+        </div>
+
+    </header>
+
+    <!-- ====================================== -->
+    <!-- CONTENIDO PRINCIPAL -->
+    <!-- ====================================== -->
+
+    <main>
+
+        <!-- TÍTULO -->
+
+        <section class="titulo">
+
+            <h1>¡Bienvenido, Usuario!</h1>
+
+            <p>Resumen General del Sistema</p>
+
+        </section>
+
+        <!-- ESTADO DE CARGA / ERROR DE DATOS (lo completa js/dashboard.js) -->
+
+        <div id="estado-datos" class="estado-datos" role="status" aria-live="polite" aria-atomic="true"></div>
+
+        <!-- TARJETAS -->
+
+        <section class="cards">
+
+            <div class="card azul card--enlace" data-metrica="herramientas">
+
+                <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
+
+                <h2 aria-label="Cargando datos">—</h2>
+
+                <h3>Herramientas</h3>
+
+                <a class="footer card__enlace" href="herramientas.html" aria-label="Ver total de herramientas">
+
+                    Total
+
+                </a>
+
+            </div>
+
+            <div class="card verde card--enlace" data-metrica="insumos">
+
+                <i class="fa-solid fa-box" aria-hidden="true"></i>
+
+                <h2 aria-label="Cargando datos">—</h2>
+
+                <h3>Insumos</h3>
+
+                <a class="footer card__enlace" href="insumos.html" aria-label="Ver stock de insumos">
+
+                    Stock
+
+                </a>
+
+            </div>
+
+            <div class="card naranja card--enlace" data-metrica="prestamosActivos">
+
+                <i class="fa-solid fa-handshake" aria-hidden="true"></i>
+
+                <h2 aria-label="Cargando datos">—</h2>
+
+                <h3>Préstamos</h3>
+
+                <a class="footer card__enlace" href="prestamos.html" aria-label="Ver préstamos activos">
+
+                    Activos
+
+                </a>
+
+            </div>
+
+            <div class="card rojo card--enlace" data-metrica="alertas">
+
+                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+
+                <h2 aria-label="Cargando datos">—</h2>
+
+                <h3>Alertas</h3>
+
+                <button type="button" class="footer card__enlace" aria-controls="alertas-panel" aria-label="Atención: ir al detalle de las alertas">
+
+                    Atención
+
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- TABLA + PANEL DERECHO -->
+
+        <section class="contenido">
+
+            <!-- MOVIMIENTOS -->
+
+            <div class="tabla">
+
+                <h2 id="movimientos-titulo">Movimientos recientes</h2>
+
+                <!-- Las filas las dibuja js/dashboard.js (renderMovimientos) con datos de storage.js. -->
+
+                <table class="tabla-movimientos" aria-labelledby="movimientos-titulo">
+
+                    <thead>
+
+                        <tr>
+
+                            <th scope="col">Elemento</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Responsable</th>
+                            <th scope="col">Fecha</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="movimientos-cuerpo">
+
+                        <tr>
+                            <td colspan="4" class="movimientos__mensaje movimientos__mensaje--vacio">Cargando movimientos…</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+                <a class="btn-link" href="prestamos.html">
+
+                    Ver historial completo
+
+                </a>
+
+            </div>
+
+            <!-- PANEL DERECHO -->
+
+            <div class="derecha">
+
+                <!-- GRÁFICO -->
+
+                <div class="grafico">
+
+                    <h2>Préstamos por estado</h2>
+
+                    <!-- El círculo y la leyenda los dibuja js/dashboard.js (renderGraficoPrestamos)
+                         con la colección "prestamos" de storage.js. El círculo es solo decorativo:
+                         los datos están en la leyenda, en texto. -->
+
+                    <div class="circulo" id="grafico-circulo" aria-hidden="true"></div>
+
+                    <ul id="grafico-leyenda">
+
+                        <li class="grafico__mensaje">Cargando préstamos…</li>
+
+                    </ul>
+
+                    <p id="grafico-nota" class="grafico__nota"></p>
+
+                </div>
+
+
+                <!-- ALERTAS -->
+
+                <div class="alertas" id="alertas-panel" tabindex="-1">
+
+                    <h2>Alertas</h2>
+
+                    <!-- Los ítems los dibuja js/dashboard.js (renderAlertas) con datos de storage.js -->
+
+                    <ul id="alertas-lista">
+
+                        <li class="alerta alerta--vacio">Cargando alertas…</li>
+
+                    </ul>
+
+                    <p id="alertas-nota" class="alertas__nota"></p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

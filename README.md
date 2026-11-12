@@ -38,7 +38,7 @@ unset et10_clave
 ## Recorrido para la exposición
 
 - Iniciar sesión con una cuenta del sitio. El menú muestra los módulos permitidos.
-- Herramientas: crear una ficha, entrar en Ver / QR y agregar uno o más ejemplares. Solo los revisados como **disponible** pueden prestarse. Los ejemplares pendientes del relevamiento inicial conservan su estado hasta ser revisados.
+- Herramientas: usar el formulario original de Nueva herramienta, guardar la ficha y entrar en Ejemplares / QR para agregar unidades. Solo los revisados como **disponible** pueden prestarse. Los ejemplares pendientes del relevamiento inicial conservan su estado hasta ser revisados.
 - Insumos: crear la ficha con unidad y mínimo, registrar un ingreso con motivo y después un egreso. No se edita el saldo directamente. El historial registra el operador.
 - Préstamos: seleccionar solicitante, fecha y ejemplares. La devolución se registra por unidad. Un ejemplar ya prestado no se puede volver a prestar.
 - Panel: consultar indicadores y movimientos. Usar Actualizar para traer cambios hechos desde otra PC. Un préstamo de dos unidades cuenta una entrega.
@@ -46,7 +46,7 @@ unset et10_clave
 
 ## QR
 
-Desde Ver / QR se imprime la etiqueta del catálogo o de cada ejemplar. Las nuevas etiquetas contienen `pages/qr.html?id=IDENTIFICADOR`. Al abrirlas sin sesión, el sistema pide acceso y conserva el destino.
+En Herramientas, abrir una ficha y elegir Ejemplares / QR para imprimir la etiqueta del catálogo o de cada unidad. En Insumos, usar el botón QR de su fila. La consulta general por QR y la salida están en el icono de perfil; en Herramientas se accede desde Sesión / consultar QR. Las nuevas etiquetas contienen `pages/qr.html?id=IDENTIFICADOR`. Al abrirlas sin sesión, el sistema pide acceso y conserva el destino.
 
 **Generar las etiquetas desde la dirección definitiva del servidor accesible por los teléfonos**, por ejemplo su IP de la red escolar o un nombre que los celulares resuelvan. No imprimir enlaces con `localhost` o `127.0.0.1`, que en otro dispositivo apuntan al propio teléfono.
 
@@ -74,7 +74,11 @@ Las ocho tablas son roles, permisos, usuarios, objetos, detalle_objeto, prestamo
 
 El SQL de apertura corrige ocho filas por cantidad cuyo saldo NULL violaba el esquema: utiliza cero de apertura y una nota de relevamiento pendiente. Esto no afirma que no existan unidades físicas. No aplicar automáticamente esa apertura a la base existente.
 
-Los controladores JS anteriores se conservan como historial del trabajo estudiantil, pero las páginas integradas cargan `js/api.js` y `js/gestion.js`. No volver a cargar en paralelo `storage.js`, `repositorio.js` o JSON como scripts.
+Los módulos conservan el cuerpo HTML de la versión estudiantil `b7eabcb` y sus cinco hojas de estilo originales. Solo se corrigió una etiqueta mal formada del encabezado de Insumos. Las tarjetas, las tablas, los menús y los contenedores originales se completan mediante sus controladores `dashboard.js`, `herramientas.js`, `insumos.js`, `prestamos.js` y `admin.js`, conectados a `api.js`.
+
+`bd-ui.js` contiene los adaptadores funcionales compartidos. La hoja adicional `bd-ui.css` solo da soporte a formularios nuevos de login, QR y diálogos, sin sustituir los estilos de los alumnos. Login y QR reutilizan el encabezado y los componentes originales. No cargar en paralelo `storage.js`, `repositorio.js` o JSON como scripts.
+
+Los selectores de solicitante y ejemplares y la fecha prevista se adaptan en JavaScript sobre el formulario original de Préstamos. El estado físico corresponde a cada ejemplar; el selector de estado del catálogo muestra su disponibilidad y los cambios se hacen desde Ejemplares / QR. Las cantidades y mínimos ausentes no se inventan.
 
 ## Validación de esta entrega
 
@@ -83,3 +87,8 @@ Los controladores JS anteriores se conservan como historial del trabajo estudian
 En navegador se comprobó alta de herramienta, alta de ejemplar, selección de esa unidad para préstamo, consulta del estado prestado y lectura desde una imagen QR. La revisión visual utilizó una sesión preparada solo en el entorno de QA; el login real se probó por HTTP. Esa fixture, las credenciales y la base de QA no forman parte del proyecto.
 
 **Pendiente en el entorno escolar:** aplicar la configuración privada, comprobar el acceso real a la base existente, probar desde una segunda PC y verificar el teléfono/cámara de exposición. Esta entrega no cambia Apache ni los datos del servidor escolar a distancia.
+
+
+### Comprobación de la restauración visual
+
+Se compararon los cuerpos HTML de los cinco módulos contra `b7eabcb` y se verificó que las cinco hojas CSS originales permanecen idénticas. Se repitieron los 28 controles HTTP en la base aislada. En las pantallas originales se probaron alta de herramienta y ejemplar, préstamo y devolución, alta de insumo, ingreso de stock, búsqueda, QR, administración, gráfico y salida. La pantalla de login conserva la paleta, tipografía, encabezado y componentes del sitio estudiantil. No se requieren migraciones SQL ni cambios de credenciales para aplicar esta restauración.

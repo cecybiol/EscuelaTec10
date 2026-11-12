@@ -1,151 +1,37 @@
-// El listener inicial debe ser async
-document.addEventListener("DOMContentLoaded", async () => {
-    
-    const formulario = document.querySelector("#formulario");
-    const historial = document.querySelector("#historial");
-    let prestamosGlobales = []; 
-
-    // ==========================================
-    // F17: Cargar opciones para los Selectores
-    // ==========================================
-    async function cargarOpciones() {
-        try {
-            // Consumimos la API para usuarios (activos) y detalles de objetos
-            const usuarios = await api('usuarios');
-            const items = await api('detalle_objeto');
-            
-            const selectSolicitante = document.querySelector('#solicitante');
-            const selectItem = document.querySelector('#item');
-            
-            // Limpiamos y llenamos Solicitantes
-            selectSolicitante.innerHTML = '<option value="">Seleccione un solicitante...</option>';
-            usuarios.filter(u => u.activo).forEach(user => {
-                selectSolicitante.innerHTML += `<option value="${user.id}">${user.nombre} (${user.legajo})</option>`;
-            });
-
-            // Limpiamos y llenamos Items
-            selectItem.innerHTML = '';
-            items.forEach(item => {
-                selectItem.innerHTML += `<option value="${item.id}">${item.nombre} - ${item.codigo}</option>`;
-            });
-            
-        } catch (error) {
-            console.error("Error al cargar las opciones:", error);
-        }
-    }
-
-    // ==========================================
-    // F10 y F12: Listar y Renderizar Préstamos
-    // ==========================================
-    function renderizarPrestamos(datos) {
-        historial.replaceChildren();
-        datos.forEach(item => {
-            const nuevaFila = document.createElement("tr");
-
-            const textoBoton = item.estado === "Devuelto" ? "Devuelto" : "Devolver";
-            const estadoBoton = item.estado === "Devuelto" ? "disabled" : "";
-
-            nuevaFila.innerHTML = `
-                <td>${item.solicitante}</td>
-                <td>${item.item}</td>
-                <td>${item.cantidad} u.</td>
-                <td style="max-width: 250px; overflow-wrap: break-word;">${item.observaciones || 'Sin comentarios'}</td>
-                <td><span class="badge">${item.estado}</span></td>
-                <!-- Añadido data-detalle-id como lo pide la guía -->
-                <td><button type="button" class="btn-sm btn-devolver" data-detalle-id="${item.detalle_id}" ${estadoBoton}>${textoBoton}</button></td>
-            `;
-            historial.appendChild(nuevaFila);
-        });
-    }
-
-    async function cargarPrestamos() {
-        historial.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Cargando datos...</td></tr>";
-        try {
-            // Suponiendo que listarPrestamos o api('prestamos') es tu endpoint real
-            prestamosGlobales = await api('prestamos'); 
-            renderizarPrestamos(prestamosGlobales);
-            
-            // Si tienes un script app.js que maneja permisos
-            if (typeof aplicarPermisos === "function") {
-                aplicarPermisos();
-            }
-        } catch (error) {
-            console.error("Error al cargar:", error);
-            historial.innerHTML = "<tr><td colspan='6'>Error al conectar con la base de datos.</td></tr>";
-        }
-    }
-
-    // ==========================================
-    // F11: Alta de Préstamo
-    // ==========================================
-    formulario.addEventListener("submit", async (evento) => {
-        evento.preventDefault(); // Evitar recarga
-
-        const solicitante_id = document.querySelector("#solicitante").value;
-        const fecha_prevista = document.querySelector("#fecha-prevista").value;
-        const observaciones = document.querySelector("#observaciones").value;
-        
-        // Obtener array de IDs de las opciones seleccionadas en el select múltiple
-        const selectItem = document.querySelector("#item");
-        const unidades = Array.from(selectItem.selectedOptions).map(option => option.value);
-
-        const nuevoPrestamo = {
-            solicitante_id,
-            fecha_prevista,
-            unidades,
-            observaciones
-        };
-
-        try {
-            await crearPrestamo(nuevoPrestamo); // O await api('prestamos', 'POST', nuevoPrestamo) según tu api.js
-            console.log("Préstamo registrado correctamente");
-            
-            formulario.reset();
-            await cargarPrestamos();
-            await cargarOpciones(); // Refrescar stock visual
-
-        } catch (error) {
-            console.error("Error al registrar préstamo:", error);
-        }
-    });
-
-    // ==========================================
-    // F17: Devolución por Detalle
-    // ==========================================
-    historial.addEventListener("click", async (evento) => {
-        // Atrapamos el elemento más cercano que tenga el data-detalle-id
-        const boton = evento.target.closest('[data-detalle-id]');
-        
-        if (boton && !boton.disabled) {
-            const detalleId = boton.dataset.detalleId;
-            
-            try {
-                await devolverUnidad(detalleId); // O await api(`prestamos/devolver/${detalleId}`, 'POST')
-                console.log("Préstamo devuelto correctamente");
-                
-                await cargarPrestamos();
-                await cargarOpciones(); // Refrescar stock visual
-
-            } catch (error) {
-                console.error("Error al devolver la unidad:", error);
-            }
-        }
-    });
-
-    // ==========================================
-    // BUSCADOR EN TIEMPO REAL
-    // ==========================================
-    document.querySelector('#buscar-prestamo').addEventListener('input', event => {
-        const texto = event.target.value.trim().toLocaleLowerCase();
-        const visibles = prestamosGlobales.filter(item =>
-            item.solicitante.toLocaleLowerCase().includes(texto)
-        );
-        renderizarPrestamos(visibles);
-    });
-
-    // ==========================================
-    // INICIALIZACIÓN
-    // ==========================================
-    await cargarOpciones();
-    await cargarPrestamos();
-});
+// Conserva el formulario y la tabla creados por E4; conecta sus eventos con MariaDB.
+document.addEventListener('DOMContentLoaded',()=>run(async()=>{
+ $('#historial').replaceChildren();$('#item').replaceChildren();
+ if(!await prepararModulo('prestamos.ver'))return;
+ const form=$('#formulario'),historial=$('#historial');let prestamos=[];
+ const anterior=$('#solicitante');const solicitante=document.createElement('select');solicitante.id=anterior.id;solicitante.className=anterior.className;solicitante.required=true;anterior.replaceWith(solicitante);
+ const item=$('#item');item.multiple=true;item.size=4;
+ const cantidad=$('#cantidad');cantidad.readOnly=true;cantidad.value=0;cantidad.min=0;
+ const grupo=document.createElement('div');grupo.className='form-group';grupo.innerHTML='<label for="fecha-prevista">Fecha prevista de devolución:</label><input id="fecha-prevista" type="date" class="input" required>';
+ cantidad.closest('.form-group').after(grupo);
+ item.addEventListener('change',()=>cantidad.value=item.selectedOptions.length);
+ form.closest('section').hidden=!puede('prestamos.crear');
+ async function cargarOpciones(){
+  if(!puede('prestamos.crear'))return;
+  const [personas,unidades]=await Promise.all([api('usuarios'),api('detalle_objeto')]);
+  solicitante.replaceChildren(new Option('Seleccionar solicitante…',''));personas.filter(u=>u.activo).forEach(u=>solicitante.add(new Option(u.alias+' · '+u.id,u.id)));
+  item.replaceChildren();unidades.forEach(u=>item.add(new Option(u.nombre+' · '+u.id,u.id)));cantidad.value=0;
+ }
+ function renderizarPrestamos(){
+  const q=$('#buscar-prestamo').value.trim().toLocaleLowerCase();
+  historial.replaceChildren();
+  const visibles=prestamos.filter(p=>[p.solicitante,p.item,p.detalle_objeto_id].some(v=>String(v??'').toLocaleLowerCase().includes(q)));
+  visibles.forEach(p=>{
+   const tr=document.createElement('tr');
+   [p.solicitante,p.item+' · '+p.detalle_objeto_id,'1 u.',p.observaciones||'Sin comentarios',p.estado].forEach((value,i)=>{const td=document.createElement('td');if(i===4){const badge=document.createElement('span');badge.className='badge';badge.textContent=value;td.append(badge);}else td.textContent=value;tr.append(td);});
+   const td=document.createElement('td');
+   if(p.estado==='devuelto')td.textContent='Devuelto';else if(puede('prestamos.devolver')){const btn=action('Devolver',async()=>{btn.disabled=true;try{await devolverUnidad(p.detalle_id);await cargarPrestamos();await cargarOpciones();}finally{btn.disabled=false;}},'btn-sm');btn.dataset.detalleId=p.detalle_id;td.append(btn);}
+   tr.append(td);historial.append(tr);
+  });
+  if(!visibles.length){const td=historial.insertRow().insertCell();td.colSpan=6;td.textContent='Sin registros';}
+ }
+ async function cargarPrestamos(){prestamos=await listarPrestamos();renderizarPrestamos();}
+ recargarModulo=async()=>{await cargarPrestamos();await cargarOpciones();};
+ $('#buscar-prestamo').addEventListener('input',renderizarPrestamos);
+ form.addEventListener('submit',async e=>{e.preventDefault();const btn=e.submitter;btn.disabled=true;try{await crearPrestamo({solicitante_id:solicitante.value,fecha_prevista:$('#fecha-prevista').value,unidades:[...item.selectedOptions].map(o=>o.value),observaciones:$('#observaciones').value});form.reset();await recargarModulo();status('Préstamo registrado.','success');}catch(err){status(err.message,'error');}finally{btn.disabled=false;}});
+ await recargarModulo();
+}));

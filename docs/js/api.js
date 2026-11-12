@@ -7,7 +7,7 @@ async function api(recurso,{metodo='GET',datos,params={}}={}) {
  const r=await fetch(url,{method:metodo,credentials:'same-origin',cache:'no-store',
   headers:{'Content-Type':'application/json','X-CSRF-Token':sesionActual?.csrf??''},
   ...(datos===undefined?{}:{body:JSON.stringify(datos)})});
- let salida;try{salida=await r.json();}catch{throw new Error('La respuesta no es JSON. Revisar PHP y la ruta');}
+ let salida;try{salida=await r.json();}catch{throw new Error(`El servidor no devolvió datos válidos (HTTP ${r.status}). Abrí el sitio desde PHP/Apache, no desde Live Server, y revisá la ruta de la API.`);}
  if(!r.ok)throw new ErrorAPI(salida.error||'Error del servidor',r.status);
  return salida;
 }

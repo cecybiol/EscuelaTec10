@@ -2,9 +2,9 @@
  * app.js — EscuelaTEC10
  * Responsable: Equipo 1 (Dashboard)
  *
- * Funciones compartidas por las 5 páginas. Se carga en todas junto con storage.js:
+ * Funciones visuales compartidas. Los datos se consultan mediante api.js:
  *
- *   <script src="../js/storage.js" defer></script>
+ *   <script src="../js/api.js" defer></script>
  *   <script src="../js/app.js" defer></script>
  *   <script src="../js/dashboard.js" defer></script>  (o herramientas.js, insumos.js, etc.)
  *
@@ -23,11 +23,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   initMenuMobile();
   if (!document.getElementById("alertas-globales")) crearContenedorAlertas();
 
-  try {
-    await initStorage(); // definida en storage.js — siembra los datos la primera vez
-  } catch (error) {
-    console.error("No se pudo inicializar el almacenamiento:", error);
-  }
 });
 
 // ---------------------------------------------------------------------------
@@ -212,7 +207,9 @@ function parseFecha(valor) {
   }
   if (typeof valor !== "string") return null;
 
-  const texto = valor.trim();
+  // MariaDB entrega DATETIME como texto SQL, expresado en hora de San Luis.
+  let texto = valor.trim();
+  if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(texto)) texto=texto.replace(' ','T')+'-03:00';
   // 1 año · 2 mes · 3 día · 4 hora · 5 minutos · 6 segundos · 7 zona (opcional)
   const iso = /^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2})(?:\.\d{1,9})?)?(Z|[+-]\d{2}:\d{2})?)?$/.exec(texto);
   if (!iso) return null;

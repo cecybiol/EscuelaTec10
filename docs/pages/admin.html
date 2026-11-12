@@ -1,1 +1,207 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Administración · ET10</title><link rel="stylesheet" href="../css/gestion.css"><script defer src="../js/api.js"></script><script defer src="../vendor/qrcode.js"></script><script defer src="../js/gestion.js"></script></head><body data-page="admin"><header><strong>ET10 / TALLER DE INFORMÁTICA</strong><small>Escuela Técnica N.º 10 “Martín Miguel de Güemes”</small><nav id="nav"></nav></header><main><h1>Administración</h1><p class="subtitle">Inventario escolar · Prácticas Profesionalizantes</p><div id="status" role="status" aria-live="polite"></div><div id="content"></div></main><dialog id="editor"><div id="editor-content"></div></dialog><footer>EscuelaTEC10 · 7.º año Informática · 2026</footer></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración - EscuelaTec10</title>
+
+    <!-- Archivos JavaScript -->
+
+
+
+
+
+    <!-- Archivo CSS -->
+    <!-- Íconos (FontAwesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <link rel="stylesheet" href="../style.css">
+
+<link rel="stylesheet" href="../css/bd-ui.css">
+<script defer src="../js/app.js"></script>
+<script defer src="../js/api.js"></script>
+<script defer src="../vendor/qrcode.js"></script>
+<script defer src="../js/bd-ui.js"></script>
+<script defer src="../js/admin.js"></script>
+</head>
+
+<body>
+
+    <!-- NAVEGACIÓN PRINCIPAL -->
+    <header>
+
+        <div class="logo">
+
+            <div class="logo-mark"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></div>
+
+            <div>
+
+                <h2>EscuelaTec</h2>
+                <span>Sistema Integral de Gestión Escolar</span>
+
+            </div>
+
+        </div>
+
+        <button class="navbar-toggle" aria-label="Abrir menú" aria-expanded="false">
+            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
+
+        <nav class="navbar-menu">
+
+            <a href="dashboard.html">
+                <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                Dashboard
+            </a>
+
+            <a href="herramientas.html">
+                <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
+                Herramientas
+            </a>
+
+            <a href="insumos.html">
+                <i class="fa-solid fa-box" aria-hidden="true"></i>
+                Insumos
+            </a>
+
+            <a href="prestamos.html">
+                <i class="fa-solid fa-handshake" aria-hidden="true"></i>
+                Préstamos
+            </a>
+
+            <a href="admin.html" aria-current="page">
+                <i class="fa-solid fa-gear" aria-hidden="true"></i>
+                Administración
+            </a>
+
+        </nav>
+
+        <div class="perfil" role="img" aria-label="Perfil de usuario">
+
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+
+        </div>
+
+    </header>
+
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-container">
+
+        <!-- TÍTULO -->
+        <section class="titulo">
+            <h1>Administración</h1>
+            <p>Gestión de usuarios, roles y permisos de la plataforma.</p>
+        </section>
+
+
+        <!-- TARJETAS DE RESUMEN -->
+        <section class="cards">
+            <div class="card azul">
+                <h3>Usuarios Registrados</h3>
+                <h2 id="totalRegistrados">0</h2>
+                <div class="footer">Total registrados</div>
+            </div>
+
+            <div class="card verde">
+                <h3>Administradores</h3>
+                <h2 id="totalAdministradores">0</h2>
+                <div class="footer">Con permisos</div>
+            </div>
+
+            <div class="card naranja">
+                <h3>Solicitudes Pendientes</h3>
+                <h2 id="totalSolicitudes">0</h2>
+                <div class="footer">En revisión</div>
+            </div>
+        </section>
+
+
+        <!-- GESTIÓN DE USUARIOS -->
+        <section class="tabla" id="tablaUsuarios">
+            <div class="tabla-header">
+                <h3>Listado de Administradores / Usuarios</h3>
+                <input type="text" id="buscador" placeholder="Buscar usuario">
+                <button id="nuevoUsuario">+ Nuevo Usuario</button>
+            </div>
+
+            <!-- Contenedor responsive para scroll horizontal en móvil -->
+            <div class="tabla-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaUsuarios">
+                        <tr>
+                            <td>01</td>
+                            <td>Usuario Demo</td>
+                            <td>admin@escuelatec10.edu.ar</td>
+                            <td>Administrador</td>
+                            <td><span class="badge active">Activo</span></td>
+                            <td>
+                                <button class="btn-action btn-edit">Editar</button>
+                                <button class="btn-action btn-delete">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+
+        <!-- PANEL DE PERMISOS POR ROL -->
+        <section class="panel-permisos">
+            <h2>Panel de permisos por rol</h2>
+            <p>Seleccioná un rol para consultar y modificar sus permisos.</p>
+
+            <label for="selectorRol">Rol:</label>
+            <select id="selectorRol">
+                <option value="administrador">Administrador</option>
+                <option value="docente">Docente</option>
+                <option value="alumno">Alumno</option>
+            </select>
+
+            <div class="permisos">
+                <label><input type="checkbox" checked> Gestionar usuarios</label>
+                <label><input type="checkbox" checked> Gestionar préstamos</label>
+                <label><input type="checkbox" checked> Gestionar insumos</label>
+                <label><input type="checkbox"> Ver reportes</label>
+            </div>
+        </section>
+
+
+        <!-- REPORTES -->
+        <section class="reportes" id="seccionReportes">
+            <h2>Reportes básicos</h2>
+            <p>Consultá información general de usuarios y actividad.</p>
+
+            <div class="reporte-item">
+                <h3>Reporte de usuarios</h3>
+                <p id="textoReporteUsuarios">Total de usuarios registrados: 0</p>
+                <button id="exportarUsuarios">Exportar usuarios</button>
+            </div>
+
+            <div class="reporte-item">
+                <h3>Reporte de administradores</h3>
+                <p id="textoReporteAdmins">Administradores registrados: 0</p>
+                <button id="exportarAdministradores">Exportar reporte</button>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="footer">
+        <p>2026 EscuelaTec10 — Módulo de Administración</p>
+    </footer>
+
+</body>
+</html>

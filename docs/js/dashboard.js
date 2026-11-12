@@ -3,14 +3,20 @@
  * Responsable: Equipo 1 (Dashboard)
  *
  * Lógica específica de pages/dashboard.html.
- * Se carga después de storage.js y app.js (ahí están las funciones
+ * Se carga después de api.js y app.js (ahí están las funciones
  * compartidas, como showAlert()).
  */
 
 document.addEventListener("DOMContentLoaded", async () => {
+  try {
+  if (!await prepararModulo('dashboard.ver')) return;
+  recargarModulo=cargarDatos;
   initTeclaEspacioEnCards();
   initBotonAlertas();
   await cargarDatos();
+  const titulo=document.querySelector('.titulo');
+  if(titulo)titulo.append(action('Actualizar',cargarDatos,'secondary'));
+  }catch(e){mostrarEstado('error',e.message,true);}
 });
 
 // ---------------------------------------------------------------------------
@@ -26,39 +32,18 @@ const NOMBRES_COLECCION = {
 };
 
 /**
- * Espera la carga de storage.js y avisa en pantalla si algo falló.
+ * Consulta MariaDB a través de la API y avisa en pantalla si algo falló.
  * Un fallo (404, JSON inválido, sin red) NO se muestra como "0 registros":
  * las cards afectadas muestran "—" y hay un aviso con botón para reintentar.
  */
+// Solo contiene las últimas respuestas de MariaDB en memoria de esta página.
+let datosServidor={};
+const leerColeccionServidor=nombre=>datosServidor[nombre]??null;
+const TIPOS_MOVIMIENTO={ingreso:'Ingreso',egreso:'Egreso',prestamo:'Préstamo',devolucion:'Devolución'};
 async function cargarDatos() {
-  mostrarEstado("info", "Cargando datos…");
-
-  let errores;
-  try {
-    // initStorage() devuelve la lista de errores de la carga (vacía si todo salió bien)
-    errores = await initStorage();
-  } catch (error) {
-    console.error("No se pudo inicializar el almacenamiento:", error);
-    errores = [{ coleccion: "todas", tipo: "red", mensaje: error.message }];
-  }
-
-  // Las colecciones que no se pudieron cargar dan indicadores en "—", nunca en 0
-  coleccionesFallidas = new Set((errores || []).map((e) => e.coleccion));
-  actualizarPanel();
-  suscribirCambios();
-
-  if (!errores || errores.length === 0) {
-    limpiarEstado();
-    return;
-  }
-
-  const detalle = errores.map(describirError).join("; ");
-  mostrarEstado(
-    "error",
-    `No se pudieron cargar los datos de: ${detalle}. ` +
-      'Los totales afectados se muestran como "—" para no confundirlos con cero.',
-    true
-  );
+ mostrarEstado('info','Cargando datos…');
+ try{await actualizarPanel();limpiarEstado();}
+ catch(e){datosServidor={};coleccionesFallidas=new Set(['todas']);actualizarResumen();renderMovimientos();renderAlertas();renderGraficoPrestamos();mostrarEstado('error',e.message,true);}
 }
 
 function describirError(error) {
@@ -181,7 +166,7 @@ function calcularResumen({ herramientas = null, insumos = null, prestamos = null
 
   // Sin ningún préstamo registrado todavía: dato pendiente (null), no "0 activos".
   const prestamosActivos =
-    listaPrestamos && listaPrestamos.length > 0 ? contarPrestamosPorEstado(listaPrestamos).activo : null;
+    listaPrestamos ? listaPrestamos.filter(p=>['activo','vencido'].includes(p.estado)).length : null;
 
   return {
     herramientas: listaHerramientas ? listaHerramientas.length : null,
@@ -224,10 +209,10 @@ function renderResumen(resumen) {
   });
 }
 
-/** Lee las colecciones de storage.js, calcula el resumen y actualiza las cards. */
+/** Lee la última respuesta del servidor y actualiza las cards. */
 function actualizarResumen() {
   const leer = (nombre) =>
-    coleccionesFallidas.has("todas") || coleccionesFallidas.has(nombre) ? null : getCollection(nombre);
+    coleccionesFallidas.has("todas") || coleccionesFallidas.has(nombre) ? null : leerColeccionServidor(nombre);
 
   ultimoResumen = calcularResumen({
     herramientas: leer("herramientas"),
@@ -345,7 +330,7 @@ function renderMovimientos() {
     return;
   }
 
-  const recientes = seleccionarMovimientosRecientes(getCollection("movimientos"));
+  const recientes = seleccionarMovimientosRecientes(leerColeccionServidor("movimientos"));
   if (recientes.length === 0) {
     cuerpo.appendChild(crearFilaMensaje("Todavía no hay movimientos registrados.", "vacio"));
     return;
@@ -375,7 +360,7 @@ function renderAlertas() {
 
   const insumos = coleccionesFallidas.has("todas") || coleccionesFallidas.has("insumos")
     ? null
-    : soloObjetos(getCollection("insumos"));
+    : soloObjetos(leerColeccionServidor("insumos"));
 
   if (!insumos) {
     lista.appendChild(crearItemAlerta("No se pudieron cargar las alertas.", "error"));
@@ -422,7 +407,10 @@ function renderAlertas() {
 }
 
 /** Actualiza todo lo que depende de los datos: cards, movimientos y alertas. */
-function actualizarPanel() {
+async function actualizarPanel() {
+  const [resumen,movimientos]=await Promise.all([api('dashboard'),api('movimientos')]);
+  datosServidor={...resumen,movimientos};
+  coleccionesFallidas=new Set();
   actualizarResumen();
   renderMovimientos();
   renderAlertas();
@@ -512,7 +500,7 @@ function renderGraficoPrestamos() {
   circulo.style.removeProperty("--grafico"); // sin datos: el CSS muestra un anillo gris neutro
 
   const prestamos =
-    coleccionesFallidas.has("todas") || coleccionesFallidas.has("prestamos") ? null : getCollection("prestamos");
+    coleccionesFallidas.has("todas") || coleccionesFallidas.has("prestamos") ? null : leerColeccionServidor("prestamos");
   const distribucion = calcularDistribucionPrestamos(prestamos);
 
   if (!distribucion) {
@@ -540,16 +528,6 @@ function renderGraficoPrestamos() {
   if (nota) {
     nota.textContent = `Total: ${distribucion.total} ${distribucion.total === 1 ? "préstamo" : "préstamos"}.`;
   }
-}
-
-let suscripto = false;
-
-/** Recalcula al crear/editar/borrar algo (esta pestaña u otra) sin recargar la página. */
-function suscribirCambios() {
-  if (suscripto) return;
-  suscripto = true;
-  window.addEventListener("escuelatec:cambio", actualizarPanel); // misma pestaña (storage.js)
-  window.addEventListener("storage", actualizarPanel); // otra pestaña (evento nativo)
 }
 
 // ---------------------------------------------------------------------------
