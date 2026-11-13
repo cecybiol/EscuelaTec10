@@ -92,3 +92,16 @@ En navegador se comprobó alta de herramienta, alta de ejemplar, selección de e
 ### Comprobación de la restauración visual
 
 Se compararon los cuerpos HTML de los cinco módulos contra `b7eabcb` y se verificó que las cinco hojas CSS originales permanecen idénticas. Se repitieron los 28 controles HTTP en la base aislada. En las pantallas originales se probaron alta de herramienta y ejemplar, préstamo y devolución, alta de insumo, ingreso de stock, búsqueda, QR, administración, gráfico y salida. La pantalla de login conserva la paleta, tipografía, encabezado y componentes del sitio estudiantil. No se requieren migraciones SQL ni cambios de credenciales para aplicar esta restauración.
+
+
+### Si no se puede registrar un préstamo
+
+La apertura inicial conserva los ejemplares como `pendiente`: no deben aparecer como disponibles sin una revisión. El formulario muestra cuántos ejemplares están pendientes, prestados, en reparación o de baja y bloquea el registro cuando no hay unidades disponibles.
+
+Con permisos de catálogo y edición se puede usar **Revisar ejemplares pendientes** en Préstamos. Seleccionar una unidad, confirmar que se revisó y está apta, y guardar. Esa unidad queda disponible y seleccionada para el préstamo. También se puede hacer la revisión desde Herramientas → Ejemplares / QR. No se aplica un UPDATE masivo ni se cambia el estado de otras unidades.
+
+`api/prestamos_opciones.php` requiere `prestamos.crear` y devuelve solo solicitantes activos, unidades disponibles y un resumen de disponibilidad. Así un operador puede registrar entregas sin acceso al endpoint de administración `usuarios.php` ni al catálogo general. Los campos de revisión se entregan únicamente a quien ya tiene `objetos.ver` y `objetos.editar`. El historial mantiene su permiso y alcance propios.
+
+La fecha prevista se inicializa al día de San Luis y la cantidad se calcula según los ejemplares seleccionados. Los errores quedan visibles junto al formulario. Si la escritura se confirma pero falla una consulta posterior, se informa que el préstamo fue registrado y se ofrece Actualizar, sin sugerir repetir la entrega.
+
+Esta corrección se verificó con 37 controles HTTP en una base aislada, incluyendo operador sin permisos de administración, revisión de una unidad, exclusión de prestadas, devolución y rechazo de duplicados. En navegador se reprodujo la apertura con 56 pendientes y cero disponibles, se revisó una unidad, se registró su préstamo y devolución y se registró otra entrega con el operador limitado. El HTML y las hojas CSS originales no cambian.

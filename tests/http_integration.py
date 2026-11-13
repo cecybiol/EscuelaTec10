@@ -24,6 +24,7 @@ results=[]
 def check(name,fn):
  fn();results.append(name);print('PASS',name,flush=True)
 c=Client();check('Anonymous data rejected (401)',lambda:c.call('objetos',expected=401))
+check('Anonymous loan options rejected',lambda:c.call('prestamos_opciones',expected=401))
 check('Wrong password rejected',lambda:c.call('sesion','POST',{'id':'USR-003','clave':'wrong'},401))
 c.login('USR-003',password)
 check('Session persists',lambda:c.call('sesion'))
@@ -45,6 +46,17 @@ tool={**obj,'nombre':'TESTER '+suffix,'tipo':'herramienta','modo_control':'indiv
 tid=c.call('objetos','POST',tool,201)['id']
 units=[]
 for i in range(2):units.append(c.call('detalle_objeto','POST',{'objeto_id':tid,'estado':'disponible','ubicacion':'Mesa','qr':'','numero_serie':str(i),'observaciones':''},201)['id'])
+pending=c.call('detalle_objeto','POST',{'objeto_id':tid,'estado':'pendiente','ubicacion':'Revisión','qr':'SI','numero_serie':'SERIE-PENDIENTE','observaciones':'Conservar esta nota'},201)['id']
+options=c.call('prestamos_opciones')
+assert pending not in [u['id'] for u in options['unidades']]
+assert pending in [u['id'] for u in options['revision']]
+assert options['diagnostico']['pendientes']>=1
+assert all(set(u)=={'id','alias'} for u in options['solicitantes'])
+results.append('Pending units explained and excluded; borrower fields minimal')
+c.call('detalle_objeto','PUT',{'id':pending,'estado':'disponible','ubicacion':'Revisión','qr':'SI','numero_serie':'SERIE-PENDIENTE','observaciones':'Conservar esta nota'})
+assert pending in [u['id'] for u in c.call('prestamos_opciones')['unidades']]
+results.append('Reviewed unit becomes selectable')
+c.call('detalle_objeto','PUT',{'id':pending,'estado':'en_reparacion','ubicacion':'Revisión','qr':'SI','numero_serie':'SERIE-PENDIENTE','observaciones':'Conservar esta nota'})
 check('Catalog QR resolves',lambda:c.call('qr?id='+tid))
 assert c.call('qr?id='+units[0])['ejemplar']['id']==units[0];results.append('Unit QR resolves')
 check('Unknown QR returns 404',lambda:c.call('qr?id=NO-EXISTE',expected=404))
@@ -52,11 +64,25 @@ readerPass=secrets.token_urlsafe(20)
 rid=c.call('usuarios','POST',{'alias':'Lector '+suffix,'rol_id':'3','clave':readerPass},201)['id']
 other=c.call('usuarios','POST',{'alias':'Otro '+suffix,'rol_id':'3'},201)['id']
 reader=Client();reader.login(rid,readerPass)
+check('Reader cannot obtain loan options',lambda:reader.call('prestamos_opciones',expected=403))
 check('Reader cannot write',lambda:reader.call('objetos','POST',obj,403))
 check('Reader cannot manage users',lambda:reader.call('usuarios',expected=403))
 check('Reader may query QR',lambda:reader.call('qr?id='+oid))
 future=(datetime.date.today()+datetime.timedelta(days=7)).isoformat()
-pid=c.call('prestamos','POST',{'solicitante_id':rid,'fecha_prevista':future,'unidades':units,'observaciones':'Dos unidades'},201)['id']
+operator=c
+limited_id=None
+if os.environ.get('ET10_TEST_LOAN_ROLE_ID'):
+ limited_password=secrets.token_urlsafe(20)
+ limited_id=c.call('usuarios','POST',{'alias':'Prestamista '+suffix,'rol_id':os.environ['ET10_TEST_LOAN_ROLE_ID'],'clave':limited_password},201)['id']
+ operator=Client();operator.login(limited_id,limited_password)
+ check('Loan operator cannot list administration users',lambda:operator.call('usuarios',expected=403))
+ check('Loan operator cannot list inventory endpoint',lambda:operator.call('detalle_objeto',expected=403))
+ limited_options=operator.call('prestamos_opciones')
+ assert limited_options['unidades'] and limited_options['solicitantes'] and not limited_options['revision']
+ results.append('Loan options work without users.ver or objetos.ver')
+pid=operator.call('prestamos','POST',{'solicitante_id':rid,'fecha_prevista':future,'unidades':units,'observaciones':'Dos unidades'},201)['id']
+assert all(u['id'] not in units for u in operator.call('prestamos_opciones')['unidades'])
+results.append('Lent units removed from options')
 check('Same unit cannot be lent twice',lambda:c.call('prestamos','POST',{'solicitante_id':other,'fecha_prevista':future,'unidades':[units[0]],'observaciones':''},409))
 check('Cannot deactivate lent catalog',lambda:c.call('objetos','DELETE',{'id':tid},409))
 check('Cannot alter lent unit',lambda:c.call('detalle_objeto','PUT',{'id':units[0],'estado':'baja','ubicacion':'','qr':'','numero_serie':'','observaciones':''},409))
@@ -66,6 +92,8 @@ assert all(p['solicitante_id']==rid for p in reader.call('prestamos'));results.a
 summary=c.call('dashboard');assert len([p for p in summary['prestamos'] if str(p['id'])==str(pid)])==1;results.append('Dashboard counts one loan for two units')
 c.call('prestamos','PUT',{'detalle_id':str(active[0]['detalle_id'])})
 remaining=[p for p in c.call('prestamos') if str(p['id'])==str(pid)];assert sum(p['estado']=='devuelto' for p in remaining)==1;results.append('Partial return leaves other unit open')
+assert active[0]['detalle_objeto_id'] in [u['id'] for u in operator.call('prestamos_opciones')['unidades']]
+results.append('Returned unit restored to options')
 check('Repeated return rejected',lambda:c.call('prestamos','PUT',{'detalle_id':str(active[0]['detalle_id'])},409))
 check('Own role permission mutation blocked',lambda:c.call('permisos','PUT',{'rol_id':'1','permisos':[]},409))
 perms=c.call('permisos');role3=[{'codigo':p['codigo'],'alcance':p['alcance']} for p in perms if str(p['rol_id'])=='3']
@@ -74,5 +102,6 @@ c.call('prestamos','PUT',{'detalle_id':str(active[1]['detalle_id'])})
 c.call('objetos','DELETE',{'id':tid});check('Inactive QR hidden',lambda:c.call('qr?id='+tid,expected=404))
 c.call('usuarios','DELETE',{'id':rid});check('Deactivated account session rejected',lambda:reader.call('sesion',expected=401))
 c.call('objetos','DELETE',{'id':oid});c.call('usuarios','DELETE',{'id':other})
+if limited_id:c.call('usuarios','DELETE',{'id':limited_id})
 c.call('sesion','DELETE');check('Logout removes access',lambda:c.call('objetos',expected=401))
 print(json.dumps({'passed':len(results),'checks':results},ensure_ascii=False,indent=2))
