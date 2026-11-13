@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded',()=>run(async()=>{
  async function mostrarDetalle(h){
   seleccionada=h;$('#detalle-titulo').textContent=h.nombre;$('#campo-nombre').value=h.nombre;$('#campo-ubicacion').value=h.ubicacion;$('#campo-notas').value=h.notas;configurarEstado($('#campo-estado'),estadoTexto(h));
   for(const el of [$('#campo-nombre'),$('#campo-ubicacion'),$('#campo-notas')])el.readOnly=!puede('objetos.editar');$('#btn-guardar-cambios').hidden=!puede('objetos.editar');
-  let acciones=$('#bd-herramienta-acciones');if(!acciones){acciones=document.createElement('div');acciones.id='bd-herramienta-acciones';acciones.className='detalle-footer';$('#panel-info').append(acciones);}acciones.replaceChildren(action('Ejemplares / QR',()=>verFichaQR(h.id)));
+  let acciones=$('#bd-herramienta-acciones');if(!acciones){acciones=document.createElement('div');acciones.id='bd-herramienta-acciones';acciones.className='detalle-footer';$('#panel-info').append(acciones);}acciones.replaceChildren(action('Ejemplares / QR',()=>verFichaQR(h.id)));if(puede('objetos.editar'))acciones.append(action('Stock inicial',()=>establecerStockInicial(h),'secondary'));
   if(puede('objetos.baja'))acciones.append(action('Dar de baja',async()=>{if(confirm('¿Dar de baja '+h.nombre+'? Se conserva su historial.')){await eliminarObjeto(h.id);mostrarLista();await cargar();}},'danger'));
   activarTab(false);listado.style.display='none';detalle.style.display='block';await mostrarHistorial(h);
  }

@@ -105,3 +105,20 @@ Con permisos de catálogo y edición se puede usar **Revisar ejemplares pendient
 La fecha prevista se inicializa al día de San Luis y la cantidad se calcula según los ejemplares seleccionados. Los errores quedan visibles junto al formulario. Si la escritura se confirma pero falla una consulta posterior, se informa que el préstamo fue registrado y se ofrece Actualizar, sin sugerir repetir la entrega.
 
 Esta corrección se verificó con 37 controles HTTP en una base aislada, incluyendo operador sin permisos de administración, revisión de una unidad, exclusión de prestadas, devolución y rechazo de duplicados. En navegador se reprodujo la apertura con 56 pendientes y cero disponibles, se revisó una unidad, se registró su préstamo y devolución y se registró otra entrega con el operador limitado. El HTML y las hojas CSS originales no cambian.
+
+
+### Stock inicial y préstamo por QR de cada unidad
+
+En Herramientas, abrir la herramienta y elegir **Stock inicial**. Ingresar el total físico, revisar la ubicación y confirmar el recuento. Al aumentar el total se crean solo los ejemplares faltantes; cada uno recibe su ID y etiqueta desde **Ejemplares / QR**. Las unidades existentes conservan sus códigos. Para reducir el total hay que seleccionar expresamente cuáles quedan de baja. Solo marcar disponibles los ejemplares revisados y aptos.
+
+En Insumos, usar **Stock inicial** para establecer el saldo y su unidad de medida. Repetir el mismo total no suma cantidades. Cada diferencia queda auditada en movimientos con prefijo reservado `APERTURA:`. Después del primer ingreso/egreso de uso, las correcciones se hacen con movimientos normales y su motivo. Las herramientas con historial de préstamos se gestionan por ejemplar. No se requieren migraciones SQL.
+
+En Préstamos: elegir el solicitante, escanear el QR de cada unidad, completar la fecha prevista y registrar. El campo acepta lector USB, código escrito, cámara o foto del QR. Enter agrega la unidad sin enviar el formulario. Cada lectura consulta MariaDB mediante `prestamo_qr.php`, completa nombre/ID/serie/ubicación y suma una única unidad a la selección. Las lecturas repetidas no duplican unidades; los QR de catálogo, unidades pendientes, en reparación, de baja o prestadas se rechazan. Al guardar se vuelve a validar disponibilidad dentro de la transacción.
+
+Si una etiqueta existente contiene un código distinto al ID del ejemplar, vincularlo desde **Ejemplares / QR → Editar → Código de la etiqueta QR existente** (máximo 20 caracteres, según el esquema existente). Un código no puede vincularse a dos unidades. El préstamo acepta códigos directos y enlaces a la ficha de una unidad.
+
+La cámara requiere HTTPS o localhost y permiso del navegador. En una PC de la red con HTTP se puede usar lector USB, introducir el código o cargar una foto. El lector y el generador de QR se sirven localmente, sin depender de una CDN.
+
+Validación: 52 controles HTTP pasaron en PHP 8.4 y MariaDB 11.8 sobre una base descartable. Cubren apertura idempotente, recuento entero, bajas explícitas, revisión, bloqueo de apertura tras movimientos/préstamos, códigos y enlaces QR, etiquetas duplicadas, permisos limitados, préstamo y devolución. La base escolar y su configuración privada no se modificaron.
+
+En navegador se comprobó el recuento de 2 a 3 ejemplares conservando HER-020-1 y HER-020-2, habilitación por revisión expresa, saldo de insumo con unidad de medida, bloqueo de escaneo sin solicitante, agregado de dos unidades por código y foto QR, rechazo del escaneo repetido, registro del préstamo y devolución parcial. Las cinco hojas CSS originales y el cuerpo HTML de los cinco módulos permanecen iguales a la versión estudiantil (con la corrección previa del logo de Insumos). La cámara física queda pendiente de prueba en el dispositivo de exposición.

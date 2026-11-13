@@ -1,6 +1,7 @@
 <?php
 require __DIR__.'/comun.php';metodo(['POST']);$u=exigirPermiso('stock.mover');$d=datos();
 $id=texto($d,'id',40);$tipo=opcion($d,'tipo',['ingreso','egreso']);$cant=numero($d,'cantidad',true);$motivo=texto($d,'motivo',180);
+if(preg_match('/^APERTURA:/i',$motivo))responder(['error'=>'El prefijo APERTURA está reservado para el recuento inicial'],400);
 $pdo->beginTransaction();$o=consulta("SELECT stock_actual,unidad FROM objetos WHERE id=? AND activo=1 AND modo_control='cantidad' FOR UPDATE",[$id])->fetch();
 if(!$o||!$o['unidad']){$pdo->rollBack();responder(['error'=>'Definir artículo y unidad de medida'],400);}
 if($tipo==='egreso'&&$cant>(float)$o['stock_actual']){$pdo->rollBack();responder(['error'=>'Stock insuficiente'],409);}

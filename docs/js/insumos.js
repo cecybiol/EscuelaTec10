@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded',()=>run(async()=>{
   visibles.forEach(i=>{
    const tr=document.createElement('tr');tr.innerHTML=`<td><strong>${esc(i.nombre)}</strong><br><small>${esc(i.id)}</small></td><td>${esc(i.categoria)}</td><td>${esc(i.stock??'Sin saldo')} ${esc(i.unidad??'(sin unidad definida)')}</td><td><span class="status-tag tag-${estadoClase(i)}">${esc(i.obtenerEstado())}</span></td><td></td>`;
    const td=tr.lastElementChild;if(puede('objetos.editar'))td.append(action('Editar',()=>editarFichaCantidad(i),'btn-sm'));
-   if(puede('stock.mover')&&i.modo_control==='cantidad')td.append(action('Ingreso / egreso',()=>stock(i),'btn-sm'));
+   if(puede('stock.mover')&&i.modo_control==='cantidad')td.append(action('Stock inicial',()=>establecerStockInicial(i),'btn-sm'),action('Ingreso / egreso',()=>stock(i),'btn-sm'));
    td.append(action('QR',()=>verFichaQR(i.id),'btn-sm'));
    if(puede('objetos.baja'))td.append(action('Dar de baja',async()=>{if(confirm('¿Dar de baja '+i.nombre+'?')){await eliminarObjeto(i.id);await cargarInsumos();}},'btn-sm'));
    tbody.append(tr);

@@ -9,11 +9,13 @@ if ($m==='GET') {
  $filas=consulta("SELECT id,id AS codigo,nombre,tipo,modo_control,categoria,ubicacion,unidad,stock_actual AS stock,stock_minimo AS stockMinimo,notas,fecha_creacion AS fechaCreacion FROM objetos WHERE activo=1 AND (?='' OR tipo=?) AND nombre LIKE ? ORDER BY nombre",[$tipo,$tipo,'%'.$q.'%'])->fetchAll();
  foreach($filas as &$o) {
   $o['stock']=$o['stock']===null?null:(float)$o['stock']; $o['stockMinimo']=$o['stockMinimo']===null?null:(float)$o['stockMinimo'];
-  $o['unidades']=consulta('SELECT id,ubicacion,estado,qr,numero_serie FROM detalle_objeto WHERE objeto_id=?',[$o['id']])->fetchAll();
+  $o['unidades']=consulta('SELECT e.id,e.ubicacion,e.estado,e.qr,e.numero_serie,EXISTS(SELECT 1 FROM detalle_prestamo p WHERE p.detalle_objeto_id=e.id AND p.fecha_devolucion IS NULL) AS prestado FROM detalle_objeto e WHERE e.objeto_id=?',[$o['id']])->fetchAll();
   $o['cantidadTotal']=count($o['unidades']);
+  $o['cantidadActiva']=count(array_filter($o['unidades'],fn($u)=>$u['estado']!=='baja'));
   $libres=(int)consulta("SELECT COUNT(*) FROM detalle_objeto e WHERE e.objeto_id=? AND e.estado='disponible' AND NOT EXISTS(SELECT 1 FROM detalle_prestamo d WHERE d.detalle_objeto_id=e.id AND d.fecha_devolucion IS NULL)",[$o['id']])->fetchColumn();
+  $o['cantidadDisponible']=$libres;
   $o['estado']=$libres>0?'disponible':'sin_disponibilidad';
-  $o['cantidad']=$o['modo_control']==='individual'?$o['cantidadTotal']:$o['stock'];
+  $o['cantidad']=$o['modo_control']==='individual'?$o['cantidadActiva']:$o['stock'];
  }
  responder($filas);
 }

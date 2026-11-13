@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded',()=>run(async()=>{
  if(!await prepararModulo('prestamos.ver'))return;
  const form=$('#formulario'),historial=$('#historial'),registrar=$('#btn-registrar');
  const puedeCrear=puede('prestamos.crear');
- let prestamos=[],opciones=null,cargando=false,guardando=false;
+ let prestamos=[],opciones=null,cargando=false,guardando=false,escaneando=false;
  const anterior=$('#solicitante'),solicitante=document.createElement('select');
  solicitante.id=anterior.id;solicitante.className=anterior.className;solicitante.required=true;anterior.replaceWith(solicitante);
  const item=$('#item');item.multiple=true;item.size=4;
@@ -19,13 +19,29 @@ document.addEventListener('DOMContentLoaded',()=>run(async()=>{
  const acciones=document.createElement('div');acciones.className='form-group';ayuda.after(acciones);
  const mensaje=document.createElement('p');mensaje.id='prestamos-mensaje';mensaje.setAttribute('role','status');mensaje.setAttribute('aria-live','polite');form.prepend(mensaje);
  function informar(texto,tipo='info'){mensaje.textContent=texto;mensaje.className='estado-datos__msg estado-datos__msg--'+(tipo==='error'?'error':'info');}
- function actualizarBoton(){registrar.disabled=!puedeCrear||cargando||guardando||!opciones?.unidades.length||!opciones?.solicitantes.length;}
+ function actualizarBoton(){registrar.disabled=!puedeCrear||cargando||guardando||escaneando||!opciones?.unidades.length||!opciones?.solicitantes.length||!solicitante.value||!seleccionadas().length;}
  const seleccionadas=()=>[...item.selectedOptions].map(o=>o.value).filter(Boolean);
- item.addEventListener('change',()=>{cantidad.value=seleccionadas().length;});
+ item.addEventListener('change',()=>{cantidad.value=seleccionadas().length;actualizarBoton();});
+ solicitante.addEventListener('change',actualizarBoton);
  form.closest('section').hidden=!puedeCrear;
  registrar.disabled=true;
+ const escaner=instalarEscanerPrestamo({form,item,solicitante,informar,agregar:async codigo=>{
+  if(guardando||cargando)throw new Error('Esperá a que termine la operación actual.');
+  if(!solicitante.value)throw new Error('Primero seleccioná el usuario que recibe el préstamo.');
+  escaneando=true;actualizarBoton();
+  try{
+  const {ejemplar:u}=await api('prestamo_qr',{params:{codigo}});
+  if(seleccionadas().includes(u.id)){informar('El ejemplar '+u.id+' ya está seleccionado.');return;}
+  if(seleccionadas().length>=100)throw new Error('Se permiten hasta 100 ejemplares por entrega.');
+  let opt=[...item.options].find(x=>x.value===u.id);
+  if(!opt){opt=new Option(u.nombre+' · '+u.id+(u.ubicacion?' · '+u.ubicacion:''),u.id);item.add(opt);opciones.unidades.push(u);}
+  opt.selected=true;item.disabled=false;cantidad.value=seleccionadas().length;actualizarBoton();
+  informar('Agregado: '+u.nombre+' · '+u.id+(u.numero_serie?' · serie '+u.numero_serie:'')+(u.ubicacion?' · '+u.ubicacion:''));
+  }finally{escaneando=false;actualizarBoton();}
+ }});
  async function cargarOpciones(preferida=null){
   if(!puedeCrear)return;
+  const seleccionPrevia=new Set(seleccionadas());
   cargando=true;opciones=null;actualizarBoton();solicitante.disabled=item.disabled=true;
   const solicitantePrevio=solicitante.value;
   solicitante.replaceChildren(new Option('Cargando solicitantes…',''));item.replaceChildren();cantidad.value=0;
@@ -36,13 +52,13 @@ document.addEventListener('DOMContentLoaded',()=>run(async()=>{
    datos.solicitantes.forEach(u=>solicitante.add(new Option(u.alias+' · '+u.id,u.id)));
    if(datos.solicitantes.some(u=>u.id===solicitantePrevio))solicitante.value=solicitantePrevio;
    else if(datos.solicitantes.length===1)solicitante.value=datos.solicitantes[0].id;
-   datos.unidades.forEach(u=>{const opt=new Option(u.nombre+' · '+u.id+(u.ubicacion?' · '+u.ubicacion:''),u.id);opt.selected=u.id===preferida;item.add(opt);});
+   datos.unidades.forEach(u=>{const opt=new Option(u.nombre+' · '+u.id+(u.ubicacion?' · '+u.ubicacion:''),u.id);opt.selected=u.id===preferida||seleccionPrevia.has(u.id);item.add(opt);});
    cantidad.value=seleccionadas().length;
    const d=datos.diagnostico;
    if(!datos.solicitantes.length)ayuda.textContent='No hay solicitantes activos. Un administrador debe registrar al menos uno.';
    else if(!datos.unidades.length){
     ayuda.textContent=!d.ejemplares?'No hay ejemplares físicos registrados. Crear una ficha no crea sus unidades: agregalas en Herramientas → Ejemplares / QR.':`No hay ejemplares disponibles: ${d.pendientes} pendientes de revisión, ${d.prestados} prestados, ${d.en_reparacion} en reparación y ${d.baja} de baja.`;
-   }else ayuda.textContent=`${datos.unidades.length} ejemplar(es) disponible(s). Seleccioná las unidades a prestar; para elegir varias, usá Ctrl o Cmd. La cantidad se calcula según la selección.`;
+   }else ayuda.textContent=`${datos.unidades.length} ejemplar(es) disponible(s). Elegí el solicitante y escaneá cada QR. También podés seleccionar las unidades de la lista con Ctrl o Cmd. La cantidad se calcula según la selección.`;
    if(datos.revision.length)acciones.append(action('Revisar ejemplares pendientes',revisarEjemplar,'btn-secondary'));
    if(puede('objetos.ver')&&!datos.unidades.length)acciones.append(action('Abrir Herramientas',()=>location.assign('herramientas.html'),'btn-secondary'));
   }catch(e){opciones=null;solicitante.replaceChildren(new Option('No se pudieron cargar los solicitantes',''));ayuda.textContent='No se pudieron consultar las opciones del préstamo.';informar(e.message,'error');throw e;}
@@ -92,12 +108,13 @@ document.addEventListener('DOMContentLoaded',()=>run(async()=>{
  const actualizar=action('Actualizar',()=>run(recargarModulo),'btn-secondary');$('#buscar-prestamo').closest('label').after(actualizar);
  form.addEventListener('invalid',e=>{informar('Completá los campos obligatorios: solicitante, ejemplares y fecha prevista de devolución.','error');},true);
  form.addEventListener('submit',async e=>{
-  e.preventDefault();if(guardando)return;
+  e.preventDefault();if(guardando||escaneando)return;
   const unidades=seleccionadas();
   if(!solicitante.value||!unidades.length||!fecha.value){informar('Seleccioná un solicitante, al menos un ejemplar y la fecha prevista.','error');return;}
   if(unidades.length>100){informar('Se pueden prestar hasta 100 ejemplares por entrega.','error');return;}
   guardando=true;actualizarBoton();informar('Registrando préstamo…');
   try{
+   await escaner.detener();
    const resultado=await crearPrestamo({solicitante_id:solicitante.value,fecha_prevista:fecha.value,unidades,observaciones:$('#observaciones').value});
    form.reset();fecha.min=fecha.value=hoy();cantidad.value=0;
    await refrescarDespues('Préstamo '+resultado.id+' registrado correctamente.');
@@ -108,3 +125,37 @@ document.addEventListener('DOMContentLoaded',()=>run(async()=>{
  const inicial=await Promise.allSettled([cargarPrestamos(),cargarOpciones()]);
  inicial.filter(r=>r.status==='rejected').forEach(r=>status(r.reason.message,'error'));
 }));
+
+function instalarEscanerPrestamo({form,item,solicitante,informar,agregar}){
+ const grupo=document.createElement('div');grupo.className='form-group';
+ grupo.innerHTML='<label for="prestamo-codigo">QR de la unidad:</label><input id="prestamo-codigo" class="input" autocomplete="off" placeholder="Escaneá o escribí el código de la unidad"><div id="prestamo-qr-acciones"></div><label>Leer una foto del QR<input id="prestamo-qr-imagen" type="file" accept="image/*"></label><div id="prestamo-qr-lector"></div>';
+ item.closest('.form-group').before(grupo);
+ const campo=grupo.querySelector('#prestamo-codigo'),imagen=grupo.querySelector('#prestamo-qr-imagen');
+ let lector=null,activo=false,iniciando=false,leyendo=false,ultimo='',instante=0;
+ function verificar(){if(!solicitante.value)throw new Error('Primero seleccioná el usuario que recibe el préstamo.');}
+ async function leer(codigo){
+  verificar();if(leyendo)return;codigo=String(codigo??'').trim();
+  if(!codigo)throw new Error('Escaneá o ingresá el código de una unidad.');
+  leyendo=true;
+  try{await agregar(codigo);campo.value='';}catch(e){informar(e.message,'error');throw e;}finally{leyendo=false;}
+ }
+ async function detener(){if(activo&&lector){await lector.stop();activo=false;} }
+ function crearLector(){if(typeof Html5Qrcode==='undefined')throw new Error('No se pudo cargar el lector QR. Usá el código escrito o el lector USB.');if(!lector)lector=new Html5Qrcode('prestamo-qr-lector');return lector;}
+ const agregarBoton=action('Agregar QR',()=>leer(campo.value),'secondary');
+ const camara=action('Usar cámara',async()=>{
+  verificar();if(activo||iniciando)return;
+  if(!window.isSecureContext)throw new Error('La cámara necesita HTTPS o localhost. Podés cargar una foto del QR o usar un lector USB.');
+  iniciando=true;camara.disabled=true;
+  try{await crearLector().start({facingMode:'environment'},{fps:10,qrbox:{width:220,height:220}},codigo=>{
+   if(leyendo||(codigo===ultimo&&Date.now()-instante<2000))return;
+   ultimo=codigo;instante=Date.now();run(()=>leer(codigo));
+  },()=>{});activo=true;informar('Cámara activa. Escaneá los QR de las unidades que vas a prestar.');}
+  catch(e){informar('No se pudo iniciar la cámara. Revisá el permiso del navegador o usá una foto/lector USB.','error');throw e;}
+  finally{iniciando=false;camara.disabled=false;}
+ },'secondary');
+ grupo.querySelector('#prestamo-qr-acciones').append(agregarBoton,camara,action('Detener cámara',detener,'secondary'));
+ campo.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();run(()=>leer(campo.value));}});
+ imagen.addEventListener('change',()=>run(async()=>{try{verificar();const archivo=imagen.files[0];if(!archivo)return;await detener();const codigo=await crearLector().scanFile(archivo,true);await leer(codigo);}catch(e){informar(e.message,'error');throw e;}finally{imagen.value='';}}));
+ window.addEventListener('pagehide',()=>{detener().catch(()=>{});});
+ return {detener};
+}
