@@ -131,7 +131,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   
 
-
   let herramientaSeleccionada = null; 
   let herramientas = [];
 
@@ -353,19 +352,54 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
+  
       try {
-        // Intenta guardar a través del repositorio
-        if (typeof guardarHerramienta === 'function') {
-          await guardarHerramienta(datosFormulario);
+          const base = herramientaSeleccionada
+            ? (await listarHerramientas()).find(
+                x => x.id === herramientaSeleccionada.id)
+            : {};
+          if (herramientaSeleccionada && !base) {
+            throw new Error('La ficha ya no está disponible');
+          }
+    
+          const datosFormulario = {
+            ...base,
+            nombre: campoNombre.value.trim(),
+            ubicacion: campoUbicacion.value.trim(),
+            notas: campoNotas.value.trim(),
+            categoria: base.categoria ?? 'Herramientas'
+          };
+    
+          if (typeof guardarHerramienta === 'function') {
+            await guardarHerramienta(datosFormulario);
+          }
+          await cargarYRenderizar();
+          mostrarVistaListado();
+        } catch (err) {
+          alert(`Error al guardar: ${err.message}`);
         }
 
-        await cargarYRenderizar();
-        mostrarVistaListado();
-      } catch (err) {
-        alert(`Error al guardar: ${err.message}`);
-      }
+        const btnBaja = document.querySelector('#btn-baja-herramienta');
+        if (btnBaja) {
+          btnBaja.addEventListener('click', async () => {
+            if (!herramientaSeleccionada) return;
+            if (confirm('¿Estás segura de dar de baja esta herramienta?')) {
+              try {
+                await eliminarObjeto(herramientaSeleccionada.id);
+                await cargarYRenderizar();
+                mostrarVistaListado();
+              } catch (error) {
+                showAlert(error.message, 'error');
+              }
+            }
+          });
+        }
+
+
     });
   }
+
+  
 
   if (inputBuscar) {
     inputBuscar.addEventListener('input', (e) => renderizarHerramientas(e.target.value));
