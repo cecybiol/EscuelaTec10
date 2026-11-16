@@ -337,15 +337,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     formEditar.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const datosFormulario = {
-        id: herramientaSeleccionada ? herramientaSeleccionada.id : null,
-        nombre: campoNombre ? campoNombre.value.trim() : '',
-        estado: campoEstado ? campoEstado.value : 'disponible',
-        ubicacion: campoUbicacion ? campoUbicacion.value.trim() : '',
-        notas: campoNotas ? campoNotas.value.trim() : '',
-        categoria: 'Herramientas',
-        unidades: herramientaSeleccionada ? herramientaSeleccionada.unidades : []
-      };
+    
 
       if (!datosFormulario.nombre) {
         alert("El nombre de la herramienta es obligatorio.");
@@ -379,34 +371,40 @@ document.addEventListener('DOMContentLoaded', async () => {
           alert(`Error al guardar: ${err.message}`);
         }
 
-        const btnBaja = document.querySelector('#btn-baja-herramienta');
-        if (btnBaja) {
-          btnBaja.addEventListener('click', async () => {
-            if (!herramientaSeleccionada) return;
-            if (confirm('¿Estás segura de dar de baja esta herramienta?')) {
-              try {
-                await eliminarObjeto(herramientaSeleccionada.id);
-                await cargarYRenderizar();
-                mostrarVistaListado();
-              } catch (error) {
-                showAlert(error.message, 'error');
-              }
-            }
-          });
-        }
+       
 
 
     });
   }
 
-  
+
 
   if (inputBuscar) {
     inputBuscar.addEventListener('input', (e) => renderizarHerramientas(e.target.value));
-  }
+  
+  
+  
+}
 
+  
   if (btnVolver) btnVolver.addEventListener('click', mostrarVistaListado);
   if (btnCancelarEdicion) btnCancelarEdicion.addEventListener('click', mostrarVistaListado);
+
+  const btnBaja = document.querySelector('#btn-baja-herramienta');
+  if (btnBaja) {
+    btnBaja.addEventListener('click', async () => {
+      if (!herramientaSeleccionada) return;
+      if (confirm('¿Estás segura de dar de baja esta herramienta?')) {
+        try {
+          await eliminarObjeto(herramientaSeleccionada.id);
+          await cargarYRenderizar();
+          mostrarVistaListado();
+        } catch (error) {
+          showAlert(error.message, 'error');
+        }
+      }
+    });
+  }
 
   // TABS
   const activarTabInfo = () => {
