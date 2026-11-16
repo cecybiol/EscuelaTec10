@@ -70,6 +70,13 @@ class Herramienta extends ItemInventario {
 // =================================================================
 document.addEventListener('DOMContentLoaded', async () => {
 
+  try {
+    if (!await comprobarSesion()) return;
+  } catch (error) {
+    showAlert(error.message, 'error');
+    return;
+  }
+
   const vistaListado = document.getElementById('vista-lista') || document.getElementById('herramientas');
   const vistaDetalle = document.getElementById('vista-detalle');
   
@@ -94,6 +101,36 @@ document.addEventListener('DOMContentLoaded', async () => {
   const tabHistorial = document.getElementById('tab-historial');
   const panelInfo = document.getElementById('panel-info');
   const panelHistorial = document.getElementById('panel-historial');
+
+  document.querySelector('#form-ejemplar')
+  .addEventListener('submit', async evento => {
+    evento.preventDefault();
+    if (!herramientaSeleccionada) {
+      showAlert('Primero guardar y seleccionar la ficha', 'error');
+      return;
+    }
+    try {
+      const idCatalogo = herramientaSeleccionada.id;
+      await api('detalle_objeto', {
+        metodo: 'POST', 
+        datos: {
+          objeto_id: idCatalogo,
+          estado: 'disponible', 
+          qr: 'FALTO',
+          ubicacion: document.querySelector('#ej-ubicacion').value,
+          numero_serie: '', 
+          observaciones: ''
+        }
+      });
+      await cargarYRenderizar();
+      mostrarVistaDetalle(herramientas.find(x => x.id === idCatalogo));
+      aplicarPermisos();
+    } catch (error) { 
+      showAlert(error.message, 'error'); 
+    }
+  });
+  
+
 
   let herramientaSeleccionada = null; 
   let herramientas = [];
@@ -274,20 +311,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
-  // CARGA DESDE REPOSITORIO (COMPARTIDO O FALLBACK)
-  const cargarYRenderizar = async () => {
+   // CARGA DESDE LA API CENTRALIZADA
+   const cargaryRenderizar = async () => {
     mostrarCargando();
-
     try {
-      if (typeof initStorage === 'function') {
-        await initStorage();
-      }
-
-      // Usa la función del repositorio para obtener el catálogo
       const rawData = typeof listarHerramientas === 'function' 
         ? await listarHerramientas() 
         : (typeof getCollection === 'function' ? getCollection('herramientas') : []);
-
+      
       herramientas = rawData.map(item => new Herramienta(item));
       renderizarHerramientas();
     } catch (err) {
@@ -295,6 +326,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       mostrarError(err.message || 'Error al conectar con el catálogo compartido.');
     }
   };
+
 
   // BOTÓN + NUEVA HERRAMIENTA
   if (btnNuevaHerramienta) {
