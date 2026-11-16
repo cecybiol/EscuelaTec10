@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     listaInsumos.forEach(item => {
       const opcion = new Option(
-        item.nombre + ' (' + (item.unidad ?? 'sin unidad') + ')',
+        item.nombre + ' (' + (item.unidad || 'sin unidad') + ')',
         item.id
       );
       opcion.disabled = !item.unidad;
@@ -159,28 +159,51 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 4. DELEGACIÓN DE EVENTOS EN LA TABLA (Edición / Baja)
   document.addEventListener('click', async (e) => {
-    const btnEdit = e.target.closest('.btn-sm, .btn-edit');
-    if (btnEdit && tbodyInsumos && tbodyInsumos.contains(btnEdit)) {
-      e.preventDefault();
-      const fila = btnEdit.closest('tr');
-      const idInsumo = fila?.dataset.id;
-      const itemEncontrado = listaInsumos.find(i => String(i.id) === String(idInsumo));
-      
-      if (!itemEncontrado) return;
+    const btnDelete = e.target.closest('.btn-delete');
+    const btnEdit = e.target.closest('.btn-edit');
 
-      const nuevoNombre = prompt('Editar nombre del insumo:', itemEncontrado.nombre);
-      if (nuevoNombre === null) return;
+    if (!tbodyInsumos) return;
+
+    const boton = btnDelete || btnEdit;
+    if (!boton || !tbodyInsumos.contains(boton)) return;
+
+    e.preventDefault();
+
+    const fila = boton.closest('tr');
+    const idInsumo = fila ? fila.dataset.id : null;
+    const itemEncontrado = listaInsumos.find(i => String(i.id) === String(idInsumo));
+
+    if (!itemEncontrado) return;
+
+    if (btnDelete) {
+      if (!confirm(`¿Seguro que deseas eliminar "${itemEncontrado.nombre}"?`)) return;
 
       try {
-        await guardarObjeto({
-          ...itemEncontrado.ficha,
-          nombre: nuevoNombre.trim()
-        });
+        if (typeof eliminarObjeto !== 'function') {
+          throw new Error('La función eliminarObjeto no está disponible. Falta conectar api.js.');
+        }
+
+        await eliminarObjeto(idInsumo);
         await cargarInsumos();
-        notify('Insumo actualizado correctamente', 'success');
+        notify('Insumo eliminado correctamente', 'success');
       } catch (error) {
         notify(error.message, 'danger');
       }
+      return;
+    }
+
+    const nuevoNombre = prompt('Editar nombre del insumo:', itemEncontrado.nombre);
+    if (nuevoNombre === null || !nuevoNombre.trim()) return;
+
+    try {
+      await guardarObjeto({
+        ...itemEncontrado.ficha,
+        nombre: nuevoNombre.trim()
+      });
+      await cargarInsumos();
+      notify('Insumo actualizado correctamente', 'success');
+    } catch (error) {
+      notify(error.message, 'danger');
     }
   });
 });
@@ -196,7 +219,7 @@ function renderizarInsumos(datos) {
     tbody.replaceChildren();
 
     datos.forEach(item => {
-      const stock = item.cantidad !== undefined ? item.cantidad : (item.stockActual ?? item.stock ?? 0);
+      const stock = item.cantidad !== undefined ? item.cantidad : ((item.stockActual !== undefined && item.stockActual !== null ? item.stockActual : (item.stock !== undefined && item.stock !== null ? item.stock : 0)));
       const estado = typeof item.obtenerEstado === 'function' ? item.obtenerEstado() : (stock === 0 ? 'Critico' : stock < 5 ? 'Stock Bajo' : 'Normal');
 
       let tagClass = 'tag-success';
@@ -210,7 +233,7 @@ function renderizarInsumos(datos) {
         <td>${item.categoria || 'General'}</td>
         <td>${stock} ${item.unidad || 'unidades'}</td>
         <td><span class="status-tag ${tagClass}">${estado}</span></td>
-        <td><button type="button" class="btn-sm btn-edit">Editar</button></td>
+        <td><button type="button" class="btn-sm btn-edit">Editar</button><button type="button" class="btn-sm btn-delete">Eliminar</button></td>
       `;
       tbody.append(tr);
     });
@@ -220,7 +243,7 @@ function renderizarInsumos(datos) {
     lista.replaceChildren();
 
     datos.forEach(item => {
-      const stock = item.cantidad !== undefined ? item.cantidad : (item.stockActual ?? item.stock ?? 0);
+      const stock = item.cantidad !== undefined ? item.cantidad : ((item.stockActual !== undefined && item.stockActual !== null ? item.stockActual : (item.stock !== undefined && item.stock !== null ? item.stock : 0)));
       const fila = document.createElement('li');
       fila.textContent = `${item.nombre} · stock: ${stock}`;
       fila.dataset.id = item.id;
