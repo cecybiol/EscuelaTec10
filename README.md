@@ -1,276 +1,124 @@
-# EscuelaTEC10 — Sistema Integral de Gestión Escolar
-Proyecto Anual 2026 —Adaptación al Ambiente de Trabajo
-Plataforma web colaborativa para administrar herramientas, insumos, préstamos y
-usuarios, con una interfaz moderna, accesible y adaptable a dispositivos móviles.
-##
- 📌 Estado del proyecto
-Fase actual: **Etapa 1-3 (HTML + CSS base)**. Ver
-| Etapa | Tecnología | Estado |
-|---|---|---|
- | 1 | HTML5 + CSS3 |
- 🔄
- En curso |
-| 2 | JavaScript |
- ⏳
- Pendiente (Semana 4) |
-| 3 | POO |
- ⏳
- Pendiente |
-| 4 | APIs |
- ⏳
- Pendiente |
-| 5 | Firebase |
- ⏳
- Pendiente |
-| 6 | QR y Automatización |
- ⏳
- Pendiente |
-##
- 👥 Equipos y módulos
-| Equipo | Módulo | Rama | Archivo HTML | Componente compartido a cargo |
-|---|---|---|---|---|
-| Equipo 1 | Dashboard | `feature-dashboard` | `pages/dashboard.html` | Header,
-navbar/sidebar, `.btn`, `.card` |
-| Equipo 2 | Herramientas | `feature-herramientas` | `pages/herramientas.html` | — |
-| Equipo 3 | Insumos | `feature-insumos` | `pages/insumos.html` | `.table`, `.alert` |
-| Equipo 4 | Préstamos | `feature-prestamos` | `pages/prestamos.html` | `.form-group`, `.input`,
-`.select`, `.textarea` |
-| Equipo 5 | Administración | `feature-admin` | `pages/admin.html` | `.badge` |
-**Entrega Fase HTML/CSS:** 29 de junio de 2026.
-##
- 🌳 Estrategia de ramas
+# EscuelaTEC10 · Inventario del taller
+
+Versión integrada para PHP 8.1 o superior y MariaDB/MySQL con PDO MySQL. El navegador usa exclusivamente la API del mismo servidor para los datos del inventario. No necesita Internet para cargar los módulos ni para generar/decodificar QR.
+
+## Puesta en marcha en el servidor escolar
+
+1. Antes de actualizar, respaldar la base y conservar la configuración privada actual **fuera del repositorio y de la carpeta publicada**. El antiguo `privado/db.php` estaba versionado; esta actualización lo convierte en un cargador sin credenciales.
+2. Actualizar la rama `Deploy` y conservar la base existente. **No volver a importar los SQL de apertura.**
+3. Copiar `privado/config.local.php.example` como `privado/config.local.php` y completar host, puerto, nombre de base, usuario SQL y contraseña del servidor. Para XAMPP comprobar el puerto real de su MariaDB. La cuenta necesita SELECT, INSERT, UPDATE y DELETE sobre la base del inventario. El archivo está excluido de Git.
+4. Verificar que PHP tenga `PDO` y `pdo_mysql`. Puede usarse el PHP de XAMPP, por ejemplo `/opt/lampp/bin/php` si esa es su instalación.
+5. El VirtualHost o Alias de Apache debe publicar **solo `docs/`**. Conservar el dominio, otros sitios y manejador de PHP existentes. No publicar la raíz del repositorio. Ejemplo de rutas, a adaptar:
+
+```apache
+DocumentRoot /var/www/EscuelaTec10/docs
+<Directory /var/www/EscuelaTec10/docs>
+    Options -Indexes
+    AllowOverride None
+    Require all granted
+</Directory>
 ```
-main
- → versión estable / publicada en GitHub Pages
-└─ deploy
- → integración de todos los equipos
-├─ feature-dashboard
-├─ feature-herramientas
-├─ feature-insumos
-├─ feature-prestamos
-└─ feature-admin
-```
-Cada equipo trabaja **únicamente** en su rama `feature-*`, hace commits ahí
-(mínimo 8-10), y abre un Pull Request hacia `deploy` para que se revise e
-integre. `deploy` se fusiona a `main` cuando la fase está completa y
-validada.
-##
- 🚀 Cómo clonar y arrancar (paso a paso)
+
+Ejecutar `apache2ctl configtest` y recargar Apache solo si responde `Syntax OK`. En XAMPP aplicar el cambio mediante su Apache, sin iniciar otro servidor sobre el mismo puerto.
+
+6. Ejecutar `php cli/diagnostico.php`. Comprueba conexión y las ocho tablas; no modifica registros ni muestra contraseñas.
+7. Las cuentas SQL y las cuentas del sitio son distintas. Elegir un administrador activo de `usuarios` y configurar su contraseña por terminal:
+
 ```bash
-# 1. Cloná el repositorio
-git clone https://github.com/cecybiol/EscuelaTec10.git
-cd EscuelaTec10
-# 2. Traé todas las ramas remotas
-git fetch --all
-# 3. Movete a la rama deploy
-git checkout deploy
-# 4. Creá o movete a TU rama de equipo (ejemplo: Equipo 2 — Herramientas)
-git checkout feature-herramientas
-# Si la rama todavía no existe en tu copia local:
-# git checkout -b feature-herramientas origin/feature-herramientas
-# 5. Abrí el proyecto en VS Code
-code .
-# 6. Probá la página con Live Server
-# Click derecho sobre pages/herramientas.html → "Open with Live Server"
+read -r -s -p 'Contraseña del sitio (mínimo 12 caracteres): ' et10_clave
+printf '\n'
+printf '%s' "$et10_clave" | php cli/clave.php USR-003
+unset et10_clave
 ```
-### Flujo de trabajo diario
-```bash
-git checkout feature-herramientas # asegurate de estar en tu rama
-git pull origin feature-herramientas
-# ... trabajás, guardás cambios ...
-git add .
-git commit -m "feat(herramientas): agrego tabla de listado"
-git push origin feature-herramientas
-# Cuando tengas un avance importante: abrí un Pull Request hacia develop en GitHub
-```
-##
- 📁 Estructura del repositorio
-```
-escuelatec/
-├── index.html
-├── pages/
-│ ├── dashboard.html
-│ ├── herramientas.html
-│ ├── insumos.html
-│ ├── prestamos.html
-│ └── admin.html
-├── css/
-│ ├── variables.css (paleta institucional, tipografía, espaciado)
-│ ├── layout.css
- (container, header, navbar, sidebar, main-content)
-│ ├── components.css (.btn .card .table .form-group .input .alert .badge)
-│ └── responsive.css (media queries — mobile first)
-├── js/
-│ └── app.js
-├── assets/
-│ ├── img/ (logo.svg incluido)
-│ └── icons/
-├── data/
- (JSON de ejemplo: herramientas.json, insumos.json)
-├── docs/
-│ └── EscuelaTEC10_Guia_Wireframes.docx
-└── README.md
-```
-##
- 🎨 Identidad visual
-**Tipografía:** Poppins (400, 500, 600, 700) — importada desde Google Fonts en cada página.
-**Paleta institucional** (definida en `css/variables.css`):
-| Uso | Variable CSS | Hex |
-|---|---|---|
-| Principal | `--color-principal` | `#2496D8` |
-| Primario Oscuro | `--color-primario-oscuro` | `#1C78AD` |
-| Secundario | `--color-secundario` | `#4A6C82` |
-| Éxito | `--color-exito` | `#2E8B57` |
-| Advertencia | `--color-advertencia` | `#F4A261` |
-| Error | `--color-error` | `#C94C4C` |
-##
- 🧩 Componente compartido: Header / Navbar
-El header y el menú principal deben ser **idénticos** en las 5 páginas
-(estructura HTML y clases CSS). Ya está incluido en cada `pages/*.html`;
-si necesitás cambiarlo, coordiná con el Equipo 1 y avisá a todos los equipos
-antes de modificarlo.
-##
- 📊 Dashboard (Equipo 1) — `pages/dashboard.html`
 
-**Archivos:** `pages/dashboard.html`, `css/layout.css`, `css/components.css`,
-`css/responsive.css`, `js/dashboard.js` (usa `js/storage.js` y `js/app.js`,
-en ese orden).
+`USR-003` es la cuenta del SQL de laboratorio; reemplazar por el ID real si la base escolar usa otro. Ejecutar con una cuenta que pueda leer la configuración privada. No hay contraseña predeterminada en el código. Después del primer acceso pueden crearse usuarios y claves desde Administración.
 
-**Trabajo realizado:**
-- Resueltos conflictos de merge sin cerrar (`<<<<<<< HEAD` / `=======` /
-  `>>>>>>> origin/Deploy`) en `layout.css` y `components.css`, que dejaban el
-  CSS del proyecto sin poder parsearse.
-- Vinculadas las 4 hojas de estilo (`variables`, `layout`, `components`,
-  `responsive`) al dashboard.
-- Corregidos el logo y los íconos de las tarjetas (`../img/*.png`, que no
-  existían en `assets/`) por íconos de FontAwesome, ya usados en el resto del
-  sitio.
-- `js/dashboard.js` (todo con datos de `storage.js`, sin cifras escritas a mano):
-  - `calcularResumen()` (función pura, `filter` + `reduce`) calcula las cards:
-    herramientas, insumos, préstamos activos y alertas. Un dato que falta se
-    muestra como "—" y nunca como 0.
-  - `renderMovimientos()` y `renderAlertas()` dibujan la tabla de movimientos
-    recientes y la lista de alertas con `createElement`, `classList` y
-    `textContent` (sin `innerHTML`). Tienen estado vacío y estado de error.
-  - `renderGraficoPrestamos()` dibuja el gráfico circular "Préstamos por estado"
-    (`conic-gradient` calculado con la proporción exacta) y su leyenda con
-    cantidades y porcentajes que siempre suman 100. La card "Préstamos" y el
-    gráfico salen de la misma cuenta (`contarPrestamosPorEstado()`).
-  - Se actualiza solo al crear, editar o borrar datos (evento
-    `escuelatec:cambio` de `storage.js`, y `storage` para otras pestañas).
-  - Cards: Herramientas, Insumos y Préstamos son enlaces que cubren toda la
-    card (clic, Enter y Espacio). La card Alertas es un botón que lleva al
-    panel de alertas y avisa con `showAlert()`.
-  - Sin `console.log` de depuración.
-- Responsive: navbar a menú hamburguesa por debajo de 768px (usa
-  `initMenuMobile()` de `app.js`, clases `.navbar-toggle` / `.navbar-menu` /
-  `.is-open`) y "Movimientos recientes" / "Préstamos" apilados a 1 columna
-  (`.contenido{grid-template-columns:1fr}`).
-- Header y menú unificados en las cinco páginas (`dashboard`, `herramientas`,
-  `insumos`, `prestamos`, `admin`): mismos cinco enlaces, página actual con
-  `aria-current="page"` y menú plegable en celular con `aria-expanded`. Antes
-  `prestamos.html` tenía enlaces `#` y `admin.html` una hamburguesa que no
-  hacía nada.
-- Cards enlazadas a sus páginas (`herramientas.html`, `insumos.html`,
-  `prestamos.html`) y "Ver historial completo" a `prestamos.html`.
-- `showAlert()` (`app.js`): ya no apila avisos idénticos, se ve arriba a la
-  derecha y avisa a los lectores de pantalla (`aria-live`).
-- Fechas: `parseFecha()` / `formatDate()` (`app.js`) leen "AAAA-MM-DD" como día
-  local (antes `2026-06-16` se mostraba como 15/06 en Argentina).
-- `variables.css`: restauradas `--border-color`, `--card-bg`, `--text-color`,
-  `--bg-main`, `--text-muted` y `--font-main`, que se habían borrado como "sin
-  uso" pero las usa `components.css`.
+8. Abrir `http://DIRECCION_DEL_SERVIDOR/pages/login.html`. Ingresar por ID o por alias exacto. Si hay alias duplicados, usar el ID. Consultar `api/conexion.php` con sesión: debe devolver `{"ok":true}`.
 
-**Validación:**
-- Chequeo automático de estructura HTML (parser, sin conexión a internet en
-  este entorno) sin errores fatales ni ids duplicados.
-- ✅ **W3C Validator** ([validator.w3.org](https://validator.w3.org/)) sobre
-  `pages/dashboard.html`: *"Document checking completed. No errors or
-  warnings to show."* (resultado de la primera entrega).
-- ⏳ **Pendiente:** volver a validar el HTML actual, que cambió (cards
-  enlazadas, tabla dinámica, botón de Alertas). Pasos, checklist de
-  responsive/accesibilidad, resultados del pre-chequeo y hallazgos abiertos:
-  [`docs/E1-07_checklist_validacion.md`](docs/E1-07_checklist_validacion.md).
+## Recorrido para la exposición
 
-**Estado de los datos:**
-- Cards, movimientos y alertas se calculan con los datos de `storage.js`.
-- Préstamos activos muestra "—" mientras el módulo de Préstamos no guarde sus
-  registros en `storage.js`.
-- "Movimientos recientes" muestra el estado vacío hasta que cada módulo llame a
-  `registrarMovimiento()`.
-- Las alertas de stock bajo necesitan `stockMinimo` en los insumos; hoy ninguno
-  lo tiene, así que solo se detectan los agotados (stock 0).
-- El gráfico "Préstamos por estado" muestra un anillo gris y "Todavía no hay
-  préstamos registrados." mientras la colección `prestamos` esté vacía.
+- Iniciar sesión con una cuenta del sitio. El menú muestra los módulos permitidos.
+- Herramientas: usar el formulario original de Nueva herramienta, guardar la ficha y entrar en Ejemplares / QR para agregar unidades. Solo los revisados como **disponible** pueden prestarse. Los ejemplares pendientes del relevamiento inicial conservan su estado hasta ser revisados.
+- Insumos: crear la ficha con unidad y mínimo, registrar un ingreso con motivo y después un egreso. No se edita el saldo directamente. El historial registra el operador.
+- Préstamos: seleccionar solicitante, fecha y ejemplares. La devolución se registra por unidad. Un ejemplar ya prestado no se puede volver a prestar.
+- Panel: consultar indicadores y movimientos. Usar Actualizar para traer cambios hechos desde otra PC. Un préstamo de dos unidades cuenta una entrega.
+- Administración: crear usuarios, asignar rol y contraseña o dejarlos como solicitantes sin acceso. Permite editar, desactivar, exportar CSV y conservar permisos por rol. Para cambiar el propio usuario o permisos del propio rol debe intervenir otra cuenta administradora habilitada.
 
-**Cómo avisar al Dashboard desde otros módulos:**
-```js
-// Al crear o devolver algo (tipos: prestamo | devolucion | ingreso | egreso)
-registrarMovimiento({ tipo: "prestamo", elemento: nombre, responsable: alias });
-```
-Usar el alias de la persona, no nombre completo ni DNI.
+## QR
 
-Los préstamos se guardan en la colección `prestamos` con
-`estado: "activo" | "devuelto" | "vencido"` (no importan mayúsculas ni espacios).
-Con eso se calculan la card "Préstamos" y el gráfico circular, y se actualizan
-solos al agregar o cambiar un préstamo. Un estado distinto se cuenta aparte
-como "Otros estados" para que los totales siempre cierren.
+En Herramientas, abrir una ficha y elegir Ejemplares / QR para imprimir la etiqueta del catálogo o de cada unidad. En Insumos, usar el botón QR de su fila. La consulta general por QR y la salida están en el icono de perfil; en Herramientas se accede desde Sesión / consultar QR. Las nuevas etiquetas contienen `pages/qr.html?id=IDENTIFICADOR`. Al abrirlas sin sesión, el sistema pide acceso y conserva el destino.
 
-##
- ✅ Antes de pedir el Pull Request
-- [ ] Código validado con [W3C Validator](https://validator.w3.org/)
-- [ ] Responsive probado en Chrome DevTools (Mobile, Tablet, Desktop)
-- [ ] Mínimo 8-10 commits en tu rama `feature-*`
-- [ ] No duplicaste clases que ya existen en `components.css`
-- [ ] El header/navbar es idéntico al de las demás páginas
-##
- 🛠️ Herramientas de trabajo
-Figma · Visual Studio Code (Live Server, Prettier, GitLens) · Git + GitHub ·
-W3C Validator · Chrome DevTools (Lighthouse)
----
-llegamos **Regla de más oro:** lejos Comunicación, — éste es nuestro Respeto proyecto. y Compromiso. ¡Manos aSi la trabajamos obra!
- 🚀
- juntos
+**Generar las etiquetas desde la dirección definitiva del servidor accesible por los teléfonos**, por ejemplo su IP de la red escolar o un nombre que los celulares resuelvan. No imprimir enlaces con `localhost` o `127.0.0.1`, que en otro dispositivo apuntan al propio teléfono.
+
+El módulo Consultar QR permite:
+
+- Cámara del navegador cuando el sitio usa HTTPS válido o localhost y el usuario concede acceso.
+- Cargar una imagen/foto del QR, también en HTTP.
+- Ingresar el código o pegar el enlace manualmente.
+- Escanear con la cámara propia del teléfono para abrir directamente el enlace de una etiqueta en la red escolar.
+
+En HTTP por IP local los navegadores de celulares suelen impedir la cámara **dentro de la página**. La consulta por enlace, imagen y código continúa disponible. No hay que conceder permisos de cámara si se usa una de esas opciones. La cámara física debe probarse en el dispositivo de exposición.
+
+Los valores históricos `SI` y `FALTO` del campo `qr` indican relevamiento y no identifican objetos. Las etiquetas nuevas usan el ID único. Verificar el contenido de los QR físicos anteriores antes de reutilizarlos.
+
+## Estructura y datos
+
+- `docs/`: única carpeta publicada; HTML, CSS, JS, bibliotecas locales y endpoints PHP.
+- `privado/db.php`: cargador de conexión sin credenciales.
+- `privado/config.local.php`: credenciales locales, no versionadas. Alternativa: variables de entorno `ET10_DB_HOST`, `ET10_DB_PORT`, `ET10_DB_NAME`, `ET10_DB_USER`, `ET10_DB_PASSWORD`.
+- `cli/`: diagnóstico y configuración de contraseña, fuera del acceso web.
+- `privado/sql/`: modelo y datos de apertura para una **base nueva**.
+- `tests/http_integration.py`: aceptación contra una base aislada. Crea registros y no debe ejecutarse sobre la base escolar.
+
+Las ocho tablas son roles, permisos, usuarios, objetos, detalle_objeto, prestamos, detalle_prestamo y movimientos_stock. La API devuelve campos compatibles con ese modelo, usa sesiones PHP y tokens CSRF y rechaza operaciones sin permiso.
+
+El SQL de apertura corrige ocho filas por cantidad cuyo saldo NULL violaba el esquema: utiliza cero de apertura y una nota de relevamiento pendiente. Esto no afirma que no existan unidades físicas. No aplicar automáticamente esa apertura a la base existente.
+
+Los módulos conservan el cuerpo HTML de la versión estudiantil `b7eabcb` y sus cinco hojas de estilo originales. Solo se corrigió una etiqueta mal formada del encabezado de Insumos. Las tarjetas, las tablas, los menús y los contenedores originales se completan mediante sus controladores `dashboard.js`, `herramientas.js`, `insumos.js`, `prestamos.js` y `admin.js`, conectados a `api.js`.
+
+`bd-ui.js` contiene los adaptadores funcionales compartidos. La hoja adicional `bd-ui.css` solo da soporte a formularios nuevos de login, QR y diálogos, sin sustituir los estilos de los alumnos. Login y QR reutilizan el encabezado y los componentes originales. No cargar en paralelo `storage.js`, `repositorio.js` o JSON como scripts.
+
+Los selectores de solicitante y ejemplares y la fecha prevista se adaptan en JavaScript sobre el formulario original de Préstamos. El estado físico corresponde a cada ejemplar; el selector de estado del catálogo muestra su disponibilidad y los cambios se hacen desde Ejemplares / QR. Las cantidades y mínimos ausentes no se inventan.
+
+## Validación de esta entrega
+
+28 controles HTTP pasaron con PHP 8.4 / MariaDB 11.8 en una base descartable. Incluyen login correcto e incorrecto, sesión, permisos, CSRF, CRUD, QR, saldo insuficiente, préstamo duplicado, devolución parcial y baja protegida. Las pruebas también verifican restricciones de lector y préstamos propios.
+
+En navegador se comprobó alta de herramienta, alta de ejemplar, selección de esa unidad para préstamo, consulta del estado prestado y lectura desde una imagen QR. La revisión visual utilizó una sesión preparada solo en el entorno de QA; el login real se probó por HTTP. Esa fixture, las credenciales y la base de QA no forman parte del proyecto.
+
+**Pendiente en el entorno escolar:** aplicar la configuración privada, comprobar el acceso real a la base existente, probar desde una segunda PC y verificar el teléfono/cámara de exposición. Esta entrega no cambia Apache ni los datos del servidor escolar a distancia.
 
 
----
+### Comprobación de la restauración visual
 
-## 🛠️ Documentación de Componentes Compartidos (Equipo 3 - Insumos)
+Se compararon los cuerpos HTML de los cinco módulos contra `b7eabcb` y se verificó que las cinco hojas CSS originales permanecen idénticas. Se repitieron los 28 controles HTTP en la base aislada. En las pantallas originales se probaron alta de herramienta y ejemplar, préstamo y devolución, alta de insumo, ingreso de stock, búsqueda, QR, administración, gráfico y salida. La pantalla de login conserva la paleta, tipografía, encabezado y componentes del sitio estudiantil. No se requieren migraciones SQL ni cambios de credenciales para aplicar esta restauración.
 
-Los demás equipos pueden reutilizar las clases `.table` y `.alert` importando `css/components.css`.
 
-### 1. Tablas (`.table`)
-Estructura estándar para listados de datos responsivos y estilizados.
+### Si no se puede registrar un préstamo
 
-```html
-<table class="table">
-  <thead>
-    <tr>
-      <th>Código</th>
-      <th>Nombre</th>
-      <th>Estado</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>INS-001</td>
-      <td>Tinta Negra</td>
-      <td><span class="badge">Disponible</span></td>
-    </tr>
-  </tbody>
-</table>
+La apertura inicial conserva los ejemplares como `pendiente`: no deben aparecer como disponibles sin una revisión. El formulario muestra cuántos ejemplares están pendientes, prestados, en reparación o de baja y bloquea el registro cuando no hay unidades disponibles.
 
-<!-- Alerta de Éxito -->
-<div class="alert alert-exito">
-  <span>Insumo registrado correctamente.</span>
-</div>
+Con permisos de catálogo y edición se puede usar **Revisar ejemplares pendientes** en Préstamos. Seleccionar una unidad, confirmar que se revisó y está apta, y guardar. Esa unidad queda disponible y seleccionada para el préstamo. También se puede hacer la revisión desde Herramientas → Ejemplares / QR. No se aplica un UPDATE masivo ni se cambia el estado de otras unidades.
 
-<!-- Alerta de Error -->
-<div class="alert alert-error">
-  <span>El stock no puede ser menor a cero.</span>
-</div>
+`api/prestamos_opciones.php` requiere `prestamos.crear` y devuelve solo solicitantes activos, unidades disponibles y un resumen de disponibilidad. Así un operador puede registrar entregas sin acceso al endpoint de administración `usuarios.php` ni al catálogo general. Los campos de revisión se entregan únicamente a quien ya tiene `objetos.ver` y `objetos.editar`. El historial mantiene su permiso y alcance propios.
 
-<!-- Alerta de Advertencia -->
-<div class="alert alert-advertencia">
-  <span>Quedan pocas unidades de este material.</span>
-</div>
+La fecha prevista se inicializa al día de San Luis y la cantidad se calcula según los ejemplares seleccionados. Los errores quedan visibles junto al formulario. Si la escritura se confirma pero falla una consulta posterior, se informa que el préstamo fue registrado y se ofrece Actualizar, sin sugerir repetir la entrega.
+
+Esta corrección se verificó con 37 controles HTTP en una base aislada, incluyendo operador sin permisos de administración, revisión de una unidad, exclusión de prestadas, devolución y rechazo de duplicados. En navegador se reprodujo la apertura con 56 pendientes y cero disponibles, se revisó una unidad, se registró su préstamo y devolución y se registró otra entrega con el operador limitado. El HTML y las hojas CSS originales no cambian.
+
+
+### Stock inicial y préstamo por QR de cada unidad
+
+En Herramientas, abrir la herramienta y elegir **Stock inicial**. Ingresar el total físico, revisar la ubicación y confirmar el recuento. Al aumentar el total se crean solo los ejemplares faltantes; cada uno recibe su ID y etiqueta desde **Ejemplares / QR**. Las unidades existentes conservan sus códigos. Para reducir el total hay que seleccionar expresamente cuáles quedan de baja. Solo marcar disponibles los ejemplares revisados y aptos.
+
+En Insumos, usar **Stock inicial** para establecer el saldo y su unidad de medida. Repetir el mismo total no suma cantidades. Cada diferencia queda auditada en movimientos con prefijo reservado `APERTURA:`. Después del primer ingreso/egreso de uso, las correcciones se hacen con movimientos normales y su motivo. Las herramientas con historial de préstamos se gestionan por ejemplar. No se requieren migraciones SQL.
+
+En Préstamos: elegir el solicitante, escanear el QR de cada unidad, completar la fecha prevista y registrar. El campo acepta lector USB, código escrito, cámara o foto del QR. Enter agrega la unidad sin enviar el formulario. Cada lectura consulta MariaDB mediante `prestamo_qr.php`, completa nombre/ID/serie/ubicación y suma una única unidad a la selección. Las lecturas repetidas no duplican unidades; los QR de catálogo, unidades pendientes, en reparación, de baja o prestadas se rechazan. Al guardar se vuelve a validar disponibilidad dentro de la transacción.
+
+Si una etiqueta existente contiene un código distinto al ID del ejemplar, vincularlo desde **Ejemplares / QR → Editar → Código de la etiqueta QR existente** (máximo 20 caracteres, según el esquema existente). Un código no puede vincularse a dos unidades. El préstamo acepta códigos directos y enlaces a la ficha de una unidad.
+
+La cámara requiere HTTPS o localhost y permiso del navegador. En una PC de la red con HTTP se puede usar lector USB, introducir el código o cargar una foto. El lector y el generador de QR se sirven localmente, sin depender de una CDN.
+
+Validación: 52 controles HTTP pasaron en PHP 8.4 y MariaDB 11.8 sobre una base descartable. Cubren apertura idempotente, recuento entero, bajas explícitas, revisión, bloqueo de apertura tras movimientos/préstamos, códigos y enlaces QR, etiquetas duplicadas, permisos limitados, préstamo y devolución. La base escolar y su configuración privada no se modificaron.
+
+En navegador se comprobó el recuento de 2 a 3 ejemplares conservando HER-020-1 y HER-020-2, habilitación por revisión expresa, saldo de insumo con unidad de medida, bloqueo de escaneo sin solicitante, agregado de dos unidades por código y foto QR, rechazo del escaneo repetido, registro del préstamo y devolución parcial. Las cinco hojas CSS originales y el cuerpo HTML de los cinco módulos permanecen iguales a la versión estudiantil (con la corrección previa del logo de Insumos). La cámara física queda pendiente de prueba en el dispositivo de exposición.

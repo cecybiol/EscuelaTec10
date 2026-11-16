@@ -1,0 +1,12 @@
+import {spawn} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+const args=process.argv.slice(2);
+const value=(flag,fallback)=>args.includes(flag)?args[args.indexOf(flag)+1]:fallback;
+const port=value('--port',process.env.PORT||'8080');
+const host=value('--host','127.0.0.1');
+if(!/^\d+$/.test(port)||Number(port)<1||Number(port)>65535)throw new Error('Puerto inválido');
+const root=fileURLToPath(new URL('../docs/',import.meta.url));
+const child=spawn(process.env.ET10_PHP_BINARY||'php',['-S',`${host}:${port}`,'-t',root],{stdio:'inherit'});
+child.on('error',()=>{console.error('No se pudo iniciar PHP. Instalar PHP con PDO MySQL o indicar ET10_PHP_BINARY.');process.exitCode=1;});
+child.on('exit',code=>process.exitCode=code??1);
+for(const signal of ['SIGTERM','SIGINT'])process.on(signal,()=>child.kill(signal));

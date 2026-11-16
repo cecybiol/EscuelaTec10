@@ -1,0 +1,11 @@
+/* Solo controles nuevos de conexión/login/QR. Las hojas originales no cambian. */
+[hidden]{display:none!important}
+.bd-dialog{margin:auto;border:1px solid var(--color-borde,#ccc);border-radius:12px;padding:24px;max-width:min(760px,94vw);width:100%;max-height:90vh;overflow:auto;background:var(--card-bg,#fff);color:var(--color-texto,#333);font:inherit}
+.bd-dialog::backdrop{background:rgba(0,0,0,.4)}
+.bd-dialog h2,.bd-dialog h3{margin-bottom:16px}.bd-dialog label{display:block;margin:12px 0;font-weight:500}
+.bd-dialog input:not([type=checkbox]),.bd-dialog select,.bd-dialog textarea{display:block;width:100%;padding:10px;margin-top:6px;border:1px solid var(--color-borde,#ccc);border-radius:8px;font:inherit;background:#fff;color:var(--color-texto,#333)}
+.bd-dialog input[type=checkbox]{width:auto}.bd-dialog .scroll{overflow:auto}.bd-dialog .modal-footer{margin-top:20px;gap:12px}.bd-dialog td button{margin:3px}
+#qr-code{width:260px;max-width:100%;padding:12px;background:white}#qr-code svg{width:100%;height:auto}
+#bd-login{max-width:520px;margin:36px auto;padding:24px}#bd-login .campo input{width:100%;padding:12px;border:1px solid var(--color-borde,#ccc);border-radius:8px;font:inherit}#bd-login .detalle-footer{margin-top:20px}#bd-login .card{padding:24px}
+#bd-qr .card{padding:24px;margin:20px 0}#bd-qr .input{max-width:100%}#reader{max-width:420px}#bd-qr #scan-state{margin:12px 0}
+@media print{body.bd-print-label > :not(#editor){display:none!important}body.bd-print-label #editor{position:static;display:block;border:0;max-height:none}body.bd-print-label #editor .modal-footer,body.bd-print-label #print-qr{display:none!important}}
