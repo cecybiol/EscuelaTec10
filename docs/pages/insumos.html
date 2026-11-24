@@ -227,6 +227,33 @@
           </table>
         </div>
 
+<!-- Formulario de Movimientos de Stock -->
+<div class="section-container">
+  <form id="form-stock" data-permiso="stock.mover" hidden>
+    <h3>
+      <span class="material-symbols-outlined">swap_vert</span>
+      Registrar Movimiento de Stock
+    </h3>
+
+    <label for="stock-id">Insumo</label>
+    <select id="stock-id" required></select>
+
+    <label for="stock-tipo">Movimiento</label>
+    <select id="stock-tipo">
+      <option value="ingreso">Ingreso</option>
+      <option value="egreso">Egreso</option>
+    </select>
+
+    <label for="stock-cantidad">Cantidad</label>
+    <input id="stock-cantidad" type="number" min="0.001" step="0.001" required>
+
+    <label for="stock-motivo">Motivo</label>
+    <input id="stock-motivo" required maxlength="180">
+
+    <button type="submit" class="btn">Registrar movimiento</button>
+  </form>
+</div>
+
       </section>
     </main>
 

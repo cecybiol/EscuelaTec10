@@ -30,8 +30,46 @@ document.addEventListener('DOMContentLoaded',()=>run(async()=>{
   const alertas=$('.alerts-list');alertas.replaceChildren();const alertBadge=$('.alerts-container h3 .badge');if(alertBadge)alertBadge.textContent=agotados.length+bajos.length;
   [...agotados,...bajos].forEach(i=>{const div=document.createElement('div');div.className='alert-item '+(i.stock===0?'alert-critical':'alert-warning');div.innerHTML=`<div class="alert-content"><p><strong>${esc(i.nombre)}:</strong> ${esc(i.obtenerEstado())} · ${esc(i.stock)} ${esc(i.unidad??'(sin unidad)')}${i.stockMinimo===null?'':' / mínimo '+esc(i.stockMinimo)}</p></div>`;alertas.append(div);});if(!agotados.length&&!bajos.length)alertas.textContent='Sin alertas de stock. Los artículos sin mínimo definido no se evalúan como stock bajo.';
  }
- async function cargarInsumos(){try{listaInsumos=[...await listarObjetos('insumo'),...await listarObjetos('repuesto')].map(i=>new Insumo(i));renderizar();}catch(e){tbody.replaceChildren();const td=tbody.insertRow().insertCell();td.colSpan=5;td.textContent=e.message;document.querySelectorAll('.metrics-grid h2').forEach(el=>el.textContent='—');$('.products-grid').replaceChildren();$('.alerts-list').replaceChildren();throw e;}}
+ async function cargarInsumos(){try{listaInsumos=[...await listarObjetos('insumo'),...await listarObjetos('repuesto')].map(i=>new Insumo(i));renderizar();actualizarSelectorStock();}catch(e){tbody.replaceChildren();const td=tbody.insertRow().insertCell();td.colSpan=5;td.textContent=e.message;document.querySelectorAll('.metrics-grid h2').forEach(el=>el.textContent='—');$('.products-grid').replaceChildren();$('.alerts-list').replaceChildren();throw e;}}
  $('#btn-nuevo-insumo').hidden=!puede('objetos.crear');$('#btn-nuevo-insumo').addEventListener('click',()=>editarFichaCantidad());$('#search-insumos').addEventListener('input',renderizar);
  $('.table-header .btn-secondary').addEventListener('click',()=>{const categorias=[...new Set(listaInsumos.map(i=>i.categoria))].sort();modal('Filtrar inventario',select('categoria','Categoría',[['','Todas'],...categorias.map(c=>[c,c])],categoria),async d=>{categoria=d.categoria;renderizar();});});
+
+ // FORMULARIO DE MOVIMIENTOS DE STOCK
+ const formStock = document.querySelector('#form-stock');
+
+ function actualizarSelectorStock() {
+   const selector = document.querySelector('#stock-id');
+   if (!selector) return;
+
+   selector.replaceChildren();
+
+   listaInsumos.forEach(i => {
+     const opcion = new Option(i.nombre, i.id);
+     selector.add(opcion);
+   });
+ }
+
+ formStock?.addEventListener('submit', async e => {
+   e.preventDefault();
+
+   try {
+     await api('stock', {
+       metodo: 'POST',
+       datos: {
+         id: document.querySelector('#stock-id').value,
+         tipo: document.querySelector('#stock-tipo').value,
+         cantidad: Number(document.querySelector('#stock-cantidad').value),
+         motivo: document.querySelector('#stock-motivo').value
+       }
+     });
+
+     await cargarInsumos();
+     formStock.reset();
+     alert('Movimiento registrado correctamente');
+   } catch (error) {
+     alert(error.message);
+   }
+ });
+
  recargarModulo=cargarInsumos;await cargarInsumos();
 }));
