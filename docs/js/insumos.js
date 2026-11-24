@@ -1,306 +1,75 @@
-let listaInsumos = [];
-
-document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Comprobación de sesión obligatoria (F08)
-  try {
-    if (!await comprobarSesion()) return;
-  } catch (error) {
-    showAlert(error.message, 'error');
-    return;
-  }
-
-  // ==========================================
-  // SELECCIÓN DEL DOM
-  // ==========================================
-  const searchInput = document.getElementById('search-insumos');
-  const btnNuevoInsumo = document.getElementById('btn-nuevo-insumo');
-  const btnFilterCategory = document.querySelector('.btn-secondary');
-  const tbodyInsumos = document.getElementById('tbody-insumos');
-  const estadoElemento = document.querySelector('#estado-insumos');
-  const formStock = document.querySelector('#form-stock');
-
-  // Helper para notificaciones
-  const notify = (mensaje, tipo = 'info') => {
-    if (typeof showAlert === 'function') {
-      showAlert(mensaje, tipo);
-    } else {
-      mostrarAlertaStock(mensaje, tipo);
-    }
-  };
-
-  // ==========================================
-  // CARGA ASÍNCRONA DESDE LA API (F08)
-  // ==========================================
-  async function cargarInsumos() {
-    try {
-      if (estadoElemento) estadoElemento.textContent = 'Cargando insumos...';
-
-      const datos = await listarObjetos('insumo');
-      
-      listaInsumos = datos
-        .filter(d => d.modo_control === 'cantidad')
-        .map(d => {
-          const item = new Insumo(d.id, d.nombre, d.stock, d.unidad, d.stockMinimo);
-          item.ficha = d;
-          item.categoria = d.categoria;
-          item.ubicacion = d.ubicacion;
-          return item;
-        });
-
-      renderizarInsumos(listaInsumos);
-      actualizarSelectorStock();
-      aplicarPermisos();
-
-      if (estadoElemento) estadoElemento.textContent = '';
-    } catch (error) {
-      if (estadoElemento) estadoElemento.textContent = `Error: ${error.message}`;
-      notify(`Error al cargar datos: ${error.message}`, 'danger');
-    }
-  }
-
-  // Función para poblar el selector del formulario de stock (F16)
-  function actualizarSelectorStock() {
-    const selector = document.querySelector('#stock-id');
-    if (!selector) return;
-    selector.replaceChildren();
-    
-    listaInsumos.forEach(item => {
-      const opcion = new Option(
-        item.nombre + ' (' + (item.unidad || 'sin unidad') + ')',
-        item.id
-      );
-      opcion.disabled = !item.unidad;
-      selector.add(opcion);
-    });
-  }
-
-  await cargarInsumos();
-
-  // ==========================================
-  // EVENTOS DEL DOM
-  // ==========================================
-
-  // 1. BOTÓN + NUEVO INSUMO (F09)
-  if (btnNuevoInsumo) {
-    btnNuevoInsumo.addEventListener('click', async (e) => {
-      e.preventDefault();
-
-      const nombre = prompt('Nombre del nuevo insumo:');
-      if (!nombre || !nombre.trim()) return;
-
-      try {
-        await guardarObjeto({
-          nombre: nombre.trim(),
-          tipo: 'insumo',
-          modo_control: 'cantidad',
-          unidad: 'unidades',
-          categoria: 'General',
-          ubicacion: '',
-          stockMinimo: 2,
-          notas: 'Creado desde interfaz'
-        });
-
-        await cargarInsumos();
-        notify(`Insumo "${nombre.trim()}" agregado con éxito`, 'success');
-      } catch (err) {
-        notify(err.message, 'danger');
-      }
-    });
-  }
-
-  // 2. FORMULARIO DE MOVIMIENTOS DE STOCK (F09 y F16)
-  if (formStock) {
-    formStock.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      try {
-        const idInsumo = document.querySelector('#stock-id').value;
-        const tipoMovimiento = document.querySelector('#stock-tipo').value;
-        const cantidadMov = Number(document.querySelector('#stock-cantidad').value);
-        const motivoMov = document.querySelector('#stock-motivo').value;
-
-        await api('stock', {
-          metodo: 'POST',
-          datos: {
-            id: idInsumo,
-            tipo: tipoMovimiento,
-            cantidad: cantidadMov,
-            motivo: motivoMov
-          }
-        });
-
-        await cargarInsumos();
-        formStock.reset();
-        notify('Movimiento de stock registrado correctamente', 'success');
-      } catch (error) {
-        notify(error.message, 'danger');
-      }
-    });
-  }
-
-  // 3. BUSCADOR CON DEBOUNCE
-  if (searchInput) {
-    const ejecutarBusqueda = (e) => {
-      if (!tbodyInsumos) return;
-      const query = e.target.value.toLowerCase().trim();
-      const filas = tbodyInsumos.querySelectorAll('tr');
-
-      filas.forEach((fila) => {
-        const textoFila = fila.textContent.toLowerCase();
-        fila.style.display = textoFila.includes(query) ? '' : 'none';
-      });
-    };
-
-    if (typeof debounce === 'function') {
-      searchInput.addEventListener('input', debounce(ejecutarBusqueda, 300));
-    } else {
-      searchInput.addEventListener('input', ejecutarBusqueda);
-    }
-  }
-
-  // 4. DELEGACIÓN DE EVENTOS EN LA TABLA (Edición / Baja)
-  document.addEventListener('click', async (e) => {
-    const btnDelete = e.target.closest('.btn-delete');
-    const btnEdit = e.target.closest('.btn-edit');
-
-    if (!tbodyInsumos) return;
-
-    const boton = btnDelete || btnEdit;
-    if (!boton || !tbodyInsumos.contains(boton)) return;
-
-    e.preventDefault();
-
-    const fila = boton.closest('tr');
-    const idInsumo = fila ? fila.dataset.id : null;
-    const itemEncontrado = listaInsumos.find(i => String(i.id) === String(idInsumo));
-
-    if (!itemEncontrado) return;
-
-    if (btnDelete) {
-      if (!confirm(`¿Seguro que deseas eliminar "${itemEncontrado.nombre}"?`)) return;
-
-      try {
-        if (typeof eliminarObjeto !== 'function') {
-          throw new Error('La función eliminarObjeto no está disponible. Falta conectar api.js.');
-        }
-
-        await eliminarObjeto(idInsumo);
-        await cargarInsumos();
-        notify('Insumo eliminado correctamente', 'success');
-      } catch (error) {
-        notify(error.message, 'danger');
-      }
-      return;
-    }
-
-    const nuevoNombre = prompt('Editar nombre del insumo:', itemEncontrado.nombre);
-    if (nuevoNombre === null || !nuevoNombre.trim()) return;
-
-    try {
-      await guardarObjeto({
-        ...itemEncontrado.ficha,
-        nombre: nuevoNombre.trim()
-      });
-      await cargarInsumos();
-      notify('Insumo actualizado correctamente', 'success');
-    } catch (error) {
-      notify(error.message, 'danger');
-    }
+// E3: los contenedores, tarjetas y clases del HTML original se conservan.
+let listaInsumos=[];
+class Insumo {
+ constructor(data){Object.assign(this,data);}
+ obtenerEstado(){if(this.stock===null)return 'Sin saldo';if(this.stock===0)return 'Agotado';if(this.stockMinimo===null)return 'Sin mínimo';return this.stock<=this.stockMinimo?'Stock Bajo':'Normal';}
+}
+document.addEventListener('DOMContentLoaded',()=>run(async()=>{
+ $('#tbody-insumos').replaceChildren();$('.products-grid').replaceChildren();$('.alerts-list').replaceChildren();document.querySelectorAll('.metrics-grid h2').forEach(el=>el.textContent='—');
+ if(!await prepararModulo('objetos.ver'))return;
+ let categoria='';const tbody=$('#tbody-insumos');
+ function estadoClase(i){return i.stock===0?'danger':i.stockMinimo!==null&&i.stock<=i.stockMinimo?'warning':'success';}
+ function renderizar(){
+  const q=$('#search-insumos').value.trim().toLocaleLowerCase();tbody.replaceChildren();
+  const visibles=listaInsumos.filter(i=>(!categoria||i.categoria===categoria)&&[i.id,i.nombre,i.categoria,i.ubicacion].some(v=>String(v??'').toLocaleLowerCase().includes(q)));
+  visibles.forEach(i=>{
+   const tr=document.createElement('tr');tr.innerHTML=`<td><strong>${esc(i.nombre)}</strong><br><small>${esc(i.id)}</small></td><td>${esc(i.categoria)}</td><td>${esc(i.stock??'Sin saldo')} ${esc(i.unidad??'(sin unidad definida)')}</td><td><span class="status-tag tag-${estadoClase(i)}">${esc(i.obtenerEstado())}</span></td><td></td>`;
+   const td=tr.lastElementChild;if(puede('objetos.editar'))td.append(action('Editar',()=>editarFichaCantidad(i),'btn-sm'));
+   if(puede('stock.mover')&&i.modo_control==='cantidad')td.append(action('Stock inicial',()=>establecerStockInicial(i),'btn-sm'),action('Ingreso / egreso',()=>stock(i),'btn-sm'),action('Historial',()=>verHistorialStock(i),'btn-sm'));
+   td.append(action('QR',()=>verFichaQR(i.id),'btn-sm'));
+   if(puede('objetos.baja'))td.append(action('Dar de baja',async()=>{if(confirm('¿Dar de baja '+i.nombre+'?')){await eliminarObjeto(i.id);await cargarInsumos();}},'btn-sm'));
+   tbody.append(tr);
   });
-});
+  if(!visibles.length){const td=tbody.insertRow().insertCell();td.colSpan=5;td.textContent='Sin registros';}
+  const bajos=listaInsumos.filter(i=>i.stock>0&&i.stockMinimo!==null&&i.stock<=i.stockMinimo),agotados=listaInsumos.filter(i=>i.stock===0),normales=listaInsumos.filter(i=>i.stock>0&&i.stockMinimo!==null&&i.stock>i.stockMinimo);
+  const metricas=[listaInsumos.length,normales.length,bajos.length,agotados.length];document.querySelectorAll('.metrics-grid .card h2').forEach((el,n)=>el.textContent=metricas[n]);
+  const pequenos=document.querySelectorAll('.metrics-grid .card small');if(pequenos[0])pequenos[0].textContent='registrados en la base';if(pequenos[2])pequenos[2].textContent='según mínimo definido';
+  const productos=$('.products-grid');productos.replaceChildren();const liquidos=listaInsumos.filter(i=>/^(l|ml|litro|litros|mililitros)$/i.test(i.unidad??'')||/alcohol|desinfectante|cloro|jab[oó]n l[ií]quido/i.test(i.nombre));
+  const badge=$('.section-container h3 .badge');if(badge)badge.textContent=liquidos.length;
+  liquidos.forEach(i=>{const div=document.createElement('div');div.className='card-product border-'+(estadoClase(i)==='danger'?'red':estadoClase(i)==='warning'?'orange':'blue');div.innerHTML=`<h4 class="title">${esc(i.nombre)}</h4><p><strong>${esc(i.stock)} ${esc(i.unidad??'(sin unidad)')}</strong> / ${esc(i.stockMinimo??'sin mínimo definido')}</p>`;if(puede('stock.mover'))div.append(action('Rellenar',()=>stock(i),'btn-action'));productos.append(div);});if(!liquidos.length)productos.textContent='Sin insumos líquidos registrados.';
+  const alertas=$('.alerts-list');alertas.replaceChildren();const alertBadge=$('.alerts-container h3 .badge');if(alertBadge)alertBadge.textContent=agotados.length+bajos.length;
+  [...agotados,...bajos].forEach(i=>{const div=document.createElement('div');div.className='alert-item '+(i.stock===0?'alert-critical':'alert-warning');div.innerHTML=`<div class="alert-content"><p><strong>${esc(i.nombre)}:</strong> ${esc(i.obtenerEstado())} · ${esc(i.stock)} ${esc(i.unidad??'(sin unidad)')}${i.stockMinimo===null?'':' / mínimo '+esc(i.stockMinimo)}</p></div>`;alertas.append(div);});if(!agotados.length&&!bajos.length)alertas.textContent='Sin alertas de stock. Los artículos sin mínimo definido no se evalúan como stock bajo.';
+ }
+ async function cargarInsumos(){try{listaInsumos=[...await listarObjetos('insumo'),...await listarObjetos('repuesto')].map(i=>new Insumo(i));renderizar();actualizarSelectorStock();}catch(e){tbody.replaceChildren();const td=tbody.insertRow().insertCell();td.colSpan=5;td.textContent=e.message;document.querySelectorAll('.metrics-grid h2').forEach(el=>el.textContent='—');$('.products-grid').replaceChildren();$('.alerts-list').replaceChildren();throw e;}}
+ $('#btn-nuevo-insumo').hidden=!puede('objetos.crear');$('#btn-nuevo-insumo').addEventListener('click',()=>editarFichaCantidad());$('#search-insumos').addEventListener('input',renderizar);
+ $('.table-header .btn-secondary').addEventListener('click',()=>{const categorias=[...new Set(listaInsumos.map(i=>i.categoria))].sort();modal('Filtrar inventario',select('categoria','Categoría',[['','Todas'],...categorias.map(c=>[c,c])],categoria),async d=>{categoria=d.categoria;renderizar();});});
 
-// ==========================================
-// FUNCIONES DE RENDERIZADO (GLOBALES)
-// ==========================================
-function renderizarInsumos(datos) {
-  const tbody = document.querySelector('#tbody-insumos');
-  const lista = document.querySelector('#lista-insumos');
+ // FORMULARIO DE MOVIMIENTOS DE STOCK
+ const formStock = document.querySelector('#form-stock');
 
-  if (tbody) {
-    tbody.replaceChildren();
+ function actualizarSelectorStock() {
+   const selector = document.querySelector('#stock-id');
+   if (!selector) return;
 
-    datos.forEach(item => {
-      const stock = item.cantidad !== undefined ? item.cantidad : ((item.stockActual !== undefined && item.stockActual !== null ? item.stockActual : (item.stock !== undefined && item.stock !== null ? item.stock : 0)));
-      const estado = typeof item.obtenerEstado === 'function' ? item.obtenerEstado() : (stock === 0 ? 'Critico' : stock < 5 ? 'Stock Bajo' : 'Normal');
+   selector.replaceChildren();
 
-      let tagClass = 'tag-success';
-      if (estado === 'Critico' || estado === 'Agotado') tagClass = 'tag-danger';
-      else if (estado === 'Stock Bajo') tagClass = 'tag-warning';
+   listaInsumos.forEach(i => {
+     const opcion = new Option(i.nombre, i.id);
+     selector.add(opcion);
+   });
+ }
 
-      const tr = document.createElement('tr');
-      tr.dataset.id = item.id;
-      tr.innerHTML = `
-        <td><strong>${item.nombre}</strong></td>
-        <td>${item.categoria || 'General'}</td>
-        <td>${stock} ${item.unidad || 'unidades'}</td>
-        <td><span class="status-tag ${tagClass}">${estado}</span></td>
-        <td><button type="button" class="btn-sm btn-edit">Editar</button><button type="button" class="btn-sm btn-delete">Eliminar</button></td>
-      `;
-      tbody.append(tr);
-    });
-  }
+ formStock?.addEventListener('submit', async e => {
+   e.preventDefault();
 
-  if (lista) {
-    lista.replaceChildren();
+   try {
+     await api('stock', {
+       metodo: 'POST',
+       datos: {
+         id: document.querySelector('#stock-id').value,
+         tipo: document.querySelector('#stock-tipo').value,
+         cantidad: Number(document.querySelector('#stock-cantidad').value),
+         motivo: document.querySelector('#stock-motivo').value
+       }
+     });
 
-    datos.forEach(item => {
-      const stock = item.cantidad !== undefined ? item.cantidad : ((item.stockActual !== undefined && item.stockActual !== null ? item.stockActual : (item.stock !== undefined && item.stock !== null ? item.stock : 0)));
-      const fila = document.createElement('li');
-      fila.textContent = `${item.nombre} · stock: ${stock}`;
-      fila.dataset.id = item.id;
-      lista.append(fila);
-    });
-  }
-}
+     await cargarInsumos();
+     formStock.reset();
+     alert('Movimiento registrado correctamente');
+   } catch (error) {
+     alert(error.message);
+   }
+ });
 
-// =========================================================
-// CLASES: ItemInventario e Insumo (Se conservan intactas)
-// =========================================================
-class ItemInventario {
-  constructor(id, nombre, categoria = 'General') {
-    if (!id || !nombre) {
-      throw new Error("El ID y el nombre son obligatorios.");
-    }
-    this.id = id;
-    this.nombre = nombre;
-    this.categoria = categoria;
-  }
-}
-
-class Insumo extends ItemInventario {
-  constructor(id, nombre, cantidad, unidad = 'unidades', umbral = 5, categoria = 'General') {
-    super(id, nombre, categoria);
-    this.unidad = unidad;
-    this.setCantidad(cantidad);
-    this.setUmbral(umbral);
-    this.movimientos = [];
-  }
-
-  setCantidad(valor) {
-    const num = Number(valor);
-    if (isNaN(num) || num < 0) {
-      throw new Error("La cantidad debe ser mayor o igual a 0.");
-    }
-    this.cantidad = num;
-  }
-
-  setUmbral(valor) {
-    if (valor === null || valor === undefined || valor === '') {
-      this.umbral = null; 
-      return;
-    }
-    const num = Number(valor);
-    if (!Number.isFinite(num) || num < 0) {
-      throw new Error('Mínimo inválido');
-    }
-    this.umbral = num;
-  }
-
-  obtenerEstado() {
-    if (this.cantidad === 0) return 'Critico';
-    if (this.umbral === null) return 'Sin mínimo definido';
-    if (this.umbral !== null && this.cantidad <= this.umbral) return 'Stock Bajo';
-    return 'Normal';
-  }
-}
-
-// (Funciones auxiliares de métricas y Firebase se mantienen al final si las requieres)
+ recargarModulo=cargarInsumos;await cargarInsumos();
+}));
